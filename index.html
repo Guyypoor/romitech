@@ -9,7 +9,7 @@
 <title>RomiTech</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@500;700;900&family=IBM+Plex+Sans+Hebrew:wght@300;400;500;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;800&display=swap">
 <style>
 html,body{margin:0}img{max-width:100%}
 /* Layout: dark "spec-sheet" store — graphite panels, circular light-box pedestals for white product shots,
@@ -25,9 +25,9 @@ html,body{margin:0}img{max-width:100%}
   --ok:#46c98b; --warn:#f0b54a; --bad:#ff7a6b;
   --btn:#d9b45a; --btn-ink:#000000;
   --glass:rgba(0,0,0,.82);
-  --f-sans:"IBM Plex Sans Hebrew","Segoe UI",Arial,system-ui,sans-serif;
-  --f-display:"Frank Ruhl Libre","IBM Plex Sans Hebrew",Georgia,serif;
-  --f-mono:"IBM Plex Sans Hebrew","Segoe UI",Arial,sans-serif;
+  --f-sans:"Rubik","Segoe UI",Arial,system-ui,sans-serif;
+  --f-display:"Rubik","Segoe UI",Arial,sans-serif;
+  --f-mono:"Rubik","Segoe UI",Arial,sans-serif;
   --wrap:1240px; --r:18px;
   color-scheme:dark;
 }
@@ -53,9 +53,10 @@ h1,h2,.sh h2,.pd h2,.ct h3{font-family:var(--f-display)}
 .hdr{border-bottom-color:rgba(217,180,90,.35)!important;position:sticky;top:env(safe-area-inset-top,0px);z-index:50;background:var(--glass);backdrop-filter:blur(18px) saturate(160%);-webkit-backdrop-filter:blur(18px) saturate(160%);border-bottom:1px solid var(--line)}
 .hdr .wrap{display:flex;align-items:center;gap:28px;height:64px}
 .logo{display:flex;align-items:center;gap:10px;direction:ltr;flex:none}
+@media (max-width:380px){.hdr .wrap{gap:10px}.logo{gap:6px}.logo svg{width:26px;height:26px}.wm{font-size:18px!important}.hdr .ib{min-width:36px;height:36px;padding:0 8px;gap:4px}}
 .logo svg{width:30px;height:30px}
-.wm{font-family:var(--f-display);font-weight:700;font-size:22px;letter-spacing:.01em}
-.wm b{font-weight:500;color:var(--gold)}
+.wm{font-family:var(--f-display);font-weight:800;font-size:22px;letter-spacing:-.01em}
+.wm b{font-weight:800;color:var(--gold)}
 .nav{display:flex;gap:6px}
 .nav a,.nav button{border:0;background:none;cursor:pointer;font-size:14.5px;color:var(--fg-2);padding:8px 12px;border-radius:999px}
 .nav a:hover,.nav button:hover{background:var(--panel-2);color:var(--fg)}
@@ -83,7 +84,7 @@ h1,h2,.sh h2,.pd h2,.ct h3{font-family:var(--f-display)}
 .hero::before{content:"";position:absolute;inset:-35% -12% auto auto;width:72%;aspect-ratio:1;background:radial-gradient(closest-side,rgba(217,180,90,.14),transparent 70%);pointer-events:none}
 .hero{border-bottom:1px solid var(--gold-deep)!important}
 .hero .wrap{position:relative;display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:48px;align-items:center;padding-block:64px 56px}
-.hero h1{font-size:clamp(46px,7vw,96px);font-weight:900;line-height:1;letter-spacing:-.01em;margin:14px 0 22px}
+.hero h1{font-size:clamp(44px,6.6vw,90px);font-weight:800;line-height:1.02;letter-spacing:-.02em;margin:14px 0 22px}
 .hero .lead{font-size:clamp(16px,1.5vw,19px);color:var(--fg-2);max-width:40ch;margin:0 0 26px}
 @media (max-width:900px){.hero .wrap{grid-template-columns:1fr;padding-block:36px}}
 
