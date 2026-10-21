@@ -5,41 +5,32 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="description" content="RomiTech – אביזרים לטלפון, לשעון ולאוזניות. כיסויים, מגני מסך, מטענים ואוזניות לפי המכשיר שלך.">
 <meta name="robots" content="noindex">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='1' y='1' width='30' height='30' rx='9' fill='%230a0b0e'/%3E%3Cpath d='M11.5 23.5V8.5h5.2a4.2 4.2 0 0 1 0 8.4h-5.2M16.4 16.9l5.2 6.6' fill='none' stroke='%2345f0c4' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='1' y='1' width='30' height='30' rx='9' fill='%23000000'/%3E%3Cpath d='M11.5 23.5V8.5h5.2a4.2 4.2 0 0 1 0 8.4h-5.2M16.4 16.9l5.2 6.6' fill='none' stroke='%23d9b45a' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
 <title>RomiTech</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Hebrew:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@500;700;900&family=IBM+Plex+Sans+Hebrew:wght@300;400;500;600;700&display=swap">
 <style>
 html,body{margin:0}img{max-width:100%}
 /* Layout: dark "spec-sheet" store — graphite panels, circular light-box pedestals for white product shots,
    mono type for every number (prices, counts, codes), one iridescent gradient used only on the mark and key highlights. */
 :root{
-  --bg:#0a0b0e; --panel:#121419; --panel-2:#191c22; --line:#24272f; --line-2:#30343d;
-  --fg:#f2f3f5; --fg-2:#c7cad1; --muted:#8a8f9b;
-  --lightbox:#eceef2; --lightbox-2:#dfe2e8;
-  --accent:#62b6ff; --accent-ink:#06121f;
-  --grad:linear-gradient(100deg,#9a86ff 0%,#4cc3ff 52%,#45f0c4 100%);
-  --ok:#3ddc97; --warn:#ffb547; --bad:#ff6b6b;
-  --btn:#f2f3f5; --btn-ink:#0a0b0e;
-  --glass:rgba(10,11,14,.78);
+  /* RomiTech – שחור, לבן וזהב: רקע שחור מלא, "ויטרינות" לבנות למוצרים, זהב לפעולות ולכותרת הראשית בלבד */
+  --bg:#000000; --panel:#0d0d0d; --panel-2:#171717; --line:#262626; --line-2:#3a3a3a;
+  --fg:#ffffff; --fg-2:#d9d6cf; --muted:#9c978c;
+  --lightbox:#ffffff; --lightbox-2:#f1ece1;
+  --gold:#d9b45a; --gold-deep:#8a6a1f; --gold-hi:#f1d58a;
+  --accent:#d9b45a; --accent-ink:#000000;
+  --grad:linear-gradient(100deg,#8a6a1f 0%,#c9a24a 22%,#f1d58a 46%,#b8913a 70%,#8a6a1f 100%);
+  --ok:#46c98b; --warn:#f0b54a; --bad:#ff7a6b;
+  --btn:#d9b45a; --btn-ink:#000000;
+  --glass:rgba(0,0,0,.82);
   --f-sans:"IBM Plex Sans Hebrew","Segoe UI",Arial,system-ui,sans-serif;
-  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
-  --wrap:1240px; --r:20px;
+  --f-display:"Frank Ruhl Libre","IBM Plex Sans Hebrew",Georgia,serif;
+  --f-mono:"IBM Plex Sans Hebrew","Segoe UI",Arial,sans-serif;
+  --wrap:1240px; --r:18px;
   color-scheme:dark;
 }
-@media (prefers-color-scheme: light){:root:not([data-theme="dark"]){
-  --bg:#f6f7f9; --panel:#ffffff; --panel-2:#eff1f4; --line:#e2e5ea; --line-2:#d3d7de;
-  --fg:#0c0d10; --fg-2:#2c2f36; --muted:#5f6471;
-  --lightbox:#eef0f3; --lightbox-2:#e3e6eb;
-  --accent:#2f62ff; --accent-ink:#ffffff;
-  --btn:#0c0d10; --btn-ink:#ffffff; --glass:rgba(246,247,249,.82); color-scheme:light}}
-:root[data-theme="light"]{
-  --bg:#f6f7f9; --panel:#ffffff; --panel-2:#eff1f4; --line:#e2e5ea; --line-2:#d3d7de;
-  --fg:#0c0d10; --fg-2:#2c2f36; --muted:#5f6471;
-  --lightbox:#eef0f3; --lightbox-2:#e3e6eb;
-  --accent:#2f62ff; --accent-ink:#ffffff;
-  --btn:#0c0d10; --btn-ink:#ffffff; --glass:rgba(246,247,249,.82); color-scheme:light}
 *{box-sizing:border-box} [hidden]{display:none!important}
 html{direction:rtl}
 body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--f-sans);font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased}
@@ -49,18 +40,22 @@ a{color:inherit;text-decoration:none}
 :focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:8px}
 .wrap{max-width:var(--wrap);margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
 h1,h2,h3{margin:0;text-wrap:balance;letter-spacing:-.01em}
-.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums;letter-spacing:0}
+h1,h2,.sh h2,.pd h2,.ct h3{font-family:var(--f-display)}
 .label{font-family:var(--f-sans);font-size:13px;font-weight:500;letter-spacing:.01em;color:var(--muted)}
-.gradtext{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.gradtext{background:var(--grad);background-size:220% 100%;background-position:0 0;-webkit-background-clip:text;background-clip:text;color:transparent}
+.foil{background:var(--grad);background-size:220% 100%;background-position:100% 0;-webkit-background-clip:text;background-clip:text;color:transparent;padding-bottom:.08em}
+@media (prefers-reduced-motion:no-preference){.foil{animation:sheen 2.4s .35s cubic-bezier(.3,.6,.2,1) both}@keyframes sheen{from{background-position:100% 0}to{background-position:0 0}}}
+.strip{background:var(--gold);color:#000!important;border-bottom:0!important;font-weight:500}
 
 /* top strip + header */
 .strip{font-size:12.5px;color:var(--muted);border-bottom:1px solid var(--line);padding-block:7px;text-align:center}
-.hdr{position:sticky;top:env(safe-area-inset-top,0px);z-index:50;background:var(--glass);backdrop-filter:blur(18px) saturate(160%);-webkit-backdrop-filter:blur(18px) saturate(160%);border-bottom:1px solid var(--line)}
+.hdr{border-bottom-color:rgba(217,180,90,.35)!important;position:sticky;top:env(safe-area-inset-top,0px);z-index:50;background:var(--glass);backdrop-filter:blur(18px) saturate(160%);-webkit-backdrop-filter:blur(18px) saturate(160%);border-bottom:1px solid var(--line)}
 .hdr .wrap{display:flex;align-items:center;gap:28px;height:64px}
 .logo{display:flex;align-items:center;gap:10px;direction:ltr;flex:none}
 .logo svg{width:30px;height:30px}
-.wm{font-weight:700;font-size:20px;letter-spacing:-.02em}
-.wm b{font-weight:300}
+.wm{font-family:var(--f-display);font-weight:700;font-size:22px;letter-spacing:.01em}
+.wm b{font-weight:500;color:var(--gold)}
 .nav{display:flex;gap:6px}
 .nav a,.nav button{border:0;background:none;cursor:pointer;font-size:14.5px;color:var(--fg-2);padding:8px 12px;border-radius:999px}
 .nav a:hover,.nav button:hover{background:var(--panel-2);color:var(--fg)}
@@ -85,9 +80,10 @@ h1,h2,h3{margin:0;text-wrap:balance;letter-spacing:-.01em}
 
 /* hero */
 .hero{position:relative;overflow:hidden;border-bottom:1px solid var(--line)}
-.hero::before{content:"";position:absolute;inset:-30% -10% auto auto;width:70%;aspect-ratio:1;background:radial-gradient(closest-side,rgba(76,195,255,.16),transparent 70%);pointer-events:none}
+.hero::before{content:"";position:absolute;inset:-35% -12% auto auto;width:72%;aspect-ratio:1;background:radial-gradient(closest-side,rgba(217,180,90,.14),transparent 70%);pointer-events:none}
+.hero{border-bottom:1px solid var(--gold-deep)!important}
 .hero .wrap{position:relative;display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:48px;align-items:center;padding-block:64px 56px}
-.hero h1{font-size:clamp(40px,6vw,78px);font-weight:700;line-height:1.02;letter-spacing:-.03em;margin:14px 0 18px}
+.hero h1{font-size:clamp(46px,7vw,96px);font-weight:900;line-height:1;letter-spacing:-.01em;margin:14px 0 22px}
 .hero .lead{font-size:clamp(16px,1.5vw,19px);color:var(--fg-2);max-width:40ch;margin:0 0 26px}
 @media (max-width:900px){.hero .wrap{grid-template-columns:1fr;padding-block:36px}}
 
@@ -104,7 +100,7 @@ h1,h2,h3{margin:0;text-wrap:balance;letter-spacing:-.01em}
 
 /* pedestal visual */
 .pedestal{position:relative;aspect-ratio:1/1;max-width:560px;width:100%;justify-self:center}
-.disc{position:absolute;border-radius:50%;background:radial-gradient(circle at 50% 38%,#ffffff 0%,var(--lightbox) 55%,var(--lightbox-2) 100%);display:grid;place-items:center;overflow:hidden;box-shadow:0 30px 80px -30px rgba(76,195,255,.35)}
+.disc{position:absolute;border-radius:50%;background:radial-gradient(circle at 50% 38%,#ffffff 0%,var(--lightbox) 55%,var(--lightbox-2) 100%);display:grid;place-items:center;overflow:hidden;box-shadow:0 0 0 1px rgba(217,180,90,.55),0 30px 80px -30px rgba(217,180,90,.35)}
 .disc img{width:72%;height:72%;object-fit:contain;mix-blend-mode:multiply}
 .disc .sk{position:absolute;inset:0}
 .d1{inset:8% 8% 8% 8%}
@@ -159,7 +155,7 @@ h1,h2,h3{margin:0;text-wrap:balance;letter-spacing:-.01em}
 .thumb .sk{position:absolute;inset:0}
 .rowp .nm{font-weight:500;line-height:1.35}
 .rowp .sub{font-size:13px;color:var(--muted);margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.price{font-family:var(--f-mono);font-weight:600;font-size:17px;letter-spacing:-.01em;white-space:nowrap}
+.price{font-family:var(--f-sans);font-variant-numeric:tabular-nums;font-weight:600;font-size:17px;letter-spacing:-.01em;white-space:nowrap}
 .addb{width:38px;height:38px;border-radius:50%;border:1px solid var(--line-2);background:transparent;cursor:pointer;display:grid;place-items:center;color:var(--fg)}
 .addb:hover{background:var(--btn);color:var(--btn-ink);border-color:var(--btn)}
 .addb svg{width:18px;height:18px}
@@ -170,16 +166,17 @@ h1,h2,h3{margin:0;text-wrap:balance;letter-spacing:-.01em}
 @media (max-width:1100px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media (max-width:420px){.grid{gap:20px 10px}}
 .tile{cursor:pointer;display:flex;flex-direction:column;gap:10px;min-width:0}
-.tile .box{position:relative;aspect-ratio:1/1;border-radius:22px;background:var(--lightbox);display:grid;place-items:center;overflow:hidden}
+.tile .box{position:relative;aspect-ratio:1/1;border-radius:16px;box-shadow:inset 0 0 0 1px transparent;transition:box-shadow .2s;background:var(--lightbox);display:grid;place-items:center;overflow:hidden}
 .tile .box img{width:78%;height:78%;object-fit:contain;mix-blend-mode:multiply;transition:transform .45s cubic-bezier(.2,.8,.2,1)}
 .tile:hover .box img{transform:scale(1.05)}
 .tile .box .sk{position:absolute;inset:0}
 .tile .box .addb{position:absolute;left:10px;bottom:10px;background:var(--btn);color:var(--btn-ink);border:0;opacity:0;transform:translateY(6px);transition:all .2s}
+.tile:hover .box,.tile:focus-within .box{box-shadow:inset 0 0 0 2px var(--gold)}
 .tile:hover .box .addb,.tile:focus-within .box .addb{opacity:1;transform:none}
 @media (hover:none){.tile .box .addb{opacity:1;transform:none}}
 .tile .nm{font-size:14.5px;line-height:1.38;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .tile .meta{display:flex;align-items:center;justify-content:space-between;gap:8px}
-.flag{position:absolute;top:10px;right:10px;font-family:var(--f-mono);font-size:10.5px;letter-spacing:.08em;padding:4px 8px;border-radius:999px;background:rgba(12,13,16,.86);color:#fff}
+.flag{position:absolute;top:10px;right:10px;font-size:12px;font-weight:600;padding:4px 8px;border-radius:999px;background:rgba(12,13,16,.86);color:#fff}
 .st{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;color:var(--muted)}
 .st i{width:7px;height:7px;border-radius:50%;background:var(--ok)}
 .st.low i{background:var(--warn)} .st.out i{background:var(--bad)}
@@ -312,14 +309,14 @@ h1,h2,h3{margin:0;text-wrap:balance;letter-spacing:-.01em}
 .pbtn{all:unset;display:block;cursor:pointer;color:inherit;font:inherit;text-align:start;width:100%}
 .pbtn:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:6px}
 .tile .pbtn{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.a11yb{position:fixed;left:16px;bottom:16px;z-index:85;width:48px;height:48px;border-radius:50%;border:2px solid #fff;background:#1b5fd1;color:#fff;display:grid;place-items:center;cursor:pointer;box-shadow:0 6px 18px rgba(0,0,0,.35)}
+.a11yb{position:fixed;left:16px;bottom:16px;z-index:85;width:48px;height:48px;border-radius:50%;border:2px solid #000;background:var(--gold);color:#000;display:grid;place-items:center;cursor:pointer;box-shadow:0 6px 18px rgba(0,0,0,.35)}
 .a11yb svg{width:28px;height:28px}
 .a11yp{position:fixed;left:16px;bottom:74px;z-index:96;width:min(320px,calc(100vw - 32px));max-height:calc(100vh - 100px);overflow:auto;background:var(--panel);color:var(--fg);border:1px solid var(--line-2);border-radius:16px;padding:16px;box-shadow:0 18px 50px rgba(0,0,0,.4)}
 .a11yp[hidden]{display:none}
 .a11yp h2{font-size:18px;margin:0 0 4px}
 .a11yp .g{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
 .a11yp button{min-height:44px;border-radius:10px;border:1px solid var(--line-2);background:var(--panel-2);color:var(--fg);font:inherit;font-size:14px;cursor:pointer;padding:6px 8px}
-.a11yp button[aria-pressed="true"]{background:#1b5fd1;border-color:#1b5fd1;color:#fff}
+.a11yp button[aria-pressed="true"]{background:var(--gold);border-color:var(--gold);color:#000}
 .a11yp .row2{display:flex;gap:8px;margin-top:12px;align-items:center;justify-content:space-between}
 .a11yp a{color:inherit;text-decoration:underline;font-size:14px}
 :root.a11y-contrast:not([data-a11y-x]){--accent:#ffeb3b;--accent-ink:#000;--glass:#000;--btn:#ffeb3b;--btn-ink:#000;color-scheme:dark;--bg:#000;--panel:#000;--panel-2:#111;--line:#fff;--line-2:#fff;--fg:#fff;--fg-2:#fff;--muted:#fff}
@@ -366,7 +363,7 @@ footer.site .wrap{padding-block:44px 30px}
 <header class="hdr">
   <div class="wrap">
     <a class="logo" href="#home" aria-label="RomiTech – דף הבית">
-      <svg viewBox="0 0 32 32" aria-hidden="true"><defs><linearGradient id="lg1" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#9a86ff"/><stop offset=".52" stop-color="#4cc3ff"/><stop offset="1" stop-color="#45f0c4"/></linearGradient></defs><rect x="1" y="1" width="30" height="30" rx="9" fill="none" stroke="url(#lg1)" stroke-width="2"/><path d="M11.5 23.5V8.5h5.2a4.2 4.2 0 0 1 0 8.4h-5.2M16.4 16.9l5.2 6.6" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <svg viewBox="0 0 32 32" aria-hidden="true"><defs><linearGradient id="lg1" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#8a6a1f"/><stop offset=".5" stop-color="#f1d58a"/><stop offset="1" stop-color="#b8913a"/></linearGradient></defs><rect x="1" y="1" width="30" height="30" rx="9" fill="none" stroke="url(#lg1)" stroke-width="2"/><path d="M11.5 23.5V8.5h5.2a4.2 4.2 0 0 1 0 8.4h-5.2M16.4 16.9l5.2 6.6" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
       <span class="wm">Romi<b>Tech</b></span>
     </a>
     <nav class="nav" aria-label="ניווט ראשי">
@@ -389,7 +386,7 @@ footer.site .wrap{padding-block:44px 30px}
 <footer class="site"><div class="wrap">
   <div class="fg">
     <div>
-      <div class="logo"><svg viewBox="0 0 32 32" aria-hidden="true"><defs><linearGradient id="lg2" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#9a86ff"/><stop offset=".52" stop-color="#4cc3ff"/><stop offset="1" stop-color="#45f0c4"/></linearGradient></defs><rect x="1" y="1" width="30" height="30" rx="9" fill="none" stroke="url(#lg2)" stroke-width="2"/><path d="M11.5 23.5V8.5h5.2a4.2 4.2 0 0 1 0 8.4h-5.2M16.4 16.9l5.2 6.6" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="wm">Romi<b>Tech</b></span></div>
+      <div class="logo"><svg viewBox="0 0 32 32" aria-hidden="true"><defs><linearGradient id="lg2" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#8a6a1f"/><stop offset=".5" stop-color="#f1d58a"/><stop offset="1" stop-color="#b8913a"/></linearGradient></defs><rect x="1" y="1" width="30" height="30" rx="9" fill="none" stroke="url(#lg2)" stroke-width="2"/><path d="M11.5 23.5V8.5h5.2a4.2 4.2 0 0 1 0 8.4h-5.2M16.4 16.9l5.2 6.6" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="wm">Romi<b>Tech</b></span></div>
       <p style="color:var(--muted);font-size:14px;max-width:34ch;margin:14px 0 0">אביזרים לטלפון, לשעון ולאוזניות. מתאימים למכשיר שלך, עם מלאי מתעדכן ומשלוח עד הבית.</p>
     </div>
     <div><span class="label">קטגוריות</span><ul id="fc1"></ul></div>
@@ -472,7 +469,7 @@ function img(ii,alt){ if(ii==null||ii<0) return `<span class="noimg" role="img" 
 function hydrate(){}
 const nf=new Intl.NumberFormat('he-IL',{maximumFractionDigits:2});
 const priceOf=p=>{ let v=p.price/100*CONFIG.priceMultiplier; if(CONFIG.addVat) v*=1+CONFIG.vat; return Math.round(v*100)/100; };
-const money=v=>'₪'+nf.format(v);
+const nf2=new Intl.NumberFormat('he-IL',{minimumFractionDigits:2,maximumFractionDigits:2}); const money=v=>'₪'+(Number.isInteger(+v)?nf.format(v):nf2.format(v));
 const STK=[['במלאי',''],['מלאי נמוך','low'],['אזל','out']];
 const norm=s=>String(s||'').toLowerCase().replace(/[֑-ׇ]/g,'').replace(/[–—\-_/+.,()]/g,' ').replace(/\s+/g,' ').trim();
 const hasWords=(p,q)=>{ const t=norm(q).split(' ').filter(Boolean); return t.every(w=>p._w.includes(' '+w+' ')); };
@@ -530,7 +527,7 @@ function viewHome(){
   <section class="hero"><div class="wrap">
     <div>
       <span class="label"><span class="mono">${nf.format(ALL.length)}</span> מוצרים · <span class="mono">${DB.cats.filter(c=>c[2]).length}</span> קטגוריות · משלוח עד הבית</span>
-      <h1>האביזר הנכון.<br><span class="gradtext">למכשיר שלך.</span></h1>
+      <h1 class="foil">האביזר הנכון<br>למכשיר שלך.</h1>
       <p class="lead">בוחרים את הטלפון, ואנחנו מראים רק את מה שמתאים לו: כיסויים, מגני מסך, מטענים ואוזניות, עם מלאי מתעדכן ומשלוח עד הבית.</p>
       ${finderHTML()}
     </div>
