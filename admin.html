@@ -115,7 +115,8 @@ tr:last-child td{border-bottom:0}
       <button class="btn" id="setBtn">הגדרות</button>
     </div>
     <div class="box set" id="settings" hidden style="margin-bottom:14px">
-      <label>מחיר משלוח עד הבית (₪)<input id="shipFee" type="number" min="0" step="1" placeholder="ריק = יעודכן ללקוח"></label>
+      <label>מחיר משלוח עד הבית (₪)<input id="shipFee" type="number" min="0" step="1" placeholder="35"></label>
+      <label>משלוח חינם מסכום הזמנה (₪)<input id="shipFree" type="number" min="0" step="1" placeholder="ריק = בלי משלוח חינם"></label>
       <button class="btn main" id="saveSet">שמירה</button>
       <span class="muted" style="font-size:13px">איסוף עצמי מהחנות תמיד חינם.</span>
     </div>
@@ -166,8 +167,8 @@ async function load(){
   const { data, error }=await sb.from('rt_orders').select('*').order('created_at',{ascending:false}).limit(500);
   if(error){ toast('שגיאה בטעינה: '+error.message); return; }
   ORD=data||[]; render(); $('#upd').textContent='עודכן '+new Date().toLocaleTimeString('he-IL',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
-  const { data:s }=await sb.from('rt_settings').select('*').eq('k','ship_home_fee').maybeSingle();
-  if(s && document.activeElement!==$('#shipFee')) $('#shipFee').value=(s.v==null?'':s.v);
+  const { data:ss }=await sb.from('rt_settings').select('*').in('k',['ship_home_fee','ship_free_over']);
+  (ss||[]).forEach(s=>{ const el=s.k==='ship_home_fee'?$('#shipFee'):$('#shipFree'); if(document.activeElement!==el) el.value=(s.v==null?'':s.v); });
 }
 function render(){
   const live=ORD.filter(o=>o.status!=='test'); const today=new Date().toDateString(); const m=new Date();
@@ -192,8 +193,8 @@ document.addEventListener('click',e=>{
 $('#q').addEventListener('input',render);
 $('#refresh').onclick=load;
 $('#setBtn').onclick=()=>$('#settings').hidden=!$('#settings').hidden;
-$('#saveSet').onclick=async()=>{ const v=$('#shipFee').value.trim(); const val=v===''?null:Math.max(0,+v);
-  const { error }=await sb.from('rt_settings').upsert({k:'ship_home_fee',v:val}); toast(error?'לא נשמר: '+error.message:'מחיר המשלוח נשמר'); };
+$('#saveSet').onclick=async()=>{ const num=id=>{const v=$(id).value.trim(); return v===''?null:Math.max(0,+v);};
+  const { error }=await sb.from('rt_settings').upsert([{k:'ship_home_fee',v:num('#shipFee')},{k:'ship_free_over',v:num('#shipFree')}]); toast(error?'לא נשמר: '+error.message:'הגדרות המשלוח נשמרו'); };
 
 function openOrder(id){
   const o=ORD.find(x=>x.id===id); if(!o) return;
