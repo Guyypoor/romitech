@@ -478,6 +478,7 @@ const CONFIG = {
   priceMultiplier: 1,   // 1 = המחיר הקיים. 1.5 = תוספת 50%
   addVat: false,        // true = הוספת מע"מ למחיר המוצג
   vat: 0.18,
+  hideCats: ['retail'], // קטגוריות מוסתרות: 'retail'=ציוד לחנויות (גיא 21/10)
   hideSup: ['M'],       // ספקים מוסתרים: 'M'=מיאמי (אביאל), 'N'=ניל (נדב). להחזרת מיאמי: []
   hideFlagged: false,   // true = הסתרת 14 המוצרים עם מחיר חשוד
   hideOutOfStock: false,
@@ -894,7 +895,7 @@ window.addEventListener('hashchange',route);
 fetch('products.json').then(r=>r.json()).then(d=>{
   DB=d;
   ALL=d.p.map(a=>({id:a[0],name:a[1],sku:a[2],brand:a[3],cat:a[4],models:a[5],price:a[6],stock:a[7],img:a[8],flag:a[9],sup:a[10]||'M',alt:a[11]||''}))
-    .filter(p=>!(CONFIG.hideSup||[]).includes(p.sup)&&!(CONFIG.hideFlagged&&p.flag)&&!(CONFIG.hideOutOfStock&&p.stock===2));
+    .filter(p=>!(CONFIG.hideSup||[]).includes(p.sup)&&!(CONFIG.hideCats||[]).includes(d.cats[p.cat][0])&&!(CONFIG.hideFlagged&&p.flag)&&!(CONFIG.hideOutOfStock&&p.stock===2));
   ALL.forEach(p=>{ p._s=norm([p.name,p.sku,p.brand,p.models,d.cats[p.cat][1]].join(' ')); p._w=' '+norm(p.name+' '+p.models)+' '; BYID.set(p.id,p); });
   Object.keys(cart).forEach(id=>{ if(!BYID.has(+id)) delete cart[id]; }); saveCart();
   const vis=new Set(ALL.map(p=>p.img)); d.cats.forEach((c,i)=>{ const ps=ALL.filter(p=>p.cat===i); c[2]=ps.length; if(PICK[c[0]]==null||!vis.has(PICK[c[0]])){ const f=ps.find(p=>p.img!=null&&p.img>=0); PICK[c[0]]=f?f.img:-1; } });
