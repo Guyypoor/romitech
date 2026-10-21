@@ -61,7 +61,7 @@ textarea{height:80px;padding:10px 12px;resize:vertical}
 table{width:100%;border-collapse:collapse;min-width:820px}
 th,td{text-align:right;padding:11px 12px;border-bottom:1px solid var(--line);font-size:14px;white-space:nowrap}
 th{font-size:12px;color:var(--muted);font-weight:500;background:var(--panel-2)}
-tr.row{cursor:pointer} tr.row:hover td{background:var(--panel-2)}
+tr.row{cursor:pointer} .idb{all:unset;cursor:pointer;font:inherit;color:inherit;text-decoration:underline;text-underline-offset:3px} .idb:focus-visible{outline:2px solid var(--accent,#45f0c4);outline-offset:2px;border-radius:4px} tr.row:hover td{background:var(--panel-2)}
 tr:last-child td{border-bottom:0}
 .pill{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:2px 10px;font-size:12.5px;border:1px solid currentColor}
 .pill i{width:6px;height:6px;border-radius:50%;background:currentColor}
@@ -129,7 +129,7 @@ tr:last-child td{border-bottom:0}
 </main>
 
 <div class="scrim" id="scrim" hidden></div>
-<aside class="drawer" id="drawer" hidden aria-label="פרטי הזמנה"></aside>
+<aside class="drawer" id="drawer" hidden role="dialog" aria-modal="true" aria-label="פרטי הזמנה"></aside>
 <div class="toast" id="toast" hidden></div>
 
 <script>
@@ -180,13 +180,14 @@ function render(){
   const q=$('#q').value.trim().toLowerCase().replace(/[-\s]/g,'');
   const list=ORD.filter(o=>inTab(o,tab)).filter(o=>!q||[o.id,o.name,o.phone].some(v=>String(v||'').toLowerCase().replace(/[-\s]/g,'').includes(q)));
   $('#rows').innerHTML=list.length?list.map(o=>`<tr class="row" data-id="${esc(o.id)}">
-    <td class="mono">${esc(o.id)}</td><td class="mono">${fdt(o.created_at)}</td><td>${esc(o.name)}</td><td class="mono">${esc(o.phone)}</td>
+    <td class="mono"><button type="button" class="idb" data-open="${esc(o.id)}" aria-label="פתיחת הזמנה ${esc(o.id)} של ${esc(o.name)}">${esc(o.id)}</button></td><td class="mono">${fdt(o.created_at)}</td><td>${esc(o.name)}</td><td class="mono">${esc(o.phone)}</td>
     <td>${o.ship_method==='pickup'?'איסוף':'משלוח'}</td><td class="mono">${(o.items||[]).reduce((a,i)=>a+i.q,0)}</td><td class="mono">${money(o.total)}</td>
     <td>${pill('p-'+o.pay_status,PAY[o.pay_status]||o.pay_status)}</td><td>${pill('s-'+o.status,ST[o.status]||o.status)}</td></tr>`).join('')
     :`<tr><td colspan="9" class="empty">אין הזמנות כאן.</td></tr>`;
 }
 document.addEventListener('click',e=>{
   const t=e.target.closest('[data-t]'); if(t){ tab=t.dataset.t; render(); return; }
+  const ob=e.target.closest('[data-open]'); if(ob){ openOrder(ob.dataset.open); return; }
   const r=e.target.closest('tr.row'); if(r){ openOrder(r.dataset.id); return; }
   if(e.target.closest('[data-x]')||e.target===$('#scrim')) closeOrder();
 });
@@ -227,13 +228,16 @@ function openOrder(id){
     <div class="box"><h3>היסטוריה</h3><div class="log">${(o.log||[]).slice().reverse().map(l=>`<span>${fdt(l.at)} · ${esc(l.ev==='created'?'נוצרה באתר':l.ev==='admin'?'עודכנה בניהול: '+(ST[l.status]||l.status)+' / '+(PAY[l.pay]||l.pay):l.ev==='ha'?'עדכון אוטומטי: '+JSON.stringify(l.set):l.ev)}</span>`).join('')||'—'}</div></div>
   </div>
   <div class="df">${o.status==='new'?`<button class="btn main" id="dApprove">אישור הזמנה</button>`:''}<button class="btn ${o.status==='new'?'':'main'}" id="dSave">שמירה</button><span class="sp"></span>${o.status!=='cancelled'?`<button class="btn" id="dCancel" style="color:var(--bad)">ביטול הזמנה</button>`:''}</div>`;
-  $('#drawer').hidden=false; $('#scrim').hidden=false;
+  aLast=document.activeElement; $('#drawer').hidden=false; $('#scrim').hidden=false; setTimeout(()=>{ const b=$('#drawer [data-x]'); if(b) b.focus(); },30);
   const save=async(patch)=>{ const { error }=await sb.from('rt_orders').update(patch).eq('id',o.id); if(error){ toast('לא נשמר: '+error.message); return; } toast('נשמר'); await load(); openOrder(o.id); };
   $('#dSave').onclick=()=>save({status:$('#dSt').value,pay_status:$('#dPay').value,admin_note:$('#dNote').value.trim()||null});
   if($('#dApprove')) $('#dApprove').onclick=()=>save({status:'approved',admin_note:$('#dNote').value.trim()||null});
   if($('#dCancel')) $('#dCancel').onclick=()=>{ const b=$('#dCancel'); if(b.dataset.sure){ save({status:'cancelled'}); } else { b.dataset.sure='1'; b.textContent='ללחוץ שוב לביטול'; } };
 }
-function closeOrder(){ $('#drawer').hidden=true; $('#scrim').hidden=true; }
+let aLast=null;
+function closeOrder(){ if($('#drawer').hidden) return; $('#drawer').hidden=true; $('#scrim').hidden=true; if(aLast&&document.contains(aLast)) aLast.focus(); else { const b=document.querySelector('[data-open="'+(aLast&&aLast.dataset&&aLast.dataset.open||'')+'"]'); if(b) b.focus(); } }
+document.addEventListener('keydown',e=>{ if(e.key!=='Tab'||$('#drawer').hidden) return; const fs=[...$('#drawer').querySelectorAll('button:not([disabled]),select,textarea,input,a[href]')].filter(x=>x.getClientRects().length); if(!fs.length) return; const a=fs[0],z=fs[fs.length-1];
+  if(!$('#drawer').contains(document.activeElement)){ e.preventDefault(); a.focus(); } else if(e.shiftKey&&document.activeElement===a){ e.preventDefault(); z.focus(); } else if(!e.shiftKey&&document.activeElement===z){ e.preventDefault(); a.focus(); } });
 document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeOrder(); });
 sb.auth.onAuthStateChange((ev)=>{ if(ev==='SIGNED_OUT'){ clearInterval(timer); } });
 boot();

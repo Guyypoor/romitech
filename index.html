@@ -229,6 +229,8 @@ h1,h2,h3{margin:0;text-wrap:balance;letter-spacing:-.01em}
 .scrim.on{opacity:1;pointer-events:auto}
 .panel{position:fixed;z-index:90;top:0;bottom:0;left:0;width:min(760px,100vw);background:var(--bg);border-right:1px solid var(--line);transform:translateX(-102%);transition:transform .32s cubic-bezier(.2,.8,.2,1);display:flex;flex-direction:column;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);padding-left:env(safe-area-inset-left,0px)}
 .panel.on{transform:none}
+.panel,.sheet{visibility:hidden}.panel.on,.sheet.on{visibility:visible}
+@media (prefers-reduced-motion:no-preference){.panel{transition:transform .32s cubic-bezier(.2,.8,.2,1),visibility 0s .32s}.panel.on{transition:transform .32s cubic-bezier(.2,.8,.2,1)}}
 .panel.narrow{width:min(460px,100vw)}
 .ph{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 22px;border-bottom:1px solid var(--line)}
 .pb{flex:1;overflow:auto;padding:22px}
@@ -304,6 +306,30 @@ h1,h2,h3{margin:0;text-wrap:balance;letter-spacing:-.01em}
 /* mega menu + search */
 .sheet{position:fixed;z-index:95;inset:0 0 auto 0;background:var(--bg);border-bottom:1px solid var(--line);transform:translateY(-104%);transition:transform .3s cubic-bezier(.2,.8,.2,1);padding-top:env(safe-area-inset-top,0px);max-height:90vh;overflow:auto}
 .sheet.on{transform:none}
+@media (prefers-reduced-motion:no-preference){.sheet{transition:transform .3s cubic-bezier(.2,.8,.2,1),visibility 0s .3s}.sheet.on{transition:transform .3s cubic-bezier(.2,.8,.2,1)}}
+.skip{position:fixed;top:8px;right:8px;z-index:200;background:var(--fg);color:var(--bg);padding:10px 16px;border-radius:10px;font-weight:600;transform:translateY(-150%)}
+.skip:focus{transform:none}
+.pbtn{all:unset;display:block;cursor:pointer;color:inherit;font:inherit;text-align:start;width:100%}
+.pbtn:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:6px}
+.tile .pbtn{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.a11yb{position:fixed;left:16px;bottom:16px;z-index:85;width:48px;height:48px;border-radius:50%;border:2px solid #fff;background:#1b5fd1;color:#fff;display:grid;place-items:center;cursor:pointer;box-shadow:0 6px 18px rgba(0,0,0,.35)}
+.a11yb svg{width:28px;height:28px}
+.a11yp{position:fixed;left:16px;bottom:74px;z-index:96;width:min(320px,calc(100vw - 32px));max-height:calc(100vh - 100px);overflow:auto;background:var(--panel);color:var(--fg);border:1px solid var(--line-2);border-radius:16px;padding:16px;box-shadow:0 18px 50px rgba(0,0,0,.4)}
+.a11yp[hidden]{display:none}
+.a11yp h2{font-size:18px;margin:0 0 4px}
+.a11yp .g{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+.a11yp button{min-height:44px;border-radius:10px;border:1px solid var(--line-2);background:var(--panel-2);color:var(--fg);font:inherit;font-size:14px;cursor:pointer;padding:6px 8px}
+.a11yp button[aria-pressed="true"]{background:#1b5fd1;border-color:#1b5fd1;color:#fff}
+.a11yp .row2{display:flex;gap:8px;margin-top:12px;align-items:center;justify-content:space-between}
+.a11yp a{color:inherit;text-decoration:underline;font-size:14px}
+:root.a11y-contrast:not([data-a11y-x]){--bg:#000;--panel:#000;--panel-2:#111;--line:#fff;--line-2:#fff;--fg:#fff;--fg-2:#fff;--muted:#fff}
+html.a11y-contrast img{filter:none}
+html.a11y-contrast .btn-main{background:#ffeb3b!important;color:#000!important}
+html.a11y-links a,html.a11y-links button.pbtn,html.a11y-links .lnk{text-decoration:underline!important;text-underline-offset:3px}
+html.a11y-links :focus-visible{outline:3px solid #ffbf00!important;outline-offset:3px}
+html.a11y-font body,html.a11y-font button,html.a11y-font input,html.a11y-font select,html.a11y-font textarea{font-family:Arial,Helvetica,sans-serif!important;letter-spacing:.02em;word-spacing:.08em}
+html.a11y-still *,html.a11y-still *::before,html.a11y-still *::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+html.a11y-cursor,html.a11y-cursor *{cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 24 24'%3E%3Cpath d='M4 2l16 10-7 1.5L9.5 21z' fill='%23000' stroke='%23fff' stroke-width='1.5'/%3E%3C/svg%3E") 4 2,auto!important}
 .sheet .wrap{padding-block:20px 30px}
 .sbar{display:flex;align-items:center;gap:14px;border-bottom:1px solid var(--line);padding-bottom:14px}
 .sbar svg{width:22px;height:22px;color:var(--muted);flex:none}
@@ -336,6 +362,7 @@ footer.site .wrap{padding-block:44px 30px}
 <body>
 <div class="strip">גרסת בנייה · המחירים זמניים ויתעדכנו לפני העלייה לאוויר</div>
 
+<a class="skip" href="#app" data-skip>דילוג לתוכן הראשי</a>
 <header class="hdr">
   <div class="wrap">
     <a class="logo" href="#home" aria-label="RomiTech – דף הבית">
@@ -357,7 +384,7 @@ footer.site .wrap{padding-block:44px 30px}
   </div>
 </header>
 
-<main id="app"><div class="loading">טוען…</div></main>
+<main id="app" tabindex="-1"><div class="loading">טוען…</div></main>
 
 <footer class="site"><div class="wrap">
   <div class="fg">
@@ -367,27 +394,42 @@ footer.site .wrap{padding-block:44px 30px}
     </div>
     <div><span class="label">קטגוריות</span><ul id="fc1"></ul></div>
     <div><span class="label">עוד</span><ul id="fc2"></ul></div>
-    <div><span class="label">שירות</span><ul><li>משלוחים</li><li>ביטול עסקה והחזרות</li><li>תקנון</li><li>מדיניות פרטיות</li><li>הצהרת נגישות</li></ul></div>
+    <div><span class="label">שירות</span><ul><li>משלוחים</li><li>ביטול עסקה והחזרות</li><li>תקנון</li><li>מדיניות פרטיות</li><li><a href="accessibility.html">הצהרת נגישות</a></li></ul></div>
   </div>
   <div class="legal"><span>© 2026 RomiTech</span><span>ביטול עסקה לפי חוק הגנת הצרכן · תשלום מאובטח</span></div>
 </div></footer>
 
 <div class="scrim" id="scrim"></div>
-<aside class="panel" id="pp" aria-label="פרטי מוצר"></aside>
-<aside class="panel narrow" id="cart" aria-label="סל הקניות">
+<aside class="panel" id="pp" role="dialog" aria-modal="true" aria-label="פרטי מוצר"></aside>
+<aside class="panel narrow" id="cart" role="dialog" aria-modal="true" aria-label="סל הקניות">
   <div class="ph"><h2 style="font-size:22px">הסל</h2><button class="ib" data-close aria-label="סגירה"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
   <div class="pb" id="cartBody"></div>
   <div class="pf" id="cartFoot"></div>
 </aside>
-<div class="sheet" id="search" role="dialog" aria-label="חיפוש"><div class="wrap">
-  <div class="sbar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input id="q" type="search" placeholder="מה מחפשים? דגם, מוצר או ברקוד" autocomplete="off"><button class="ib" data-close aria-label="סגירה"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
+<div class="sheet" id="search" role="dialog" aria-modal="true" aria-label="חיפוש"><div class="wrap">
+  <div class="sbar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input id="q" type="search" aria-label="חיפוש מוצר" placeholder="מה מחפשים? דגם, מוצר או ברקוד" autocomplete="off"><button class="ib" data-close aria-label="סגירה"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
   <div id="sr"></div>
 </div></div>
-<div class="sheet" id="mega" role="dialog" aria-label="קטגוריות"><div class="wrap">
+<div class="sheet" id="mega" role="dialog" aria-modal="true" aria-label="קטגוריות"><div class="wrap">
   <div class="sh" style="margin-bottom:0"><div><span class="label">כל הקטגוריות</span><h2 style="font-size:28px;margin-top:4px">מה מחפשים היום?</h2></div><button class="ib" data-close aria-label="סגירה"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
   <div class="megagrid" id="megagrid"></div>
 </div></div>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
+<button class="a11yb" id="a11yBtn" type="button" aria-label="תפריט נגישות" aria-expanded="false" aria-controls="a11yPanel"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="12" cy="4" r="2"/><path d="M19 8.5c-2.2.5-4.6.8-7 .8s-4.8-.3-7-.8l-.5 1.9c1.9.5 3.9.8 5.8.9V14l-2.1 7.2 1.9.6L12 15.5l1.9 6.3 1.9-.6L13.7 14v-2.7c1.9-.1 3.9-.4 5.8-.9z"/></svg></button>
+<div class="a11yp" id="a11yPanel" role="dialog" aria-label="תפריט נגישות" hidden>
+  <h2>נגישות</h2>
+  <p style="margin:0;font-size:13.5px;color:var(--fg-2)">ההגדרות נשמרות בדפדפן הזה.</p>
+  <div class="row2" role="group" aria-label="גודל טקסט"><span style="font-size:14px">גודל טקסט</span><span style="display:flex;gap:8px"><button type="button" data-a11y-zoom="-1" aria-label="הקטנת טקסט">א−</button><button type="button" data-a11y-zoom="1" aria-label="הגדלת טקסט">א+</button></span></div>
+  <div class="g">
+    <button type="button" data-a11y="contrast" aria-pressed="false">ניגודיות גבוהה</button>
+    <button type="button" data-a11y="links" aria-pressed="false">הדגשת קישורים ופוקוס</button>
+    <button type="button" data-a11y="font" aria-pressed="false">גופן קריא</button>
+    <button type="button" data-a11y="still" aria-pressed="false">עצירת אנימציות</button>
+    <button type="button" data-a11y="cursor" aria-pressed="false">סמן עכבר גדול</button>
+    <button type="button" data-a11y-reset>איפוס הגדרות</button>
+  </div>
+  <div class="row2"><a href="accessibility.html">הצהרת נגישות</a><button type="button" data-a11y-close>סגירה</button></div>
+</div>
 
 <script>
 /* ===== הגדרות תמחור ותצוגה ===== */
@@ -439,7 +481,7 @@ const PICK={cases:262,screen:935,otterbox:816,cables:3,audio:652,chargers:841,ba
 
 /* ===== סל ===== */
 let cart={}; try{cart=JSON.parse(localStorage.getItem('romitech.cart')||'{}')||{}}catch(e){cart={}}
-const saveCart=()=>{ try{localStorage.setItem('romitech.cart',JSON.stringify(cart))}catch(e){} $('#cartN').textContent=cartCount(); };
+const saveCart=()=>{ try{localStorage.setItem('romitech.cart',JSON.stringify(cart))}catch(e){} $('#cartN').textContent=cartCount(); $('#openCart').setAttribute('aria-label','סל הקניות, '+cartCount()+' פריטים'); };
 const cartCount=()=>Object.values(cart).reduce((a,b)=>a+b,0);
 const cartTotal=()=>Object.entries(cart).reduce((a,[id,q])=>{const p=BYID.get(+id);return a+(p?priceOf(p)*q:0)},0);
 function addToCart(id,q=1){ const p=BYID.get(id); if(!p) return; if(p.stock===2){toast('המוצר אזל מהמלאי');return} cart[id]=(cart[id]||0)+q; saveCart(); toast('נוסף לסל · '+p.name); }
@@ -450,17 +492,17 @@ let tt; function toast(t){ const e=$('#toast'); e.textContent=t; e.classList.add
 const stk=p=>{ const [l,c]=STK[p.stock]; return `<span class="st ${c}"><i></i>${l}</span>`; };
 const sub=p=>[p.brand, p.models].filter(Boolean).join(' · ') || DB.cats[p.cat][1];
 function tile(p){
-  return `<article class="tile" data-pid="${p.id}" tabindex="0" aria-label="${esc(p.name)}">
-    <div class="box">${img(p.img,p.name)}${p.stock===2?'<span class="flag">SOLD OUT</span>':''}${p.stock<2?`<button class="addb" data-add="${p.id}" aria-label="הוספה לסל">${IC.plus}</button>`:''}</div>
-    <div class="nm">${esc(p.name)}</div>
+  return `<article class="tile" data-pid="${p.id}">
+    <div class="box">${img(p.img,p.name)}${p.stock===2?'<span class="flag">אזל</span>':''}${p.stock<2?`<button class="addb" data-add="${p.id}" aria-label="הוספה לסל: ${esc(p.name)}">${IC.plus}</button>`:''}</div>
+    <div class="nm"><button type="button" class="pbtn" aria-label="${esc(p.name)} – פרטי המוצר">${esc(p.name)}</button></div>
     <div class="meta"><span class="price">${money(priceOf(p))}</span>${stk(p)}</div></article>`;
 }
 function row(p,withAdd=true){
-  return `<div class="rowp" data-pid="${p.id}" tabindex="0" role="button" aria-label="${esc(p.name)}">
+  return `<div class="rowp" data-pid="${p.id}">
     <div class="thumb">${img(p.img,p.name)}</div>
-    <div style="min-width:0"><div class="nm">${esc(p.name)}</div><div class="sub">${esc(sub(p))}</div></div>
+    <div style="min-width:0"><div class="nm"><button type="button" class="pbtn" aria-label="${esc(p.name)} – פרטי המוצר">${esc(p.name)}</button></div><div class="sub">${esc(sub(p))}</div></div>
     <span class="price">${money(priceOf(p))}</span>
-    ${withAdd?(p.stock<2?`<button class="addb" data-add="${p.id}" aria-label="הוספה לסל">${IC.plus}</button>`:stk(p)):''}</div>`;
+    ${withAdd?(p.stock<2?`<button class="addb" data-add="${p.id}" aria-label="הוספה לסל: ${esc(p.name)}">${IC.plus}</button>`:stk(p)):''}</div>`;
 }
 
 /* ===== דף הבית ===== */
@@ -577,7 +619,7 @@ function viewShop(){
 function renderRes(){
   const r=results();
   const P=[]; if(shop.device) P.push(['device',shop.device]); shop.brands.forEach(b=>P.push(['brand',b])); if(shop.inStock) P.push(['stock','רק במלאי']); if(shop.q.trim()) P.push(['q','„'+shop.q.trim()+'”']);
-  $('#pills').innerHTML=`<span style="color:var(--muted);font-size:13.5px;align-self:center"><span class="mono">${nf.format(r.length)}</span> תוצאות</span>`+P.map(([k,v])=>`<span class="pill" ${k==='device'?'dir="ltr"':''}>${esc(v)}<button data-unpill="${k}|${esc(v)}" aria-label="הסרה">×</button></span>`).join('');
+  $('#pills').innerHTML=`<span style="color:var(--muted);font-size:13.5px;align-self:center"><span class="mono">${nf.format(r.length)}</span> תוצאות</span>`+P.map(([k,v])=>`<span class="pill" ${k==='device'?'dir="ltr"':''}>${esc(v)}<button data-unpill="${k}|${esc(v)}" aria-label="הסרת סינון: ${esc(v)}">×</button></span>`).join('');
   const part=r.slice(0,shop.shown);
   $('#res').innerHTML=!r.length?`<div class="empty">אין מוצרים שמתאימים לסינון הזה. נסה להסיר אחד מהמסננים.</div>`
     : shop.view==='grid'?`<div class="grid">${part.map(tile).join('')}</div>`:`<div class="rows">${part.map(p=>row(p)).join('')}</div>`;
@@ -614,7 +656,7 @@ function openProduct(id){
 /* ===== סל וקופה ===== */
 function renderCart(){
   const ids=Object.keys(cart);
-  $('#cartBody').innerHTML=ids.length?ids.map(id=>{const p=BYID.get(+id); if(!p) return ''; const q=cart[id]; return `<div class="line"><div class="thumb" style="width:64px;height:64px">${img(p.img,p.name)}</div><div style="min-width:0"><div class="nm">${esc(p.name)}</div><div class="ctl"><div class="qty"><button data-inc="${id}" aria-label="הוספה">+</button><span>${q}</span><button data-dec="${id}" aria-label="הורדה">−</button></div><button class="rm" data-rm="${id}">הסרה</button></div></div><span class="price" style="font-size:15px">${money(priceOf(p)*q)}</span></div>`}).join('')
+  $('#cartBody').innerHTML=ids.length?ids.map(id=>{const p=BYID.get(+id); if(!p) return ''; const q=cart[id]; return `<div class="line"><div class="thumb" style="width:64px;height:64px">${img(p.img,p.name)}</div><div style="min-width:0"><div class="nm">${esc(p.name)}</div><div class="ctl"><div class="qty"><button data-inc="${id}" aria-label="הוספת יחידה: ${esc(p.name)}">+</button><span aria-label="כמות ${q}">${q}</span><button data-dec="${id}" aria-label="הורדת יחידה: ${esc(p.name)}">−</button></div><button class="rm" data-rm="${id}" aria-label="הסרה מהסל: ${esc(p.name)}">הסרה</button></div></div><span class="price" style="font-size:15px">${money(priceOf(p)*q)}</span></div>`}).join('')
     :`<div class="empty">הסל ריק.<br><br><a class="lnk" href="#shop" data-close>לחנות ←</a></div>`;
   $('#cartFoot').innerHTML=ids.length?`<div class="tot"><span>סה״כ</span><span class="price">${money(cartTotal())}</span></div><span style="color:var(--muted);font-size:13px">${esc(freeNote()||'דמי המשלוח יחושבו בקופה.')}${SHIPCFG.free!=null&&cartTotal()<SHIPCFG.free?' · משלוח '+money(SHIPCFG.fee):''} · איסוף עצמי מהחנות חינם</span><button class="btn btn-main" id="co">לתשלום</button>`:'';
   hydrate($('#cartBody')); const co=$('#co'); if(co) co.onclick=checkout;
@@ -645,13 +687,13 @@ function checkout(){
     <div class="ships" role="radiogroup" aria-label="שיטת משלוח">${Object.entries(SHIP).map(([k,s])=>`<label class="opt ${co.ship===k?'on':''}"><input type="radio" name="ship" value="${k}" ${co.ship===k?'checked':''}><span><b>${esc(s.label)}</b><small>${esc(s.sub)}${k==='home'&&SHIPCFG.free!=null?' · חינם מעל '+money(SHIPCFG.free):''}</small></span><span class="mono">${feeOf(k)===0?'חינם':money(feeOf(k))}</span></label>`).join('')}</div>
     <span class="label" style="display:block;margin-top:18px">פרטים</span>
     <form id="cof" novalidate style="margin-top:12px">
-      <label>שם מלא<input id="co-name" autocomplete="name" value="${esc(f.name||'')}"></label>
-      <label>טלפון נייד<input id="co-phone" inputmode="tel" autocomplete="tel" placeholder="05X-XXXXXXX" value="${esc(f.phone||'')}"></label>
+      <label>שם מלא (חובה)<input id="co-name" autocomplete="name" aria-required="true" value="${esc(f.name||'')}"></label>
+      <label>טלפון נייד (חובה)<input id="co-phone" inputmode="tel" aria-required="true" autocomplete="tel" placeholder="05X-XXXXXXX" value="${esc(f.phone||'')}"></label>
       <label class="full">דוא״ל לקבלה<input id="co-email" type="email" autocomplete="email" value="${esc(f.email||'')}"></label>
-      <label class="addr">עיר<input id="co-city" autocomplete="address-level2" value="${esc(f.city||'')}"></label>
-      <label class="addr">רחוב ומספר<input id="co-street" autocomplete="street-address" value="${esc(f.street||'')}"></label>
+      <label class="addr">עיר (חובה)<input id="co-city" aria-required="true" autocomplete="address-level2" value="${esc(f.city||'')}"></label>
+      <label class="addr">רחוב ומספר (חובה)<input id="co-street" aria-required="true" autocomplete="street-address" value="${esc(f.street||'')}"></label>
       <label class="full">הערות<textarea id="co-notes" placeholder="קומה, קוד כניסה…">${esc(f.notes||'')}</textarea></label>
-      <p id="coerr" class="full" style="color:var(--bad);margin:0;font-size:14px" hidden></p>
+      <p id="coerr" class="full" role="alert" style="color:var(--bad);margin:0;font-size:14px" hidden></p>
     </form></div>`;
   const syncShip=()=>{ $$('#cartBody .addr').forEach(l=>l.hidden=co.ship==='pickup'); };
   $$('input[name=ship]').forEach(r=>r.onchange=()=>{ co.ship=r.value; $$('.ships .opt').forEach(o=>o.classList.toggle('on',o.querySelector('input').checked)); syncShip(); $('#tonext').textContent='המשך לתשלום · '+money(grand()); });
@@ -733,8 +775,28 @@ function renderSearch(){
 function renderMega(){ $('#megagrid').innerHTML=DB.cats.map(c=>`<button data-go="${c[0]}"><span class="thumb">${img(PICK[c[0]]??0,c[1])}</span><span style="min-width:0"><div class="nm">${esc(c[1])}</div><div class="label">${c[2]} פריטים</div></span></button>`).join(''); hydrate($('#megagrid')); }
 
 /* ===== פתיחה/סגירה וניתוב ===== */
-function openEl(s){ $$('.sheet.on').forEach(e=>e.classList.remove('on')); $(s).classList.add('on'); if($(s).classList.contains('panel')) $('#scrim').classList.add('on'); document.documentElement.style.overflow='hidden'; }
-function closeAll(){ $$('.panel.on,.sheet.on').forEach(e=>e.classList.remove('on')); $('#scrim').classList.remove('on'); document.documentElement.style.overflow=''; if(lastFocus&&lastFocus.focus) try{lastFocus.focus({preventScroll:true})}catch(e){} }
+const BG=()=>['.hdr','#app','footer.site','.skip','#a11yBtn'].map(x=>$(x)).filter(Boolean);
+const FOC='a[href],button:not([disabled]),input:not([disabled]):not([type=hidden]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])';
+function openEl(s){ $$('.sheet.on').forEach(e=>e.classList.remove('on')); const el=$(s); el.classList.add('on'); if(el.classList.contains('panel')) $('#scrim').classList.add('on'); document.documentElement.style.overflow='hidden'; BG().forEach(x=>x.inert=true);
+  setTimeout(()=>{ if(el.contains(document.activeElement)) return; const f=[...el.querySelectorAll(FOC)].find(x=>!x.closest('[hidden]')&&x.getClientRects().length); (f||el).focus({preventScroll:true}); },70); }
+function closeAll(){ $$('.panel.on,.sheet.on').forEach(e=>e.classList.remove('on')); $('#scrim').classList.remove('on'); document.documentElement.style.overflow=''; BG().forEach(x=>x.inert=false); if(lastFocus&&lastFocus.focus&&document.contains(lastFocus)) try{lastFocus.focus({preventScroll:true})}catch(e){} }
+document.addEventListener('keydown',e=>{ if(e.key!=='Tab') return; const el=$('.panel.on')||$('.sheet.on')||(!$('#a11yPanel').hidden&&$('#a11yPanel')); if(!el) return;
+  const fs=[...el.querySelectorAll(FOC)].filter(x=>!x.closest('[hidden]')&&x.getClientRects().length); if(!fs.length) return; const a=fs[0], z=fs[fs.length-1];
+  if(!el.contains(document.activeElement)){ e.preventDefault(); a.focus(); return; }
+  if(e.shiftKey&&document.activeElement===a){ e.preventDefault(); z.focus(); } else if(!e.shiftKey&&document.activeElement===z){ e.preventDefault(); a.focus(); } });
+/* תפריט נגישות */
+(function(){ const K='romitech.a11y'; let st={}; try{st=JSON.parse(localStorage.getItem(K)||'{}')||{}}catch(e){}
+  const root=document.documentElement, btn=$('#a11yBtn'), pan=$('#a11yPanel');
+  const apply=()=>{ ['contrast','links','font','still','cursor'].forEach(k=>{ root.classList.toggle('a11y-'+k,!!st[k]); const b=$(`[data-a11y="${k}"]`); if(b) b.setAttribute('aria-pressed',st[k]?'true':'false'); }); const z=st.zoom||0; document.body.style.zoom=z?String(1+z*0.15):''; try{localStorage.setItem(K,JSON.stringify(st))}catch(e){} };
+  const close=()=>{ pan.hidden=true; btn.setAttribute('aria-expanded','false'); btn.focus(); };
+  btn.onclick=()=>{ const o=pan.hidden; pan.hidden=!o; btn.setAttribute('aria-expanded',String(o)); if(o) setTimeout(()=>pan.querySelector('button').focus(),30); };
+  pan.addEventListener('click',e=>{ const t=e.target.closest('button'); if(!t) return;
+    if(t.dataset.a11y){ st[t.dataset.a11y]=!st[t.dataset.a11y]; apply(); }
+    else if(t.dataset.a11yZoom){ st.zoom=Math.max(0,Math.min(4,(st.zoom||0)+(+t.dataset.a11yZoom))); apply(); toast('גודל טקסט: '+Math.round((1+(st.zoom||0)*0.15)*100)+'%'); }
+    else if(t.hasAttribute('data-a11y-reset')){ st={}; apply(); toast('הגדרות הנגישות אופסו'); }
+    else if(t.hasAttribute('data-a11y-close')) close(); });
+  pan.addEventListener('keydown',e=>{ if(e.key==='Escape'){ e.stopPropagation(); close(); } });
+  apply(); })();
 function route(){
   const h=(location.hash||'#home').slice(1);
   $$('.nav [data-nav]').forEach(a=>a.classList.toggle('on',a.dataset.nav===h));
@@ -747,6 +809,7 @@ const go=t=>{ if(location.hash==='#'+t) route(); else location.hash=t; };
 
 document.addEventListener('click',e=>{
   const t=e.target;
+  if(t.closest('[data-skip]')){ e.preventDefault(); const m=$('#app'); m.focus(); m.scrollIntoView(); return; }
   const a=t.closest('[data-add]'); if(a){ e.stopPropagation(); addToCart(+a.dataset.add); return; }
   if(t.closest('[data-close]')) closeAll();
   const op=t.closest('[data-open]'); if(op){ lastFocus=op; renderMega(); openEl('#'+op.dataset.open); return; }
@@ -767,7 +830,7 @@ document.addEventListener('click',e=>{
   const rm=t.closest('[data-rm]'); if(rm){ setQty(rm.dataset.rm,0); return; }
 });
 document.addEventListener('keydown',e=>{
-  if(e.key==='Escape') closeAll();
+  if(e.key==='Escape'&&$('#a11yPanel').hidden) closeAll();
   if(e.key==='Enter'&&e.target.matches('[data-pid]')) openProduct(+e.target.dataset.pid);
   if(e.key==='/'&&!e.target.matches('input,textarea')){ e.preventDefault(); $('#openSearch').click(); }
 });
