@@ -437,6 +437,7 @@ const CONFIG = {
   priceMultiplier: 1,   // 1 = המחיר הקיים. 1.5 = תוספת 50%
   addVat: false,        // true = הוספת מע"מ למחיר המוצג
   vat: 0.18,
+  hideSup: ['M'],       // ספקים מוסתרים: 'M'=מיאמי (אביאל), 'N'=ניל (נדב). להחזרת מיאמי: []
   hideFlagged: false,   // true = הסתרת 14 המוצרים עם מחיר חשוד
   hideOutOfStock: false,
   pageSize: 36
@@ -523,12 +524,12 @@ function viewHome(){
   const inS=ALL.filter(p=>p.stock<2);
   const fresh=inS.slice().sort((a,b)=>b.id-a.id).filter((p,i,a)=>a.findIndex(x=>x.img===p.img)===i).slice(0,8);
   const B=[['cases','big'],['otterbox','wide'],['screen',''],['audio',''],['chargers','wide'],['apple',''],['speakers','']];
-  const rest=DB.cats.map((c,i)=>i).filter(i=>!B.some(b=>b[0]===DB.cats[i][0]));
+  const rest=DB.cats.map((c,i)=>i).filter(i=>DB.cats[i][2]&&!B.some(b=>b[0]===DB.cats[i][0]));
   const brands=['OTTERBOX','BLAZE','ANKER','SAMSUNG','APPLE','SPG','IPAKY','ONEPLUS','SANDISK','LITO'];
   $('#app').innerHTML=`
   <section class="hero"><div class="wrap">
     <div>
-      <span class="label"><span class="mono">${nf.format(ALL.length)}</span> מוצרים · <span class="mono">${DB.cats.length}</span> קטגוריות · משלוח עד הבית</span>
+      <span class="label"><span class="mono">${nf.format(ALL.length)}</span> מוצרים · <span class="mono">${DB.cats.filter(c=>c[2]).length}</span> קטגוריות · משלוח עד הבית</span>
       <h1>האביזר הנכון.<br><span class="gradtext">למכשיר שלך.</span></h1>
       <p class="lead">בוחרים את הטלפון, ואנחנו מראים רק את מה שמתאים לו: כיסויים, מגני מסך, מטענים ואוזניות, עם מלאי מתעדכן ומשלוח עד הבית.</p>
       ${finderHTML()}
@@ -536,9 +537,9 @@ function viewHome(){
     <div class="pedestal" aria-hidden="true">
       <span class="orbit"></span>
       <span class="disc d1">${img(816,'')}</span>
-      <span class="disc d2">${img(473,'')}</span>
-      <span class="disc d3">${img(841,'')}</span>
-      <span class="disc d4">${img(98,'')}</span>
+      <span class="disc d2">${img(PICK.audio,'')}</span>
+      <span class="disc d3">${img(PICK.chargers,'')}</span>
+      <span class="disc d4">${img(PICK.gadgets,'')}</span>
       <span class="tagline t1">MAGSAFE · 360°</span>
       <span class="tagline t2">USB-C · 25W</span>
     </div>
@@ -547,7 +548,7 @@ function viewHome(){
 
   <section class="sec"><div class="wrap">
     <div class="sh"><div><span class="label">קטגוריות</span><h2>מכל הבא לטלפון</h2></div><a class="lnk" href="#shop">לכל ${nf.format(ALL.length)} המוצרים ←</a></div>
-    <div class="bento">${B.map(([s,k])=>{ const i=catIdx(s); if(i<0) return ''; const c=DB.cats[i]; return `<button class="ct ${k}" data-go="${s}"><div><h3>${esc(c[1])}</h3><span class="label n">${nf.format(c[2])} פריטים</span></div><span class="disc">${img(PICK[s]??0,c[1])}</span></button>`; }).join('')}</div>
+    <div class="bento">${B.map(([s,k])=>{ const i=catIdx(s); if(i<0||!DB.cats[i][2]) return ''; const c=DB.cats[i]; return `<button class="ct ${k}" data-go="${s}"><div><h3>${esc(c[1])}</h3><span class="label n">${nf.format(c[2])} פריטים</span></div><span class="disc">${img(PICK[s]??0,c[1])}</span></button>`; }).join('')}</div>
     <div class="index">${rest.map(i=>`<button data-go="${DB.cats[i][0]}"><span>${esc(DB.cats[i][1])}</span><span class="dots"></span><span class="mono" style="color:var(--muted);font-size:13px">${DB.cats[i][2]}</span></button>`).join('')}</div>
   </div></section>
 
@@ -587,7 +588,7 @@ function viewShop(){
     <aside class="side" id="side">
       <span class="label">קטגוריה</span>
       <div class="cl" style="margin-top:8px"><button data-cat="-1" class="${shop.cat<0?'on':''}"><span>כל המוצרים</span><span class="mono">${ALL.length}</span></button>
-      ${DB.cats.map((x,i)=>`<button data-cat="${i}" class="${shop.cat===i?'on':''}"><span>${esc(x[1])}</span><span class="mono">${x[2]}</span></button>`).join('')}</div>
+      ${DB.cats.map((x,i)=>x[2]?`<button data-cat="${i}" class="${shop.cat===i?'on':''}"><span>${esc(x[1])}</span><span class="mono">${x[2]}</span></button>`:'').join('')}</div>
       <h4 class="label">מכשיר</h4>
       <select id="dev" aria-label="מכשיר"><option value="">כל המכשירים</option>${Object.entries(DEVICES).map(([b,ms])=>`<optgroup label="${b}">${ms.map(m=>`<option ${m===shop.device?'selected':''}>${esc(m)}</option>`).join('')}</optgroup>`).join('')}</select>
       ${Object.keys(bc).length?`<h4 class="label">מותג</h4>${Object.entries(bc).sort((a,b)=>b[1]-a[1]).map(([b,n])=>`<label class="chk"><input type="checkbox" data-brand="${esc(b)}" ${shop.brands.has(b)?'checked':''}> <span style="flex:1">${esc(b)}</span><span class="mono" style="color:var(--muted);font-size:12px">${n}</span></label>`).join('')}`:''}
@@ -772,7 +773,7 @@ function renderSearch(){
   $('#sr').innerHTML=r.length?`<div class="rows" style="margin-top:14px">${r.slice(0,10).map(p=>row(p,false)).join('')}</div>${r.length>10?`<button class="lnk" style="margin-top:14px" data-allq="1">לכל ${nf.format(r.length)} התוצאות ←</button>`:''}`:`<div class="empty" style="padding:30px 0">לא נמצאו מוצרים עבור „${esc(v)}”.</div>`;
   hydrate($('#sr'));
 }
-function renderMega(){ $('#megagrid').innerHTML=DB.cats.map(c=>`<button data-go="${c[0]}"><span class="thumb">${img(PICK[c[0]]??0,c[1])}</span><span style="min-width:0"><div class="nm">${esc(c[1])}</div><div class="label">${c[2]} פריטים</div></span></button>`).join(''); hydrate($('#megagrid')); }
+function renderMega(){ $('#megagrid').innerHTML=DB.cats.filter(c=>c[2]).map(c=>`<button data-go="${c[0]}"><span class="thumb">${img(PICK[c[0]]??0,c[1])}</span><span style="min-width:0"><div class="nm">${esc(c[1])}</div><div class="label">${c[2]} פריטים</div></span></button>`).join(''); hydrate($('#megagrid')); }
 
 /* ===== פתיחה/סגירה וניתוב ===== */
 const BG=()=>['.hdr','#app','footer.site','.skip','#a11yBtn'].map(x=>$(x)).filter(Boolean);
@@ -843,12 +844,14 @@ window.addEventListener('hashchange',route);
 fetch('products.json').then(r=>r.json()).then(d=>{
   DB=d;
   ALL=d.p.map(a=>({id:a[0],name:a[1],sku:a[2],brand:a[3],cat:a[4],models:a[5],price:a[6],stock:a[7],img:a[8],flag:a[9],sup:a[10]||'M',alt:a[11]||''}))
-    .filter(p=>!(CONFIG.hideFlagged&&p.flag)&&!(CONFIG.hideOutOfStock&&p.stock===2));
+    .filter(p=>!(CONFIG.hideSup||[]).includes(p.sup)&&!(CONFIG.hideFlagged&&p.flag)&&!(CONFIG.hideOutOfStock&&p.stock===2));
   ALL.forEach(p=>{ p._s=norm([p.name,p.sku,p.brand,p.models,d.cats[p.cat][1]].join(' ')); p._w=' '+norm(p.name+' '+p.models)+' '; BYID.set(p.id,p); });
   Object.keys(cart).forEach(id=>{ if(!BYID.has(+id)) delete cart[id]; }); saveCart();
-  const h=Math.ceil(d.cats.length/2);
-  $('#fc1').innerHTML=d.cats.slice(0,h).map(c=>`<li><button data-go="${c[0]}">${esc(c[1])}</button></li>`).join('');
-  $('#fc2').innerHTML=d.cats.slice(h).map(c=>`<li><button data-go="${c[0]}">${esc(c[1])}</button></li>`).join('');
+  const vis=new Set(ALL.map(p=>p.img)); d.cats.forEach((c,i)=>{ const ps=ALL.filter(p=>p.cat===i); c[2]=ps.length; if(PICK[c[0]]==null||!vis.has(PICK[c[0]])){ const f=ps.find(p=>p.img!=null&&p.img>=0); PICK[c[0]]=f?f.img:-1; } });
+  $$('.nav [data-nav]').forEach(a=>{ const i=catIdx(a.dataset.nav); if(i>=0&&!d.cats[i][2]) a.hidden=true; });
+  const vc=d.cats.filter(c=>c[2]); const h=Math.ceil(vc.length/2);
+  $('#fc1').innerHTML=vc.slice(0,h).map(c=>`<li><button data-go="${c[0]}">${esc(c[1])}</button></li>`).join('');
+  $('#fc2').innerHTML=vc.slice(h).map(c=>`<li><button data-go="${c[0]}">${esc(c[1])}</button></li>`).join('');
   route();
 }).catch(()=>{ $('#app').innerHTML='<div class="loading">לא הצלחנו לטעון את הקטלוג. רענן את העמוד כדי לנסות שוב.</div>'; });
 </script>
