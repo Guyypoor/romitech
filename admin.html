@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<title>RomiTech – ניהול</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='1' y='1' width='30' height='30' rx='9' fill='%230a0b0e'/%3E%3Cpath d='M11.5 23.5V8.5h5.2a4.2 4.2 0 0 1 0 8.4h-5.2M16.4 16.9l5.2 6.6' fill='none' stroke='%2345f0c4' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Hebrew:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<style>
+/* Layout: operations console – summary strip, status tabs, dense order table, detail drawer. Same graphite/mono language as the store. */
+:root{
+  --bg:#0a0b0e; --panel:#121419; --panel-2:#191c22; --line:#24272f; --line-2:#30343d;
+  --fg:#f2f3f5; --fg-2:#c7cad1; --muted:#8a8f9b; --accent:#62b6ff; --accent-ink:#06121f;
+  --ok:#3ddc97; --warn:#ffb547; --bad:#ff6b6b; --violet:#9a86ff;
+  --btn:#f2f3f5; --btn-ink:#0a0b0e;
+  --f-sans:"IBM Plex Sans Hebrew","Segoe UI",Arial,system-ui,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+  color-scheme:dark;
+}
+@media (prefers-color-scheme: light){:root{
+  --bg:#f6f7f9; --panel:#fff; --panel-2:#eff1f4; --line:#e2e5ea; --line-2:#d3d7de;
+  --fg:#0c0d10; --fg-2:#2c2f36; --muted:#5f6471; --accent:#2f62ff; --accent-ink:#fff;
+  --ok:#0f9d63; --warn:#b26b00; --bad:#d63b3b; --violet:#6a52e0; --btn:#0c0d10; --btn-ink:#fff; color-scheme:light}}
+*{box-sizing:border-box} [hidden]{display:none!important}
+html,body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--f-sans);font-size:15px;line-height:1.5}
+button,input,select,textarea{font:inherit;color:inherit}
+.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.muted{color:var(--muted)}
+.wrap{max-width:1280px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+header{position:sticky;top:0;z-index:20;background:var(--bg);border-bottom:1px solid var(--line)}
+header .wrap{display:flex;align-items:center;gap:16px;height:60px}
+.logo{display:flex;align-items:center;gap:8px;direction:ltr;font-weight:700;font-size:18px}.logo b{font-weight:300}
+.tag{font-size:12px;border:1px solid var(--line-2);border-radius:999px;padding:2px 10px;color:var(--muted)}
+.sp{flex:1}
+.btn{height:38px;padding:0 16px;border-radius:999px;border:1px solid var(--line-2);background:var(--panel);cursor:pointer;font-size:14px}
+.btn:hover{border-color:var(--fg-2)}
+.btn.main{background:var(--btn);color:var(--btn-ink);border-color:var(--btn);font-weight:600}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.login{max-width:380px;margin:12vh auto;background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:28px;display:flex;flex-direction:column;gap:12px}
+.login h1{margin:0 0 4px;font-size:24px}
+label{display:flex;flex-direction:column;gap:6px;font-size:13px;color:var(--muted)}
+input,select,textarea{height:42px;border-radius:12px;border:1px solid var(--line);background:var(--panel-2);padding:0 12px;font-size:15px;color:var(--fg)}
+textarea{height:80px;padding:10px 12px;resize:vertical}
+.err{color:var(--bad);font-size:14px;margin:0}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:20px 0}
+.stat{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:14px 16px}
+.stat b{display:block;font-family:var(--f-mono);font-size:26px;font-weight:600}
+.stat span{color:var(--muted);font-size:13px}
+@media (max-width:760px){.stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.bar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:14px}
+.tabs{display:flex;gap:4px;flex-wrap:wrap}
+.tabs button{border:1px solid var(--line);background:var(--panel);border-radius:999px;padding:6px 12px;cursor:pointer;font-size:13.5px;color:var(--fg-2)}
+.tabs button.on{background:var(--btn);color:var(--btn-ink);border-color:var(--btn);font-weight:600}
+.tabs .n{font-family:var(--f-mono);font-size:12px;opacity:.7;margin-inline-start:4px}
+.bar input{flex:1 1 220px;min-width:0}
+.tblw{overflow-x:auto;border:1px solid var(--line);border-radius:16px;background:var(--panel)}
+table{width:100%;border-collapse:collapse;min-width:820px}
+th,td{text-align:right;padding:11px 12px;border-bottom:1px solid var(--line);font-size:14px;white-space:nowrap}
+th{font-size:12px;color:var(--muted);font-weight:500;background:var(--panel-2)}
+tr.row{cursor:pointer} tr.row:hover td{background:var(--panel-2)}
+tr:last-child td{border-bottom:0}
+.pill{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:2px 10px;font-size:12.5px;border:1px solid currentColor}
+.pill i{width:6px;height:6px;border-radius:50%;background:currentColor}
+.s-new{color:var(--accent)} .s-approved{color:var(--violet)} .s-ordered{color:var(--warn)} .s-ready{color:var(--ok)} .s-shipped{color:var(--ok)} .s-delivered{color:var(--muted)} .s-cancelled{color:var(--bad)} .s-test{color:var(--muted)}
+.p-unpaid{color:var(--warn)} .p-pending{color:var(--accent)} .p-paid{color:var(--ok)} .p-failed{color:var(--bad)} .p-refunded{color:var(--muted)}
+.empty{padding:40px;text-align:center;color:var(--muted)}
+.scrim{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:40}
+.drawer{position:fixed;top:0;bottom:0;left:0;width:min(620px,100vw);background:var(--bg);border-right:1px solid var(--line);z-index:50;display:flex;flex-direction:column}
+.dh{display:flex;align-items:center;gap:12px;padding:14px 20px;border-bottom:1px solid var(--line)}
+.dh h2{margin:0;font-size:20px}
+.db{flex:1;overflow:auto;padding:18px 20px;display:flex;flex-direction:column;gap:18px}
+.df{border-top:1px solid var(--line);padding:12px 20px;display:flex;gap:10px;align-items:center}
+.box{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px}
+.box h3{margin:0 0 10px;font-size:13px;color:var(--muted);font-weight:500}
+.kv{display:grid;grid-template-columns:110px minmax(0,1fr);gap:6px 12px;font-size:14px}
+.kv a{color:var(--accent)}
+.it{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:12px;padding:8px 0;border-bottom:1px solid var(--line);font-size:14px}
+.it:last-child{border-bottom:0}
+.it small{display:block;color:var(--muted);font-family:var(--f-mono);font-size:12px}
+.sup{font-size:12px;border-radius:6px;padding:1px 8px;margin-inline-start:6px;background:var(--panel-2);border:1px solid var(--line-2)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.log{font-size:12.5px;color:var(--muted);font-family:var(--f-mono);display:flex;flex-direction:column;gap:4px}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--btn);color:var(--btn-ink);padding:10px 18px;border-radius:999px;z-index:60;font-size:14px}
+.set{display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap}
+</style>
+</head>
+<body>
+<header><div class="wrap"><span class="logo">Romi<b>Tech</b></span><span class="tag">ניהול</span><span class="sp"></span><span id="who" class="muted" style="font-size:13px"></span><button class="btn" id="out" hidden>יציאה</button></div></header>
+
+<main class="wrap">
+  <form class="login" id="login" hidden>
+    <h1>כניסה לניהול</h1>
+    <p class="muted" style="margin:0 0 6px;font-size:14px">אותו משתמש של פאנל הניהול של גיא שליחויות.</p>
+    <label>דוא״ל<input id="le" type="email" autocomplete="username" required></label>
+    <label>סיסמה<input id="lp" type="password" autocomplete="current-password" required></label>
+    <p class="err" id="lerr"></p>
+    <button class="btn main" type="submit">כניסה</button>
+  </form>
+
+  <section id="app" hidden>
+    <div class="stats">
+      <div class="stat"><b id="stNew">0</b><span>ממתינות לאישור</span></div>
+      <div class="stat"><b id="stOpen">0</b><span>בטיפול (אושרו עד נשלחו)</span></div>
+      <div class="stat"><b id="stToday">0</b><span>הזמנות היום</span></div>
+      <div class="stat"><b id="stMonth">₪0</b><span>מכירות החודש (בלי בוטלו)</span></div>
+    </div>
+    <div class="bar">
+      <div class="tabs" id="tabs"></div>
+      <input id="q" type="search" placeholder="חיפוש: מספר הזמנה, שם או טלפון">
+      <button class="btn" id="refresh">רענון</button>
+      <button class="btn" id="setBtn">הגדרות</button>
+    </div>
+    <div class="box set" id="settings" hidden style="margin-bottom:14px">
+      <label>מחיר משלוח עד הבית (₪)<input id="shipFee" type="number" min="0" step="1" placeholder="ריק = יעודכן ללקוח"></label>
+      <button class="btn main" id="saveSet">שמירה</button>
+      <span class="muted" style="font-size:13px">איסוף עצמי מהחנות תמיד חינם.</span>
+    </div>
+    <div class="tblw"><table>
+      <thead><tr><th>הזמנה</th><th>תאריך</th><th>לקוח</th><th>טלפון</th><th>משלוח</th><th>פריטים</th><th>סה״כ</th><th>תשלום</th><th>סטטוס</th></tr></thead>
+      <tbody id="rows"></tbody>
+    </table></div>
+    <p class="muted" style="font-size:12.5px;margin:10px 0 40px">מתרענן לבד כל 30 שניות. <span id="upd"></span></p>
+  </section>
+</main>
+
+<div class="scrim" id="scrim" hidden></div>
+<aside class="drawer" id="drawer" hidden aria-label="פרטי הזמנה"></aside>
+<div class="toast" id="toast" hidden></div>
+
+<script>
+const SB_URL='https://rtoukdganvoypamxjgwb.supabase.co';
+const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ0b3VrZGdhbnZveXBhbXhqZ3diIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE2NzU5NTksImV4cCI6MjEwNzI1MTk1OX0.RSxoPyIPf_KPvwe9rVa2rNsZoSUe5lDxEQmzh14mIFw'; // public anon key; orders readable only by admins (RLS)
+const sb=window.supabase.createClient(SB_URL,SB_KEY,{auth:{persistSession:true,autoRefreshToken:true,storageKey:'romitech-admin'}});
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const nf=new Intl.NumberFormat('he-IL',{maximumFractionDigits:2}); const money=v=>'₪'+nf.format(+v||0);
+const ST={new:'חדשה',approved:'אושרה',ordered:'הוזמנה מהספק',ready:'מוכנה בחנות',shipped:'נשלחה',delivered:'נמסרה',cancelled:'בוטלה',test:'בדיקה'};
+const PAY={unpaid:'לא שולם',pending:'בתהליך',paid:'שולם',failed:'נכשל',refunded:'הוחזר'};
+const PM={apple:'Apple Pay',card:'כרטיס אשראי',paypal:'PayPal',bit:'ביט'};
+const SUP={M:'מיאמי',N:'ניל'};
+const TABS=[['new','חדשות'],['open','בטיפול'],['ready','מוכנות'],['done','הושלמו'],['cancelled','בוטלו'],['all','הכל']];
+const inTab=(o,t)=>t==='all'?o.status!=='test':t==='open'?['approved','ordered'].includes(o.status):t==='ready'?['ready','shipped'].includes(o.status):t==='done'?o.status==='delivered':o.status===t;
+let ORD=[], tab='new', timer=null;
+const pill=(cls,txt)=>`<span class="pill ${cls}"><i></i>${esc(txt)}</span>`;
+const fdt=s=>{const d=new Date(s); return d.toLocaleDateString('he-IL',{day:'2-digit',month:'2-digit'})+' '+d.toLocaleTimeString('he-IL',{hour:'2-digit',minute:'2-digit'})};
+let tt; function toast(t){ const e=$('#toast'); e.textContent=t; e.hidden=false; clearTimeout(tt); tt=setTimeout(()=>e.hidden=true,2400); }
+
+async function boot(){
+  const { data:{ session } }=await sb.auth.getSession();
+  if(!session){ $('#login').hidden=false; $('#app').hidden=true; $('#out').hidden=true; $('#who').textContent=''; return; }
+  const { data:isAdmin, error }=await sb.rpc('rt_is_admin');
+  if(error||!isAdmin){ $('#login').hidden=false; $('#lerr').textContent='למשתמש הזה אין הרשאת ניהול.'; await sb.auth.signOut(); return; }
+  $('#login').hidden=true; $('#app').hidden=false; $('#out').hidden=false; $('#who').textContent=session.user.email;
+  await load(); clearInterval(timer); timer=setInterval(load,30000);
+}
+$('#login').addEventListener('submit',async e=>{ e.preventDefault(); $('#lerr').textContent='';
+  const { error }=await sb.auth.signInWithPassword({email:$('#le').value.trim(),password:$('#lp').value});
+  if(error){ $('#lerr').textContent='הדוא״ל או הסיסמה לא נכונים.'; return; } boot(); });
+$('#out').onclick=async()=>{ await sb.auth.signOut(); location.reload(); };
+
+async function load(){
+  const { data, error }=await sb.from('rt_orders').select('*').order('created_at',{ascending:false}).limit(500);
+  if(error){ toast('שגיאה בטעינה: '+error.message); return; }
+  ORD=data||[]; render(); $('#upd').textContent='עודכן '+new Date().toLocaleTimeString('he-IL',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+  const { data:s }=await sb.from('rt_settings').select('*').eq('k','ship_home_fee').maybeSingle();
+  if(s && document.activeElement!==$('#shipFee')) $('#shipFee').value=(s.v==null?'':s.v);
+}
+function render(){
+  const live=ORD.filter(o=>o.status!=='test'); const today=new Date().toDateString(); const m=new Date();
+  $('#stNew').textContent=live.filter(o=>o.status==='new').length;
+  $('#stOpen').textContent=live.filter(o=>['approved','ordered','ready'].includes(o.status)).length;
+  $('#stToday').textContent=live.filter(o=>new Date(o.created_at).toDateString()===today).length;
+  $('#stMonth').textContent=money(live.filter(o=>o.status!=='cancelled'&&new Date(o.created_at).getMonth()===m.getMonth()&&new Date(o.created_at).getFullYear()===m.getFullYear()).reduce((a,o)=>a+(+o.total),0));
+  $('#tabs').innerHTML=TABS.map(([k,l])=>`<button data-t="${k}" class="${tab===k?'on':''}">${l}<span class="n">${ORD.filter(o=>inTab(o,k)).length}</span></button>`).join('');
+  const q=$('#q').value.trim().toLowerCase().replace(/[-\s]/g,'');
+  const list=ORD.filter(o=>inTab(o,tab)).filter(o=>!q||[o.id,o.name,o.phone].some(v=>String(v||'').toLowerCase().replace(/[-\s]/g,'').includes(q)));
+  $('#rows').innerHTML=list.length?list.map(o=>`<tr class="row" data-id="${esc(o.id)}">
+    <td class="mono">${esc(o.id)}</td><td class="mono">${fdt(o.created_at)}</td><td>${esc(o.name)}</td><td class="mono">${esc(o.phone)}</td>
+    <td>${o.ship_method==='pickup'?'איסוף':'משלוח'}</td><td class="mono">${(o.items||[]).reduce((a,i)=>a+i.q,0)}</td><td class="mono">${money(o.total)}</td>
+    <td>${pill('p-'+o.pay_status,PAY[o.pay_status]||o.pay_status)}</td><td>${pill('s-'+o.status,ST[o.status]||o.status)}</td></tr>`).join('')
+    :`<tr><td colspan="9" class="empty">אין הזמנות כאן.</td></tr>`;
+}
+document.addEventListener('click',e=>{
+  const t=e.target.closest('[data-t]'); if(t){ tab=t.dataset.t; render(); return; }
+  const r=e.target.closest('tr.row'); if(r){ openOrder(r.dataset.id); return; }
+  if(e.target.closest('[data-x]')||e.target===$('#scrim')) closeOrder();
+});
+$('#q').addEventListener('input',render);
+$('#refresh').onclick=load;
+$('#setBtn').onclick=()=>$('#settings').hidden=!$('#settings').hidden;
+$('#saveSet').onclick=async()=>{ const v=$('#shipFee').value.trim(); const val=v===''?null:Math.max(0,+v);
+  const { error }=await sb.from('rt_settings').upsert({k:'ship_home_fee',v:val}); toast(error?'לא נשמר: '+error.message:'מחיר המשלוח נשמר'); };
+
+function openOrder(id){
+  const o=ORD.find(x=>x.id===id); if(!o) return;
+  const groups={}; (o.items||[]).forEach(i=>{(groups[i.sup]=groups[i.sup]||[]).push(i)});
+  const wa='https://wa.me/972'+String(o.phone).replace(/^0/,'');
+  $('#drawer').innerHTML=`<div class="dh"><h2 class="mono">${esc(o.id)}</h2>${pill('s-'+o.status,ST[o.status])}${pill('p-'+o.pay_status,PAY[o.pay_status])}<span class="sp"></span><button class="btn" data-x>סגירה</button></div>
+  <div class="db">
+    <div class="box"><h3>לקוח</h3><div class="kv">
+      <span class="muted">שם</span><span>${esc(o.name)}</span>
+      <span class="muted">טלפון</span><span class="mono"><a href="tel:${esc(o.phone)}">${esc(o.phone)}</a> · <a href="${esc(wa)}" target="_blank" rel="noopener">וואטסאפ</a></span>
+      ${o.email?`<span class="muted">דוא״ל</span><span>${esc(o.email)}</span>`:''}
+      <span class="muted">קבלה</span><span>${o.ship_method==='pickup'?'איסוף עצמי מהחנות':esc((o.city||'')+', '+(o.street||''))}</span>
+      ${o.notes?`<span class="muted">הערות</span><span>${esc(o.notes)}</span>`:''}
+      <span class="muted">תשלום מועדף</span><span>${esc(PM[o.pay_method]||o.pay_method||'—')}</span>
+      <span class="muted">נוצרה</span><span class="mono">${fdt(o.created_at)}</span>
+    </div></div>
+    <div class="box"><h3>פריטים לפי ספק</h3>
+      ${Object.entries(groups).map(([s,its])=>`<div style="margin-bottom:8px"><b>${esc(SUP[s]||s)}</b><span class="sup">${its.reduce((a,i)=>a+i.q,0)} יח'</span></div>${its.map(i=>`<div class="it"><span>${esc(i.name)}<small>${esc(i.sku)}</small></span><span class="mono">${i.q} × ${money(i.price)}</span><span class="mono">${money(i.line)}</span></div>`).join('')}`).join('<div style="height:10px"></div>')}
+      <div class="it" style="font-weight:600"><span>סכום פריטים</span><span></span><span class="mono">${money(o.subtotal)}</span></div>
+      <div class="it"><span>משלוח</span><span></span><span class="mono">${money(o.ship_fee)}</span></div>
+      <div class="it" style="font-weight:700"><span>סה״כ</span><span></span><span class="mono">${money(o.total)}</span></div>
+      ${o.nil_order||o.nil_status?`<p class="muted" style="font-size:13px;margin:10px 0 0">ניל: ${esc(o.nil_status||'')} ${o.nil_order?'· הזמנה '+esc(o.nil_order):''}</p>`:''}
+    </div>
+    <div class="box"><h3>טיפול</h3><div class="grid2">
+      <label>סטטוס<select id="dSt">${Object.entries(ST).map(([k,l])=>`<option value="${k}" ${o.status===k?'selected':''}>${l}</option>`).join('')}</select></label>
+      <label>תשלום<select id="dPay">${Object.entries(PAY).map(([k,l])=>`<option value="${k}" ${o.pay_status===k?'selected':''}>${l}</option>`).join('')}</select></label>
+      <label style="grid-column:1/-1">הערה פנימית<textarea id="dNote">${esc(o.admin_note||'')}</textarea></label>
+    </div>
+    <p class="muted" style="font-size:12.5px;margin:10px 0 0">"אושרה" = ההזמנה האוטומטית לניל יוצאת בריצה הקרובה (פריטי מיאמי מוזמנים ידנית בינתיים).</p></div>
+    <div class="box"><h3>היסטוריה</h3><div class="log">${(o.log||[]).slice().reverse().map(l=>`<span>${fdt(l.at)} · ${esc(l.ev==='created'?'נוצרה באתר':l.ev==='admin'?'עודכנה בניהול: '+(ST[l.status]||l.status)+' / '+(PAY[l.pay]||l.pay):l.ev==='ha'?'עדכון אוטומטי: '+JSON.stringify(l.set):l.ev)}</span>`).join('')||'—'}</div></div>
+  </div>
+  <div class="df">${o.status==='new'?`<button class="btn main" id="dApprove">אישור הזמנה</button>`:''}<button class="btn ${o.status==='new'?'':'main'}" id="dSave">שמירה</button><span class="sp"></span>${o.status!=='cancelled'?`<button class="btn" id="dCancel" style="color:var(--bad)">ביטול הזמנה</button>`:''}</div>`;
+  $('#drawer').hidden=false; $('#scrim').hidden=false;
+  const save=async(patch)=>{ const { error }=await sb.from('rt_orders').update(patch).eq('id',o.id); if(error){ toast('לא נשמר: '+error.message); return; } toast('נשמר'); await load(); openOrder(o.id); };
+  $('#dSave').onclick=()=>save({status:$('#dSt').value,pay_status:$('#dPay').value,admin_note:$('#dNote').value.trim()||null});
+  if($('#dApprove')) $('#dApprove').onclick=()=>save({status:'approved',admin_note:$('#dNote').value.trim()||null});
+  if($('#dCancel')) $('#dCancel').onclick=()=>{ const b=$('#dCancel'); if(b.dataset.sure){ save({status:'cancelled'}); } else { b.dataset.sure='1'; b.textContent='ללחוץ שוב לביטול'; } };
+}
+function closeOrder(){ $('#drawer').hidden=true; $('#scrim').hidden=true; }
+document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeOrder(); });
+sb.auth.onAuthStateChange((ev)=>{ if(ev==='SIGNED_OUT'){ clearInterval(timer); } });
+boot();
+</script>
+</body>
+</html>

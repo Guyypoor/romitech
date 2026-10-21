@@ -1,0 +1,791 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="description" content="RomiTech – אביזרים לטלפון, לשעון ולאוזניות. כיסויים, מגני מסך, מטענים ואוזניות לפי המכשיר שלך.">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='1' y='1' width='30' height='30' rx='9' fill='%230a0b0e'/%3E%3Cpath d='M11.5 23.5V8.5h5.2a4.2 4.2 0 0 1 0 8.4h-5.2M16.4 16.9l5.2 6.6' fill='none' stroke='%2345f0c4' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<title>RomiTech</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Hebrew:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+html,body{margin:0}img{max-width:100%}
+/* Layout: dark "spec-sheet" store — graphite panels, circular light-box pedestals for white product shots,
+   mono type for every number (prices, counts, codes), one iridescent gradient used only on the mark and key highlights. */
+:root{
+  --bg:#0a0b0e; --panel:#121419; --panel-2:#191c22; --line:#24272f; --line-2:#30343d;
+  --fg:#f2f3f5; --fg-2:#c7cad1; --muted:#8a8f9b;
+  --lightbox:#eceef2; --lightbox-2:#dfe2e8;
+  --accent:#62b6ff; --accent-ink:#06121f;
+  --grad:linear-gradient(100deg,#9a86ff 0%,#4cc3ff 52%,#45f0c4 100%);
+  --ok:#3ddc97; --warn:#ffb547; --bad:#ff6b6b;
+  --btn:#f2f3f5; --btn-ink:#0a0b0e;
+  --glass:rgba(10,11,14,.78);
+  --f-sans:"IBM Plex Sans Hebrew","Segoe UI",Arial,system-ui,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+  --wrap:1240px; --r:20px;
+  color-scheme:dark;
+}
+@media (prefers-color-scheme: light){:root:not([data-theme="dark"]){
+  --bg:#f6f7f9; --panel:#ffffff; --panel-2:#eff1f4; --line:#e2e5ea; --line-2:#d3d7de;
+  --fg:#0c0d10; --fg-2:#2c2f36; --muted:#5f6471;
+  --lightbox:#eef0f3; --lightbox-2:#e3e6eb;
+  --accent:#2f62ff; --accent-ink:#ffffff;
+  --btn:#0c0d10; --btn-ink:#ffffff; --glass:rgba(246,247,249,.82); color-scheme:light}}
+:root[data-theme="light"]{
+  --bg:#f6f7f9; --panel:#ffffff; --panel-2:#eff1f4; --line:#e2e5ea; --line-2:#d3d7de;
+  --fg:#0c0d10; --fg-2:#2c2f36; --muted:#5f6471;
+  --lightbox:#eef0f3; --lightbox-2:#e3e6eb;
+  --accent:#2f62ff; --accent-ink:#ffffff;
+  --btn:#0c0d10; --btn-ink:#ffffff; --glass:rgba(246,247,249,.82); color-scheme:light}
+*{box-sizing:border-box} [hidden]{display:none!important}
+html{direction:rtl}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--f-sans);font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:60;background:var(--glass)}
+button,input,select,textarea{font:inherit;color:inherit}
+a{color:inherit;text-decoration:none}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:8px}
+.wrap{max-width:var(--wrap);margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3{margin:0;text-wrap:balance;letter-spacing:-.01em}
+.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.label{font-family:var(--f-sans);font-size:13px;font-weight:500;letter-spacing:.01em;color:var(--muted)}
+.gradtext{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+
+/* top strip + header */
+.strip{font-size:12.5px;color:var(--muted);border-bottom:1px solid var(--line);padding-block:7px;text-align:center}
+.hdr{position:sticky;top:env(safe-area-inset-top,0px);z-index:50;background:var(--glass);backdrop-filter:blur(18px) saturate(160%);-webkit-backdrop-filter:blur(18px) saturate(160%);border-bottom:1px solid var(--line)}
+.hdr .wrap{display:flex;align-items:center;gap:28px;height:64px}
+.logo{display:flex;align-items:center;gap:10px;direction:ltr;flex:none}
+.logo svg{width:30px;height:30px}
+.wm{font-weight:700;font-size:20px;letter-spacing:-.02em}
+.wm b{font-weight:300}
+.nav{display:flex;gap:6px}
+.nav a,.nav button{border:0;background:none;cursor:pointer;font-size:14.5px;color:var(--fg-2);padding:8px 12px;border-radius:999px}
+.nav a:hover,.nav button:hover{background:var(--panel-2);color:var(--fg)}
+.nav .on{color:var(--fg);background:var(--panel-2)}
+.hdr .sp{flex:1}
+.ib{height:40px;min-width:40px;padding:0 10px;border-radius:999px;border:1px solid var(--line);background:var(--panel);display:inline-flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;color:var(--fg)}
+.ib:hover{border-color:var(--line-2)}
+.ib svg{width:18px;height:18px}
+.ib .mono{font-size:13px}
+.mnav{display:none}
+@media (max-width:900px){.nav{display:none}.mnav{display:inline-flex}.hdr .wrap{gap:12px}}
+
+/* buttons */
+.btn{height:46px;padding:0 24px;border-radius:999px;border:0;cursor:pointer;font-weight:600;font-size:15px;display:inline-flex;align-items:center;justify-content:center;gap:10px;transition:transform .15s}
+.btn:active{transform:scale(.97)}
+.btn-main{background:var(--btn);color:var(--btn-ink)}
+.btn-line{background:transparent;color:var(--fg);border:1px solid var(--line-2)}
+.btn-line:hover{border-color:var(--fg-2)}
+.btn[disabled]{opacity:.4;cursor:not-allowed}
+.lnk{color:var(--accent);font-weight:500;border:0;background:none;cursor:pointer;padding:0;font-size:15px}
+.lnk:hover{text-decoration:underline}
+
+/* hero */
+.hero{position:relative;overflow:hidden;border-bottom:1px solid var(--line)}
+.hero::before{content:"";position:absolute;inset:-30% -10% auto auto;width:70%;aspect-ratio:1;background:radial-gradient(closest-side,rgba(76,195,255,.16),transparent 70%);pointer-events:none}
+.hero .wrap{position:relative;display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:48px;align-items:center;padding-block:64px 56px}
+.hero h1{font-size:clamp(40px,6vw,78px);font-weight:700;line-height:1.02;letter-spacing:-.03em;margin:14px 0 18px}
+.hero .lead{font-size:clamp(16px,1.5vw,19px);color:var(--fg-2);max-width:40ch;margin:0 0 26px}
+@media (max-width:900px){.hero .wrap{grid-template-columns:1fr;padding-block:36px}}
+
+/* device finder */
+.finder{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:18px;display:flex;flex-direction:column;gap:14px;max-width:560px}
+.finder .tabs{display:flex;gap:4px;background:var(--panel-2);border-radius:999px;padding:4px;width:max-content;max-width:100%;overflow-x:auto}
+.finder .tabs button{border:0;background:none;padding:7px 16px;border-radius:999px;cursor:pointer;font-size:14px;color:var(--fg-2);white-space:nowrap}
+.finder .tabs button.on{background:var(--btn);color:var(--btn-ink);font-weight:600}
+.models{display:flex;flex-wrap:wrap;gap:6px;max-height:132px;overflow:auto}
+.models button{border:1px solid var(--line-2);background:transparent;border-radius:10px;padding:6px 11px;cursor:pointer;font-size:13.5px;direction:ltr}
+.models button:hover{border-color:var(--fg-2)}
+.models button.on{border-color:var(--accent);color:var(--accent);background:rgba(98,182,255,.08)}
+.finder .go{display:flex;align-items:center;justify-content:space-between;gap:12px;border-top:1px solid var(--line);padding-top:14px;flex-wrap:wrap}
+
+/* pedestal visual */
+.pedestal{position:relative;aspect-ratio:1/1;max-width:560px;width:100%;justify-self:center}
+.disc{position:absolute;border-radius:50%;background:radial-gradient(circle at 50% 38%,#ffffff 0%,var(--lightbox) 55%,var(--lightbox-2) 100%);display:grid;place-items:center;overflow:hidden;box-shadow:0 30px 80px -30px rgba(76,195,255,.35)}
+.disc img{width:72%;height:72%;object-fit:contain;mix-blend-mode:multiply}
+.disc .sk{position:absolute;inset:0}
+.d1{inset:8% 8% 8% 8%}
+.d2{width:30%;height:30%;top:0;right:0}
+.d3{width:26%;height:26%;bottom:2%;left:0}
+.d4{width:22%;height:22%;bottom:4%;right:4%}
+.orbit{position:absolute;inset:2%;border-radius:50%;border:1px dashed var(--line-2)}
+.tagline{position:absolute;font-family:var(--f-mono);font-size:11px;letter-spacing:.08em;color:var(--fg-2);background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:5px 10px;white-space:nowrap}
+.t1{top:44%;left:-2%}.t2{top:12%;left:14%}
+@media (prefers-reduced-motion:no-preference){.d1 img{animation:float 6s ease-in-out infinite}@keyframes float{50%{transform:translateY(-8px)}}}
+@media (max-width:900px){.pedestal{max-width:420px}.tagline{display:none}}
+
+/* marquee */
+.marquee{border-bottom:1px solid var(--line);overflow:hidden;white-space:nowrap;padding-block:16px}
+.marquee .row{display:inline-flex;gap:56px;padding-inline-start:56px;font-family:var(--f-mono);font-size:15px;letter-spacing:.14em;color:var(--muted);animation:mq 38s linear infinite}
+.marquee .row span b{color:var(--fg);font-weight:500}
+@keyframes mq{to{transform:translateX(50%)}}
+@media (prefers-reduced-motion:reduce){.marquee .row{animation:none}}
+
+/* sections */
+.sec{padding-block:64px}
+.sh{display:flex;align-items:end;justify-content:space-between;gap:16px;margin-bottom:26px;flex-wrap:wrap}
+.sh h2{font-size:clamp(28px,3.4vw,44px);font-weight:700;letter-spacing:-.025em;margin-top:6px}
+
+/* category bento */
+.bento{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));grid-auto-rows:220px;gap:14px}
+.ct{position:relative;background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:20px;overflow:hidden;cursor:pointer;text-align:right;display:flex;flex-direction:column;justify-content:space-between;transition:border-color .2s}
+.ct:hover{border-color:var(--line-2)}
+.ct h3{font-size:21px;font-weight:600;position:relative;z-index:1}
+.ct .n{position:relative;z-index:1}
+.ct .disc{width:58%;height:auto;aspect-ratio:1;left:-6%;bottom:-10%;box-shadow:none;transition:transform .5s cubic-bezier(.2,.8,.2,1)}
+.ct:hover .disc{transform:scale(1.04) rotate(-2deg)}
+.ct.big{grid-column:span 2;grid-row:span 2}
+.ct.big h3{font-size:30px}
+.ct.big .disc{width:62%;left:-4%;bottom:-6%}
+.ct.wide{grid-column:span 2}
+.ct.wide .disc{width:40%;bottom:-24%}
+@media (max-width:900px){.bento{grid-template-columns:repeat(2,minmax(0,1fr));grid-auto-rows:180px}.ct.big{grid-row:span 2}.ct.wide{grid-column:span 2}}
+.index{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0 36px;margin-top:30px;border-top:1px solid var(--line)}
+.index button{display:flex;align-items:baseline;gap:10px;border:0;border-bottom:1px solid var(--line);background:none;padding:13px 2px;cursor:pointer;text-align:right;font-size:15px}
+.index button:hover{color:var(--accent)}
+.index .dots{flex:1;border-bottom:1px dotted var(--line-2);transform:translateY(-4px)}
+@media (max-width:900px){.index{grid-template-columns:1fr 1fr}}
+@media (max-width:560px){.index{grid-template-columns:1fr}}
+
+/* list rows */
+.rows{border-top:1px solid var(--line)}
+.rowp{display:grid;grid-template-columns:76px minmax(0,1fr) auto auto;gap:18px;align-items:center;padding:14px 4px;border-bottom:1px solid var(--line);cursor:pointer}
+.rowp:hover{background:var(--panel)}
+.thumb{position:relative;width:76px;height:76px;border-radius:16px;background:var(--lightbox);display:grid;place-items:center;overflow:hidden}
+.thumb img{width:84%;height:84%;object-fit:contain;mix-blend-mode:multiply}
+.thumb .sk{position:absolute;inset:0}
+.rowp .nm{font-weight:500;line-height:1.35}
+.rowp .sub{font-size:13px;color:var(--muted);margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.price{font-family:var(--f-mono);font-weight:600;font-size:17px;letter-spacing:-.01em;white-space:nowrap}
+.addb{width:38px;height:38px;border-radius:50%;border:1px solid var(--line-2);background:transparent;cursor:pointer;display:grid;place-items:center;color:var(--fg)}
+.addb:hover{background:var(--btn);color:var(--btn-ink);border-color:var(--btn)}
+.addb svg{width:18px;height:18px}
+@media (max-width:560px){.rowp{grid-template-columns:64px minmax(0,1fr) auto;gap:12px}.rowp .addb{display:none}.thumb{width:64px;height:64px}}
+
+/* tiles (shop grid) */
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:26px 18px}
+@media (max-width:1100px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:420px){.grid{gap:20px 10px}}
+.tile{cursor:pointer;display:flex;flex-direction:column;gap:10px;min-width:0}
+.tile .box{position:relative;aspect-ratio:1/1;border-radius:22px;background:var(--lightbox);display:grid;place-items:center;overflow:hidden}
+.tile .box img{width:78%;height:78%;object-fit:contain;mix-blend-mode:multiply;transition:transform .45s cubic-bezier(.2,.8,.2,1)}
+.tile:hover .box img{transform:scale(1.05)}
+.tile .box .sk{position:absolute;inset:0}
+.tile .box .addb{position:absolute;left:10px;bottom:10px;background:var(--btn);color:var(--btn-ink);border:0;opacity:0;transform:translateY(6px);transition:all .2s}
+.tile:hover .box .addb,.tile:focus-within .box .addb{opacity:1;transform:none}
+@media (hover:none){.tile .box .addb{opacity:1;transform:none}}
+.tile .nm{font-size:14.5px;line-height:1.38;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.tile .meta{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.flag{position:absolute;top:10px;right:10px;font-family:var(--f-mono);font-size:10.5px;letter-spacing:.08em;padding:4px 8px;border-radius:999px;background:rgba(12,13,16,.86);color:#fff}
+.st{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;color:var(--muted)}
+.st i{width:7px;height:7px;border-radius:50%;background:var(--ok)}
+.st.low i{background:var(--warn)} .st.out i{background:var(--bad)}
+.sk{background:linear-gradient(90deg,transparent,rgba(255,255,255,.55),transparent);animation:sk 1.2s infinite}
+@keyframes sk{from{transform:translateX(100%)}to{transform:translateX(-100%)}}
+@media (prefers-reduced-motion:reduce){.sk{animation:none}}
+
+/* facts */
+.facts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.facts div{padding:28px 24px;border-left:1px solid var(--line)}
+.facts div:last-child{border-left:0}
+.facts b{display:block;font-size:30px;font-weight:700;letter-spacing:-.02em;margin-bottom:6px}
+.facts p{margin:0;color:var(--muted);font-size:15px}
+@media (max-width:760px){.facts{grid-template-columns:1fr}.facts div{border-left:0;border-bottom:1px solid var(--line)}.facts div:last-child{border-bottom:0}}
+
+/* shop layout */
+.shop{display:grid;grid-template-columns:250px minmax(0,1fr);gap:40px;padding-block:36px 60px}
+.side{position:sticky;top:calc(84px + env(safe-area-inset-top,0px));align-self:start;max-height:calc(100vh - 100px);overflow:auto;padding-left:4px}
+.side h4{margin:22px 0 8px}
+.side .cl button{display:flex;justify-content:space-between;gap:10px;width:100%;border:0;background:none;text-align:right;padding:7px 10px;border-radius:10px;cursor:pointer;font-size:14.5px;color:var(--fg-2)}
+.side .cl button:hover{background:var(--panel-2);color:var(--fg)}
+.side .cl button.on{background:var(--panel-2);color:var(--fg);font-weight:600}
+.side .cl .mono{color:var(--muted);font-size:12px}
+.side select,.tb select{width:100%;height:40px;border-radius:12px;border:1px solid var(--line);background:var(--panel);padding:0 10px;cursor:pointer}
+.chk{display:flex;align-items:center;gap:10px;font-size:14.5px;cursor:pointer;padding:6px 2px}
+.chk input{width:18px;height:18px;accent-color:var(--accent)}
+.shophead h1{font-size:clamp(32px,4vw,52px);font-weight:700;letter-spacing:-.03em;margin:6px 0 4px}
+.tb{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:18px 0 24px;padding-bottom:18px;border-bottom:1px solid var(--line)}
+.srch{flex:1 1 260px;display:flex;align-items:center;gap:10px;height:44px;border-radius:999px;border:1px solid var(--line);background:var(--panel);padding:0 16px;min-width:0}
+.srch svg{width:17px;height:17px;color:var(--muted);flex:none}
+.srch input{border:0;outline:none;background:transparent;width:100%;min-width:0}
+.tb select{width:auto;height:44px;border-radius:999px;padding:0 14px}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:999px;padding:3px}
+.seg button{border:0;background:none;border-radius:999px;width:38px;height:36px;cursor:pointer;color:var(--muted);display:grid;place-items:center}
+.seg button.on{background:var(--panel-2);color:var(--fg)}
+.seg svg{width:17px;height:17px}
+.pills{display:flex;gap:8px;flex-wrap:wrap;margin-top:-8px;margin-bottom:18px}
+.pill{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line-2);border-radius:999px;padding:4px 6px 4px 12px;font-size:13px;background:var(--panel)}
+.pill button{border:0;background:var(--panel-2);border-radius:50%;width:20px;height:20px;cursor:pointer;display:grid;place-items:center;font-size:12px;line-height:1}
+.more{display:flex;justify-content:center;padding-top:36px}
+.empty{padding:60px 0;text-align:center;color:var(--muted)}
+.mfilter{display:none}
+@media (max-width:900px){.shop{grid-template-columns:1fr;gap:0}.side{display:none;position:static;max-height:none}.side.open{display:block;border:1px solid var(--line);border-radius:var(--r);padding:12px 14px;margin-bottom:18px}.mfilter{display:inline-flex}}
+
+/* overlays */
+.scrim{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:80;opacity:0;pointer-events:none;transition:opacity .25s}
+.scrim.on{opacity:1;pointer-events:auto}
+.panel{position:fixed;z-index:90;top:0;bottom:0;left:0;width:min(760px,100vw);background:var(--bg);border-right:1px solid var(--line);transform:translateX(-102%);transition:transform .32s cubic-bezier(.2,.8,.2,1);display:flex;flex-direction:column;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);padding-left:env(safe-area-inset-left,0px)}
+.panel.on{transform:none}
+.panel.narrow{width:min(460px,100vw)}
+.ph{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 22px;border-bottom:1px solid var(--line)}
+.pb{flex:1;overflow:auto;padding:22px}
+.pf{border-top:1px solid var(--line);padding:16px 22px;display:flex;flex-direction:column;gap:12px}
+.hero-shot{position:relative;aspect-ratio:16/11;border-radius:24px;background:radial-gradient(circle at 50% 40%,#fff 0%,var(--lightbox) 60%,var(--lightbox-2) 100%);display:grid;place-items:center;overflow:hidden}
+.hero-shot img{width:64%;height:80%;object-fit:contain;mix-blend-mode:multiply}
+.hero-shot .sk{position:absolute;inset:0}
+.pd h2{font-size:clamp(24px,3vw,32px);font-weight:700;line-height:1.18;margin:16px 0 10px}
+.pd .pr{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
+.pd .pr .price{font-size:32px}
+.spec{margin:24px 0;border:1px solid var(--line);border-radius:16px;overflow:hidden}
+.spec div{display:grid;grid-template-columns:150px minmax(0,1fr);border-bottom:1px solid var(--line)}
+.spec div:last-child{border-bottom:0}
+.spec dt{padding:12px 16px;background:var(--panel);font-family:var(--f-mono);font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);display:flex;align-items:center}
+.spec dd{margin:0;padding:12px 16px;overflow-wrap:anywhere;direction:ltr;text-align:right}
+.qty{display:inline-flex;align-items:center;border:1px solid var(--line-2);border-radius:999px;height:46px}
+.qty button{width:42px;height:44px;border:0;background:none;cursor:pointer;font-size:18px}
+.qty span{min-width:28px;text-align:center;font-family:var(--f-mono)}
+.buy{display:flex;gap:12px;align-items:center}
+.buy .btn{flex:1}
+.rel{margin-top:30px}
+.rel .rowp{grid-template-columns:64px minmax(0,1fr) auto}
+.rel .thumb{width:64px;height:64px}
+.line{display:grid;grid-template-columns:64px minmax(0,1fr) auto;gap:12px;align-items:center;padding:14px 0;border-bottom:1px solid var(--line)}
+.line .nm{font-size:14px;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.line .ctl{display:flex;align-items:center;gap:12px;margin-top:6px}
+.line .qty{height:32px}.line .qty button{width:30px;height:30px;font-size:15px}
+.rm{border:0;background:none;color:var(--muted);font-size:13px;cursor:pointer;padding:0}
+.rm:hover{color:var(--bad)}
+.tot{display:flex;justify-content:space-between;align-items:baseline}
+.tot .price{font-size:22px}
+.co form{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.co label{display:flex;flex-direction:column;gap:6px;font-size:13px;color:var(--muted)}
+.co .full{grid-column:1/-1}
+.co input,.co textarea{height:46px;border-radius:12px;border:1px solid var(--line);background:var(--panel);padding:0 12px;font-size:15px;color:var(--fg)}
+.co textarea{height:84px;padding:10px 12px;resize:vertical}
+.pay{grid-column:1/-1;border:1px dashed var(--line-2);border-radius:14px;padding:14px;font-size:14px;color:var(--muted);display:flex;gap:10px;align-items:center}
+.pay svg{width:22px;height:22px;flex:none;color:var(--accent)}
+.sum{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:16px;margin-bottom:20px}
+.sum .it{display:flex;justify-content:space-between;gap:10px;font-size:14px;padding:5px 0}
+.sum .it span:first-child{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.steps{display:flex;align-items:stretch;gap:8px;list-style:none;padding:0;margin:0 0 18px}
+.btn svg{width:18px;height:18px;flex:none}
+.steps li{flex:1;display:flex;align-items:center;gap:8px;margin:0;line-height:22px;font-size:13.5px;color:var(--muted);border-bottom:2px solid var(--line);padding-bottom:8px}
+.steps li span{width:22px;height:22px;border-radius:50%;display:grid;place-items:center;border:1px solid var(--line-2);font-size:12px}
+.steps li.on{color:var(--fg);border-color:var(--accent)}.steps li.on span{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.steps li.done{color:var(--fg-2)}
+.ships,.methods{display:grid;gap:8px;margin-top:8px}
+.co .opt{display:flex;flex-direction:row;align-items:center;gap:12px;border:1px solid var(--line);border-radius:14px;padding:12px 14px;cursor:pointer;background:var(--panel);font-size:14px;color:var(--fg)}
+.co .opt .mono{color:var(--fg-2);font-size:13px}
+.co .opt.on{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent) inset}
+.opt input{accent-color:var(--accent);width:18px;height:18px;flex:none}
+.co .opt>span:not(.mono){flex:1;display:flex;flex-direction:column;min-width:0;text-align:right}
+.opt b{font-weight:600;font-size:15px}.opt small{color:var(--muted);font-size:12.5px}
+.demo{border:1px dashed var(--warn);color:var(--fg-2);border-radius:12px;padding:10px 12px;font-size:13px;margin-bottom:14px}
+.wallet{width:100%;height:52px;border-radius:12px;border:0;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:14px;font-size:17px}
+.wallet .wl{font-weight:600;letter-spacing:-.01em}
+.wallet.apple{background:#000;color:#fff}
+.wallet.paypal{background:#ffc439;color:#111}.wallet.paypal i{font-style:italic;font-weight:800;color:#003087}.wallet.paypal .wl{color:#0070e0;font-style:italic;font-weight:800}
+.wallet.bit{background:#00b3a6;color:#fff}.wallet.bit .wl{font-weight:800;font-size:20px}
+.cardf{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.cardf label{display:flex;flex-direction:column;gap:6px;font-size:13px;color:var(--muted)}
+.cardf .full{grid-column:1/-1}
+.cardf input,.cardf select{height:46px;border-radius:12px;border:1px solid var(--line);background:var(--panel);padding:0 12px;font-size:15px;color:var(--fg);direction:ltr;text-align:right}
+.cardf input:disabled,.cardf select:disabled{opacity:.6;cursor:not-allowed}
+.secure{display:flex;gap:8px;align-items:center;color:var(--muted);font-size:12.5px;margin:14px 0 0}.secure svg{width:16px;height:16px;flex:none}
+.co label[hidden]{display:none!important}
+.done{text-align:center;padding:50px 10px}
+.done .ok{width:68px;height:68px;border-radius:50%;background:var(--grad);display:grid;place-items:center;margin:0 auto 18px;color:#06121f}
+.done .ok svg{width:30px;height:30px}
+@media (max-width:560px){.co form{grid-template-columns:1fr}.spec div{grid-template-columns:110px minmax(0,1fr)}}
+
+/* mega menu + search */
+.sheet{position:fixed;z-index:95;inset:0 0 auto 0;background:var(--bg);border-bottom:1px solid var(--line);transform:translateY(-104%);transition:transform .3s cubic-bezier(.2,.8,.2,1);padding-top:env(safe-area-inset-top,0px);max-height:90vh;overflow:auto}
+.sheet.on{transform:none}
+.sheet .wrap{padding-block:20px 30px}
+.sbar{display:flex;align-items:center;gap:14px;border-bottom:1px solid var(--line);padding-bottom:14px}
+.sbar svg{width:22px;height:22px;color:var(--muted);flex:none}
+.sbar input{flex:1;min-width:0;border:0;outline:none;background:transparent;font-size:26px;font-weight:600}
+.megagrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:18px}
+.megagrid button{display:flex;align-items:center;gap:12px;border:1px solid var(--line);background:var(--panel);border-radius:16px;padding:10px;cursor:pointer;text-align:right}
+.megagrid button:hover{border-color:var(--line-2)}
+.megagrid .thumb{width:52px;height:52px;border-radius:12px;flex:none}
+.megagrid .nm{font-size:14.5px;font-weight:500}
+@media (max-width:900px){.megagrid{grid-template-columns:1fr 1fr}}
+@media (max-width:480px){.megagrid{grid-template-columns:1fr}}
+
+footer.site{border-top:1px solid var(--line);margin-top:20px}
+footer.site .wrap{padding-block:44px 30px}
+.fg{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:28px}
+.fg ul{list-style:none;margin:10px 0 0;padding:0;display:flex;flex-direction:column;gap:8px;font-size:14px;color:var(--fg-2)}
+.fg button{border:0;background:none;padding:0;cursor:pointer;color:inherit;text-align:right;font-size:14px}
+.fg button:hover{color:var(--fg)}
+.legal{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;border-top:1px solid var(--line);margin-top:30px;padding-top:18px;color:var(--muted);font-size:12.5px}
+@media (max-width:760px){.fg{grid-template-columns:1fr 1fr}}
+
+.toast{position:fixed;z-index:99;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translate(-50%,20px);opacity:0;background:var(--btn);color:var(--btn-ink);padding:12px 18px;border-radius:999px;font-size:14px;transition:all .25s;pointer-events:none;max-width:calc(100vw - 32px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+.loading{padding:140px 0;text-align:center;color:var(--muted)}
+.noimg{display:grid;place-items:center;width:100%;height:100%;font-weight:700;font-size:clamp(11px,2.2vw,18px);letter-spacing:-.02em;color:#9aa0ab;direction:ltr}
+.noimg b{font-weight:300}
+</style>
+
+</head>
+<body>
+<div class="strip">גרסת בנייה · המחירים זמניים ויתעדכנו לפני העלייה לאוויר</div>
+
+<header class="hdr">
+  <div class="wrap">
+    <a class="logo" href="#home" aria-label="RomiTech – דף הבית">
+      <svg viewBox="0 0 32 32" aria-hidden="true"><defs><linearGradient id="lg1" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#9a86ff"/><stop offset=".52" stop-color="#4cc3ff"/><stop offset="1" stop-color="#45f0c4"/></linearGradient></defs><rect x="1" y="1" width="30" height="30" rx="9" fill="none" stroke="url(#lg1)" stroke-width="2"/><path d="M11.5 23.5V8.5h5.2a4.2 4.2 0 0 1 0 8.4h-5.2M16.4 16.9l5.2 6.6" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span class="wm">Romi<b>Tech</b></span>
+    </a>
+    <nav class="nav" aria-label="ניווט ראשי">
+      <a href="#shop" data-nav="shop">חנות</a>
+      <button data-open="mega">קטגוריות</button>
+      <a href="#home" data-finder="1">לפי מכשיר</a>
+      <a href="#otterbox" data-nav="otterbox">OtterBox</a>
+      <a href="#apple" data-nav="apple">Apple</a>
+      <a href="#clearance" data-nav="clearance">חיסולים</a>
+    </nav>
+    <span class="sp"></span>
+    <button class="ib mnav" data-open="mega" aria-label="קטגוריות"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+    <button class="ib" id="openSearch" aria-label="חיפוש"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></button>
+    <button class="ib" id="openCart" aria-label="סל הקניות"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8h14l-1.2 11.1a2 2 0 0 1-2 1.9H8.2a2 2 0 0 1-2-1.9z"/><path d="M9 8V6.5a3 3 0 0 1 6 0V8"/></svg><span class="mono" id="cartN">0</span></button>
+  </div>
+</header>
+
+<main id="app"><div class="loading">טוען…</div></main>
+
+<footer class="site"><div class="wrap">
+  <div class="fg">
+    <div>
+      <div class="logo"><svg viewBox="0 0 32 32" aria-hidden="true"><defs><linearGradient id="lg2" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#9a86ff"/><stop offset=".52" stop-color="#4cc3ff"/><stop offset="1" stop-color="#45f0c4"/></linearGradient></defs><rect x="1" y="1" width="30" height="30" rx="9" fill="none" stroke="url(#lg2)" stroke-width="2"/><path d="M11.5 23.5V8.5h5.2a4.2 4.2 0 0 1 0 8.4h-5.2M16.4 16.9l5.2 6.6" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="wm">Romi<b>Tech</b></span></div>
+      <p style="color:var(--muted);font-size:14px;max-width:34ch;margin:14px 0 0">אביזרים לטלפון, לשעון ולאוזניות. מתאימים למכשיר שלך, עם מלאי מתעדכן ומשלוח עד הבית.</p>
+    </div>
+    <div><span class="label">קטגוריות</span><ul id="fc1"></ul></div>
+    <div><span class="label">עוד</span><ul id="fc2"></ul></div>
+    <div><span class="label">שירות</span><ul><li>משלוחים</li><li>ביטול עסקה והחזרות</li><li>תקנון</li><li>מדיניות פרטיות</li><li>הצהרת נגישות</li></ul></div>
+  </div>
+  <div class="legal"><span>© 2026 RomiTech</span><span>ביטול עסקה לפי חוק הגנת הצרכן · תשלום מאובטח</span></div>
+</div></footer>
+
+<div class="scrim" id="scrim"></div>
+<aside class="panel" id="pp" aria-label="פרטי מוצר"></aside>
+<aside class="panel narrow" id="cart" aria-label="סל הקניות">
+  <div class="ph"><h2 style="font-size:22px">הסל</h2><button class="ib" data-close aria-label="סגירה"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
+  <div class="pb" id="cartBody"></div>
+  <div class="pf" id="cartFoot"></div>
+</aside>
+<div class="sheet" id="search" role="dialog" aria-label="חיפוש"><div class="wrap">
+  <div class="sbar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input id="q" type="search" placeholder="מה מחפשים? דגם, מוצר או ברקוד" autocomplete="off"><button class="ib" data-close aria-label="סגירה"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
+  <div id="sr"></div>
+</div></div>
+<div class="sheet" id="mega" role="dialog" aria-label="קטגוריות"><div class="wrap">
+  <div class="sh" style="margin-bottom:0"><div><span class="label">כל הקטגוריות</span><h2 style="font-size:28px;margin-top:4px">מה מחפשים היום?</h2></div><button class="ib" data-close aria-label="סגירה"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
+  <div class="megagrid" id="megagrid"></div>
+</div></div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+/* ===== הגדרות תמחור ותצוגה ===== */
+const CONFIG = {
+  priceMultiplier: 1,   // 1 = המחיר הקיים. 1.5 = תוספת 50%
+  addVat: false,        // true = הוספת מע"מ למחיר המוצג
+  vat: 0.18,
+  hideFlagged: false,   // true = הסתרת 14 המוצרים עם מחיר חשוד
+  hideOutOfStock: false,
+  pageSize: 36
+};
+const ORDER_WA='972552580000';
+const SB={url:'https://rtoukdganvoypamxjgwb.supabase.co',key:'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ0b3VrZGdhbnZveXBhbXhqZ3diIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE2NzU5NTksImV4cCI6MjEwNzI1MTk1OX0.RSxoPyIPf_KPvwe9rVa2rNsZoSUe5lDxEQmzh14mIFw'}; // public anon key – access enforced by RLS/RPC
+async function sbRpc(fn,body){ const r=await fetch(SB.url+'/rest/v1/rpc/'+fn,{method:'POST',headers:{apikey:SB.key,Authorization:'Bearer '+SB.key,'Content-Type':'application/json'},body:JSON.stringify(body)}); const t=await r.text(); let j=null; try{j=JSON.parse(t)}catch(e){} if(!r.ok) throw new Error((j&&(j.message||j.hint))||('HTTP '+r.status)); return j; } // בוט הוואטסאפ של גיא – מקבל הזמנות ושומר אותן ב-HA (sensor.romitech_orders)
+const DEVICES = {
+  Apple: ['iPhone 18 Pro Max','iPhone 18 Pro','iPhone 18','iPhone Duo','iPhone 17 Pro Max','iPhone 17 Pro','iPhone 17 Air','iPhone 17','iPhone 16 Pro Max','iPhone 16 Pro','iPhone 16','iPhone 15 Pro Max','iPhone 15','iPhone 14','iPhone 13','AirPods Pro','Apple Watch'],
+  Samsung: ['S26 Ultra','S26','S26 FE','S25 Ultra','S25','S25 FE','S24','Z Fold 8','Z Flip 8','A57','A56','A37','A36','A26','A17','A16','A07','A06'],
+  Xiaomi: ['Redmi Note 13','Redmi 15','Poco']
+};
+
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const IC={
+  plus:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>',
+  x:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>',
+  check:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>',
+  lock:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><rect x="5" y="10" width="14" height="10" rx="2.5"/><path d="M8 10V7.5a4 4 0 0 1 8 0V10"/></svg>',
+  grid:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/></svg>',
+  list:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M9 6h11M9 12h11M9 18h11"/><circle cx="4.5" cy="6" r="1"/><circle cx="4.5" cy="12" r="1"/><circle cx="4.5" cy="18" r="1"/></svg>',
+  filter:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M4 6h16M7 12h10M10 18h4"/></svg>',
+  search:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>'
+};
+
+/* ===== נתונים ותמונות ===== */
+let DB=null, ALL=[], BYID=new Map();
+const PACK=100, packs={}, wait={};
+function loadPack(n){ if(packs[n]) return Promise.resolve(packs[n]); if(!wait[n]) wait[n]=fetch('img/p'+n+'.json').then(r=>r.json()).then(a=>packs[n]=a).catch(()=>{delete wait[n];return null}); return wait[n]; }
+function img(ii,alt){ if(ii==null||ii<0) return `<span class="noimg" role="img" aria-label="${esc(alt)}">Romi<b>Tech</b></span>`; return `<img src="img/${ii}.webp" alt="${esc(alt)}" loading="lazy" decoding="async">`; }
+function hydrate(){}
+const nf=new Intl.NumberFormat('he-IL',{maximumFractionDigits:2});
+const priceOf=p=>{ let v=p.price/100*CONFIG.priceMultiplier; if(CONFIG.addVat) v*=1+CONFIG.vat; return Math.round(v*100)/100; };
+const money=v=>'₪'+nf.format(v);
+const STK=[['במלאי',''],['מלאי נמוך','low'],['אזל','out']];
+const norm=s=>String(s||'').toLowerCase().replace(/[֑-ׇ]/g,'').replace(/[–—\-_/+.,()]/g,' ').replace(/\s+/g,' ').trim();
+const hasWords=(p,q)=>{ const t=norm(q).split(' ').filter(Boolean); return t.every(w=>p._w.includes(' '+w+' ')); };
+const hasText=(p,q)=>{ const t=norm(q).split(' ').filter(Boolean); return t.every(w=>p._s.includes(w)); };
+const catIdx=slug=>DB.cats.findIndex(c=>c[0]===slug);
+const PICK={cases:262,screen:935,otterbox:816,cables:3,audio:652,chargers:841,bands:913,gadgets:135,samsung:741,car:348,power:588,clearance:315,storage:161,photo:538,speakers:98,machines:418,apple:863,anker:473,phones:182,retail:124,electric:685,watches:528,mic:81};
+
+/* ===== סל ===== */
+let cart={}; try{cart=JSON.parse(localStorage.getItem('romitech.cart')||'{}')||{}}catch(e){cart={}}
+const saveCart=()=>{ try{localStorage.setItem('romitech.cart',JSON.stringify(cart))}catch(e){} $('#cartN').textContent=cartCount(); };
+const cartCount=()=>Object.values(cart).reduce((a,b)=>a+b,0);
+const cartTotal=()=>Object.entries(cart).reduce((a,[id,q])=>{const p=BYID.get(+id);return a+(p?priceOf(p)*q:0)},0);
+function addToCart(id,q=1){ const p=BYID.get(id); if(!p) return; if(p.stock===2){toast('המוצר אזל מהמלאי');return} cart[id]=(cart[id]||0)+q; saveCart(); toast('נוסף לסל · '+p.name); }
+function setQty(id,q){ if(q<=0) delete cart[id]; else cart[id]=q; saveCart(); renderCart(); }
+let tt; function toast(t){ const e=$('#toast'); e.textContent=t; e.classList.add('on'); clearTimeout(tt); tt=setTimeout(()=>e.classList.remove('on'),2200); }
+
+/* ===== רכיבים ===== */
+const stk=p=>{ const [l,c]=STK[p.stock]; return `<span class="st ${c}"><i></i>${l}</span>`; };
+const sub=p=>[p.brand, p.models].filter(Boolean).join(' · ') || DB.cats[p.cat][1];
+function tile(p){
+  return `<article class="tile" data-pid="${p.id}" tabindex="0" aria-label="${esc(p.name)}">
+    <div class="box">${img(p.img,p.name)}${p.stock===2?'<span class="flag">SOLD OUT</span>':''}${p.stock<2?`<button class="addb" data-add="${p.id}" aria-label="הוספה לסל">${IC.plus}</button>`:''}</div>
+    <div class="nm">${esc(p.name)}</div>
+    <div class="meta"><span class="price">${money(priceOf(p))}</span>${stk(p)}</div></article>`;
+}
+function row(p,withAdd=true){
+  return `<div class="rowp" data-pid="${p.id}" tabindex="0" role="button" aria-label="${esc(p.name)}">
+    <div class="thumb">${img(p.img,p.name)}</div>
+    <div style="min-width:0"><div class="nm">${esc(p.name)}</div><div class="sub">${esc(sub(p))}</div></div>
+    <span class="price">${money(priceOf(p))}</span>
+    ${withAdd?(p.stock<2?`<button class="addb" data-add="${p.id}" aria-label="הוספה לסל">${IC.plus}</button>`:stk(p)):''}</div>`;
+}
+
+/* ===== דף הבית ===== */
+const finder={brand:'Apple',model:'iPhone 17 Pro'};
+function finderCount(m){ return ALL.filter(p=>hasWords(p,m)).length; }
+function finderHTML(){
+  const ms=DEVICES[finder.brand];
+  if(!ms.includes(finder.model)) finder.model=ms[0];
+  const n=finderCount(finder.model);
+  return `<div class="finder" id="finder">
+    <span class="label">איתור לפי מכשיר</span>
+    <div class="tabs" role="tablist">${Object.keys(DEVICES).map(b=>`<button role="tab" data-fb="${b}" class="${b===finder.brand?'on':''}">${b}</button>`).join('')}</div>
+    <div class="models">${ms.map(m=>`<button data-fm="${esc(m)}" class="${m===finder.model?'on':''}">${esc(m)}</button>`).join('')}</div>
+    <div class="go"><span><span class="mono" style="font-size:20px;font-weight:600">${n}</span> <span style="color:var(--muted)">אביזרים ל-</span><span dir="ltr">${esc(finder.model)}</span></span><button class="btn btn-main" data-findgo="1">להצגת האביזרים</button></div>
+  </div>`;
+}
+function viewHome(){
+  const inS=ALL.filter(p=>p.stock<2);
+  const fresh=inS.slice().sort((a,b)=>b.id-a.id).filter((p,i,a)=>a.findIndex(x=>x.img===p.img)===i).slice(0,8);
+  const B=[['cases','big'],['otterbox','wide'],['screen',''],['audio',''],['chargers','wide'],['apple',''],['speakers','']];
+  const rest=DB.cats.map((c,i)=>i).filter(i=>!B.some(b=>b[0]===DB.cats[i][0]));
+  const brands=['OTTERBOX','BLAZE','ANKER','SAMSUNG','APPLE','SPG','IPAKY','ONEPLUS','SANDISK','LITO'];
+  $('#app').innerHTML=`
+  <section class="hero"><div class="wrap">
+    <div>
+      <span class="label"><span class="mono">${nf.format(ALL.length)}</span> מוצרים · <span class="mono">${DB.cats.length}</span> קטגוריות · משלוח עד הבית</span>
+      <h1>האביזר הנכון.<br><span class="gradtext">למכשיר שלך.</span></h1>
+      <p class="lead">בוחרים את הטלפון, ואנחנו מראים רק את מה שמתאים לו: כיסויים, מגני מסך, מטענים ואוזניות, עם מלאי מתעדכן ומשלוח עד הבית.</p>
+      ${finderHTML()}
+    </div>
+    <div class="pedestal" aria-hidden="true">
+      <span class="orbit"></span>
+      <span class="disc d1">${img(816,'')}</span>
+      <span class="disc d2">${img(473,'')}</span>
+      <span class="disc d3">${img(841,'')}</span>
+      <span class="disc d4">${img(98,'')}</span>
+      <span class="tagline t1">MAGSAFE · 360°</span>
+      <span class="tagline t2">USB-C · 25W</span>
+    </div>
+  </div></section>
+  <div class="marquee" aria-hidden="true"><div class="row">${[...brands,...brands].map(b=>`<span>— <b>${b}</b></span>`).join('')}</div></div>
+
+  <section class="sec"><div class="wrap">
+    <div class="sh"><div><span class="label">קטגוריות</span><h2>מכל הבא לטלפון</h2></div><a class="lnk" href="#shop">לכל ${nf.format(ALL.length)} המוצרים ←</a></div>
+    <div class="bento">${B.map(([s,k])=>{ const i=catIdx(s); if(i<0) return ''; const c=DB.cats[i]; return `<button class="ct ${k}" data-go="${s}"><div><h3>${esc(c[1])}</h3><span class="label n">${nf.format(c[2])} פריטים</span></div><span class="disc">${img(PICK[s]??0,c[1])}</span></button>`; }).join('')}</div>
+    <div class="index">${rest.map(i=>`<button data-go="${DB.cats[i][0]}"><span>${esc(DB.cats[i][1])}</span><span class="dots"></span><span class="mono" style="color:var(--muted);font-size:13px">${DB.cats[i][2]}</span></button>`).join('')}</div>
+  </div></section>
+
+  <section class="sec" style="padding-top:0"><div class="wrap">
+    <div class="sh"><div><span class="label">חדש במלאי</span><h2>נכנס השבוע</h2></div><button class="lnk" data-sortnew="1">לכל החדשים ←</button></div>
+    <div class="rows">${fresh.map(p=>row(p)).join('')}</div>
+  </div></section>
+
+  <section class="sec" style="padding-top:0"><div class="wrap"><div class="facts">
+    <div><b>LIVE</b><p>מצב המלאי של כל מוצר מוצג בזמן אמת: במלאי, מלאי נמוך או אזל.</p></div>
+    <div><b>עד הבית</b><p>מזמינים באתר ומקבלים משלוח עד הדלת, בכל הארץ.</p></div>
+    <div><b>14 ימים</b><p>ביטול עסקה והחזרה לפי חוק הגנת הצרכן.</p></div>
+  </div></div></section>`;
+  hydrate($('#app'));
+}
+function renderFinder(){ const f=$('#finder'); if(!f) return; f.outerHTML=finderHTML(); }
+
+/* ===== חנות ===== */
+const shop={cat:-1,q:'',brands:new Set(),inStock:false,device:'',sort:'rec',view:'grid',shown:CONFIG.pageSize};
+try{ shop.view=localStorage.getItem('romitech.view')||'grid'; }catch(e){}
+function results(){
+  let r=ALL.filter(p=>(shop.cat<0||p.cat===shop.cat)&&(!shop.brands.size||shop.brands.has(p.brand))&&(!shop.inStock||p.stock<2));
+  if(shop.device) r=r.filter(p=>hasWords(p,shop.device));
+  if(shop.q.trim()) r=r.filter(p=>hasText(p,shop.q));
+  const s=shop.sort;
+  if(s==='low') r=r.slice().sort((a,b)=>priceOf(a)-priceOf(b));
+  else if(s==='high') r=r.slice().sort((a,b)=>priceOf(b)-priceOf(a));
+  else if(s==='new') r=r.slice().sort((a,b)=>b.id-a.id);
+  return r;
+}
+function viewShop(){
+  const c=shop.cat>=0?DB.cats[shop.cat]:null;
+  const pool=ALL.filter(p=>shop.cat<0||p.cat===shop.cat);
+  const bc={}; pool.forEach(p=>{ if(p.brand) bc[p.brand]=(bc[p.brand]||0)+1; });
+  const allDev=Object.entries(DEVICES).flatMap(([b,ms])=>ms.map(m=>[b,m]));
+  $('#app').innerHTML=`<div class="wrap"><div class="shop">
+    <aside class="side" id="side">
+      <span class="label">קטגוריה</span>
+      <div class="cl" style="margin-top:8px"><button data-cat="-1" class="${shop.cat<0?'on':''}"><span>כל המוצרים</span><span class="mono">${ALL.length}</span></button>
+      ${DB.cats.map((x,i)=>`<button data-cat="${i}" class="${shop.cat===i?'on':''}"><span>${esc(x[1])}</span><span class="mono">${x[2]}</span></button>`).join('')}</div>
+      <h4 class="label">מכשיר</h4>
+      <select id="dev" aria-label="מכשיר"><option value="">כל המכשירים</option>${Object.entries(DEVICES).map(([b,ms])=>`<optgroup label="${b}">${ms.map(m=>`<option ${m===shop.device?'selected':''}>${esc(m)}</option>`).join('')}</optgroup>`).join('')}</select>
+      ${Object.keys(bc).length?`<h4 class="label">מותג</h4>${Object.entries(bc).sort((a,b)=>b[1]-a[1]).map(([b,n])=>`<label class="chk"><input type="checkbox" data-brand="${esc(b)}" ${shop.brands.has(b)?'checked':''}> <span style="flex:1">${esc(b)}</span><span class="mono" style="color:var(--muted);font-size:12px">${n}</span></label>`).join('')}`:''}
+      <h4 class="label">זמינות</h4>
+      <label class="chk"><input type="checkbox" id="instock" ${shop.inStock?'checked':''}> רק מוצרים במלאי</label>
+    </aside>
+    <section style="min-width:0">
+      <div class="shophead"><span class="label">${c?'קטגוריה':'חנות'}</span><h1>${c?esc(c[1]):'כל המוצרים'}</h1></div>
+      <div class="tb">
+        <label class="srch">${IC.search}<input id="sq" type="search" value="${esc(shop.q)}" placeholder="חיפוש בתוך ${c?esc(c[1]):'החנות'}" aria-label="חיפוש"></label>
+        <button class="ib mfilter" id="mf">${IC.filter}<span>סינון</span></button>
+        <select id="sort" aria-label="מיון"><option value="rec">מומלץ</option><option value="new">החדשים</option><option value="low">מחיר ↑</option><option value="high">מחיר ↓</option></select>
+        <div class="seg" role="group" aria-label="תצוגה"><button data-view="grid" class="${shop.view==='grid'?'on':''}" aria-label="רשת">${IC.grid}</button><button data-view="list" class="${shop.view==='list'?'on':''}" aria-label="רשימה">${IC.list}</button></div>
+      </div>
+      <div class="pills" id="pills"></div>
+      <div id="res"></div>
+      <div class="more" id="more"></div>
+    </section>
+  </div></div>`;
+  $('#sort').value=shop.sort;
+  let d; $('#sq').addEventListener('input',e=>{clearTimeout(d);d=setTimeout(()=>{shop.q=e.target.value;shop.shown=CONFIG.pageSize;renderRes()},160)});
+  $('#sort').onchange=e=>{shop.sort=e.target.value;shop.shown=CONFIG.pageSize;renderRes()};
+  $('#dev').onchange=e=>{shop.device=e.target.value;shop.shown=CONFIG.pageSize;renderRes()};
+  $('#instock').onchange=e=>{shop.inStock=e.target.checked;shop.shown=CONFIG.pageSize;renderRes()};
+  $$('[data-brand]').forEach(b=>b.onchange=()=>{ b.checked?shop.brands.add(b.dataset.brand):shop.brands.delete(b.dataset.brand); shop.shown=CONFIG.pageSize; renderRes(); });
+  $('#mf').onclick=()=>$('#side').classList.toggle('open');
+  renderRes();
+}
+function renderRes(){
+  const r=results();
+  const P=[]; if(shop.device) P.push(['device',shop.device]); shop.brands.forEach(b=>P.push(['brand',b])); if(shop.inStock) P.push(['stock','רק במלאי']); if(shop.q.trim()) P.push(['q','„'+shop.q.trim()+'”']);
+  $('#pills').innerHTML=`<span style="color:var(--muted);font-size:13.5px;align-self:center"><span class="mono">${nf.format(r.length)}</span> תוצאות</span>`+P.map(([k,v])=>`<span class="pill" ${k==='device'?'dir="ltr"':''}>${esc(v)}<button data-unpill="${k}|${esc(v)}" aria-label="הסרה">×</button></span>`).join('');
+  const part=r.slice(0,shop.shown);
+  $('#res').innerHTML=!r.length?`<div class="empty">אין מוצרים שמתאימים לסינון הזה. נסה להסיר אחד מהמסננים.</div>`
+    : shop.view==='grid'?`<div class="grid">${part.map(tile).join('')}</div>`:`<div class="rows">${part.map(p=>row(p)).join('')}</div>`;
+  $('#more').innerHTML=r.length>shop.shown?`<button class="btn btn-line" id="lm">הצגת עוד <span class="mono">${Math.min(CONFIG.pageSize,r.length-shop.shown)}</span> מתוך <span class="mono">${nf.format(r.length-shop.shown)}</span></button>`:'';
+  const lm=$('#lm'); if(lm) lm.onclick=()=>{shop.shown+=CONFIG.pageSize;renderRes()};
+  hydrate($('#res'));
+}
+
+/* ===== מוצר ===== */
+let lastFocus=null;
+function openProduct(id){
+  const p=BYID.get(id); if(!p) return; lastFocus=document.activeElement;
+  const rel=ALL.filter(x=>x.cat===p.cat&&x.id!==p.id&&x.stock<2&&x.img!==p.img).slice(0,5);
+  let q=1;
+  $('#pp').innerHTML=`<div class="ph"><span class="label">${esc(DB.cats[p.cat][1])}</span><button class="ib" data-close aria-label="סגירה">${IC.x}</button></div>
+  <div class="pb pd">
+    <div class="hero-shot">${img(p.img,p.name)}</div>
+    <h2>${esc(p.name)}</h2>
+    <div class="pr"><span class="price">${money(priceOf(p))}</span>${stk(p)}<span class="label">${CONFIG.addVat?'כולל מע״מ':'מחיר זמני'}</span></div>
+    <dl class="spec">
+      ${p.brand?`<div><dt>Brand</dt><dd>${esc(p.brand)}</dd></div>`:''}
+      <div><dt>Fits</dt><dd>${esc(p.models||'Universal')}</dd></div>
+      <div><dt>Category</dt><dd style="direction:rtl">${esc(DB.cats[p.cat][1])}</dd></div>
+      <div><dt>Barcode</dt><dd class="mono">${esc(p.sku)}</dd></div>
+    </dl>
+    ${rel.length?`<div class="rel"><span class="label">עוד ב${esc(DB.cats[p.cat][1])}</span><div class="rows" style="margin-top:10px">${rel.map(x=>row(x,false)).join('')}</div></div>`:''}
+  </div>
+  <div class="pf"><div class="buy"><div class="qty"><button data-q="1" aria-label="הוספת יחידה">+</button><span id="pq">1</span><button data-q="-1" aria-label="הורדת יחידה">−</button></div><button class="btn btn-main" id="padd" ${p.stock===2?'disabled':''}>${p.stock===2?'אזל מהמלאי':'הוספה לסל · '+money(priceOf(p))}</button></div></div>`;
+  $$('[data-q]',$('#pp')).forEach(b=>b.onclick=()=>{ q=Math.max(1,q+(+b.dataset.q)); $('#pq').textContent=q; $('#padd').textContent='הוספה לסל · '+money(priceOf(p)*q); });
+  $('#padd').onclick=()=>addToCart(p.id,q);
+  openEl('#pp'); $('#pp .pb').scrollTop=0; hydrate($('#pp'));
+}
+
+/* ===== סל וקופה ===== */
+function renderCart(){
+  const ids=Object.keys(cart);
+  $('#cartBody').innerHTML=ids.length?ids.map(id=>{const p=BYID.get(+id); if(!p) return ''; const q=cart[id]; return `<div class="line"><div class="thumb" style="width:64px;height:64px">${img(p.img,p.name)}</div><div style="min-width:0"><div class="nm">${esc(p.name)}</div><div class="ctl"><div class="qty"><button data-inc="${id}" aria-label="הוספה">+</button><span>${q}</span><button data-dec="${id}" aria-label="הורדה">−</button></div><button class="rm" data-rm="${id}">הסרה</button></div></div><span class="price" style="font-size:15px">${money(priceOf(p)*q)}</span></div>`}).join('')
+    :`<div class="empty">הסל ריק.<br><br><a class="lnk" href="#shop" data-close>לחנות ←</a></div>`;
+  $('#cartFoot').innerHTML=ids.length?`<div class="tot"><span>סה״כ</span><span class="price">${money(cartTotal())}</span></div><span style="color:var(--muted);font-size:13px">דמי המשלוח יחושבו בקופה.</span><button class="btn btn-main" id="co">לתשלום</button>`:'';
+  hydrate($('#cartBody')); const co=$('#co'); if(co) co.onclick=checkout;
+}
+/* קופה בשני שלבים: פרטים ומשלוח → תשלום (Apple Pay / אשראי / PayPal / ביט).
+   מצב תצוגה: PAY_LIVE=false – התשלום עוד לא מחובר (Grow + PayPal), ההזמנה נשלחת בוואטסאפ. */
+const PAY_LIVE=false;
+const SHIP={pickup:{label:'איסוף עצמי מהחנות',sub:'אייטק, הדקלים 104, פרדס חנה',fee:0},home:{label:'משלוח עד הבית',sub:'שליח עד הדלת, 1–3 ימי עסקים',fee:null}};
+const co={step:1,ship:'home',method:'apple',f:{}};
+const coLines=()=>Object.entries(cart).map(([id,q])=>{const p=BYID.get(+id);return p?{p,q}:null}).filter(Boolean);
+const shipFee=()=>SHIP[co.ship].fee||0;
+const grand=()=>Math.round((cartTotal()+shipFee())*100)/100;
+function sumBox(){
+  return `<div class="sum">${coLines().map(({p,q})=>`<div class="it"><span>${q} × ${esc(p.name)}</span><span class="mono">${money(priceOf(p)*q)}</span></div>`).join('')}
+    <div class="it"><span>${esc(SHIP[co.ship].label)}</span><span class="mono">${SHIP[co.ship].fee===0?'חינם':SHIP[co.ship].fee==null?'יעודכן':money(SHIP[co.ship].fee)}</span></div>
+    <div class="it" style="border-top:1px solid var(--line);margin-top:6px;padding-top:10px;font-weight:600"><span>סה״כ לתשלום</span><span class="mono">${money(grand())}</span></div></div>`;
+}
+const steps=()=>`<ol class="steps"><li class="${co.step===1?'on':'done'}"><span class="mono">1</span>פרטים ומשלוח</li><li class="${co.step===2?'on':''}"><span class="mono">2</span>תשלום</li></ol>`;
+function checkout(){
+  co.step=1; const f=co.f;
+  $('#cartBody').innerHTML=`<div class="co">${steps()}
+    <span class="label">איך לקבל את ההזמנה?</span>
+    <div class="ships" role="radiogroup" aria-label="שיטת משלוח">${Object.entries(SHIP).map(([k,s])=>`<label class="opt ${co.ship===k?'on':''}"><input type="radio" name="ship" value="${k}" ${co.ship===k?'checked':''}><span><b>${esc(s.label)}</b><small>${esc(s.sub)}</small></span><span class="mono">${s.fee===0?'חינם':s.fee==null?'יעודכן':money(s.fee)}</span></label>`).join('')}</div>
+    <span class="label" style="display:block;margin-top:18px">פרטים</span>
+    <form id="cof" novalidate style="margin-top:12px">
+      <label>שם מלא<input id="co-name" autocomplete="name" value="${esc(f.name||'')}"></label>
+      <label>טלפון נייד<input id="co-phone" inputmode="tel" autocomplete="tel" placeholder="05X-XXXXXXX" value="${esc(f.phone||'')}"></label>
+      <label class="full">דוא״ל לקבלה<input id="co-email" type="email" autocomplete="email" value="${esc(f.email||'')}"></label>
+      <label class="addr">עיר<input id="co-city" autocomplete="address-level2" value="${esc(f.city||'')}"></label>
+      <label class="addr">רחוב ומספר<input id="co-street" autocomplete="street-address" value="${esc(f.street||'')}"></label>
+      <label class="full">הערות<textarea id="co-notes" placeholder="קומה, קוד כניסה…">${esc(f.notes||'')}</textarea></label>
+      <p id="coerr" class="full" style="color:var(--bad);margin:0;font-size:14px" hidden></p>
+    </form></div>`;
+  const syncShip=()=>{ $$('#cartBody .addr').forEach(l=>l.hidden=co.ship==='pickup'); };
+  $$('input[name=ship]').forEach(r=>r.onchange=()=>{ co.ship=r.value; $$('.ships .opt').forEach(o=>o.classList.toggle('on',o.querySelector('input').checked)); syncShip(); $('#tonext').textContent='המשך לתשלום · '+money(grand()); });
+  syncShip();
+  $('#cartFoot').innerHTML=`<button class="btn btn-main" id="tonext">המשך לתשלום · ${money(grand())}</button><button class="lnk" id="backcart">חזרה לסל</button>`;
+  $('#backcart').onclick=renderCart;
+  $('#tonext').onclick=()=>{
+    const need=['co-name','co-phone'].concat(co.ship==='home'?['co-city','co-street']:[]);
+    const miss=need.filter(i=>!$('#'+i).value.trim()); const err=$('#coerr');
+    if(miss.length){err.textContent=co.ship==='home'?'כדי להמשיך צריך למלא שם, טלפון, עיר ורחוב.':'כדי להמשיך צריך למלא שם וטלפון.';err.hidden=false;$('#'+miss[0]).focus();return}
+    if(!/^05\d{8}$/.test($('#co-phone').value.replace(/\D/g,''))){err.textContent='הטלפון צריך להיות נייד ישראלי בן 10 ספרות, למשל 0521234567.';err.hidden=false;$('#co-phone').focus();return}
+    const v=i=>$('#'+i).value.replace(/[\r\n|]+/g,' ').trim();
+    co.f={name:v('co-name'),phone:v('co-phone'),email:v('co-email'),city:v('co-city'),street:v('co-street'),notes:v('co-notes')};
+    payStep();
+  };
+}
+const METHODS=[
+  {k:'apple',label:'Apple Pay',sub:'אישור ב-Face ID או Touch ID'},
+  {k:'card',label:'כרטיס אשראי',sub:'ויזה, מאסטרקארד, אמריקן אקספרס, ישראכרט'},
+  {k:'paypal',label:'PayPal',sub:'תשלום מחשבון PayPal'},
+  {k:'bit',label:'ביט',sub:'אישור באפליקציית ביט'}
+];
+function payStep(){
+  co.step=2;
+  $('#cartBody').innerHTML=`<div class="co">${steps()}
+    ${PAY_LIVE?'':`<div class="demo">התשלום באתר יופעל בקרוב. בינתיים ההזמנה נשמרת אצלנו וניצור איתך קשר לתשלום.</div>`}
+    ${sumBox()}
+    <span class="label">אמצעי תשלום</span>
+    <div class="methods" role="radiogroup" aria-label="אמצעי תשלום">${METHODS.map(m=>`<label class="opt ${co.method===m.k?'on':''}"><input type="radio" name="pm" value="${m.k}" ${co.method===m.k?'checked':''}><span><b>${esc(m.label)}</b><small>${esc(m.sub)}</small></span></label>`).join('')}</div>
+    <div id="pmui" style="margin-top:14px"></div>
+    <p class="secure">${IC.lock}<span>התשלום מתבצע בדף מאובטח של חברת הסליקה, בתוך האתר. פרטי הכרטיס לא נשמרים אצלנו.</span></p>
+  </div>`;
+  const draw=()=>{
+    const g=money(grand()); const m=co.method; const ui=$('#pmui');
+    if(m==='apple') ui.innerHTML=`<button class="wallet apple" id="paybtn" type="button"><span class="wl">Apple Pay</span><span class="mono">${g}</span></button>`;
+    if(m==='paypal') ui.innerHTML=`<button class="wallet paypal" id="paybtn" type="button"><span class="wl"><i>Pay</i>Pal</span><span class="mono">${g}</span></button>`;
+    if(m==='bit') ui.innerHTML=`<button class="wallet bit" id="paybtn" type="button"><span class="wl">bit</span><span class="mono">${g}</span></button>`;
+    if(m==='card') ui.innerHTML=`<div class="cardf" aria-label="טופס כרטיס אשראי">
+        <label class="full">מספר כרטיס<input id="cc-num" ${PAY_LIVE?'':'disabled'} placeholder="•••• •••• •••• ••••" inputmode="numeric"></label>
+        <label>תוקף<input id="cc-exp" ${PAY_LIVE?'':'disabled'} placeholder="MM/YY"></label>
+        <label>CVV<input id="cc-cvv" ${PAY_LIVE?'':'disabled'} placeholder="•••"></label>
+        <label class="full">תעודת זהות של בעל הכרטיס<input id="cc-id" ${PAY_LIVE?'':'disabled'} placeholder="9 ספרות"></label>
+        <label class="full">תשלומים<select id="cc-inst" ${PAY_LIVE?'':'disabled'}><option>תשלום אחד</option><option>2 תשלומים</option><option>3 תשלומים</option></select></label>
+      </div><button class="btn btn-main" id="paybtn" type="button" style="width:100%;margin-top:12px">${IC.lock} תשלום ${g}</button>`;
+    $('#paybtn').onclick=placeOrder;
+  };
+  $$('input[name=pm]').forEach(r=>r.onchange=()=>{ co.method=r.value; $$('.methods .opt').forEach(o=>o.classList.toggle('on',o.querySelector('input').checked)); draw(); });
+  draw();
+  $('#cartFoot').innerHTML=`<button class="lnk" id="backdet">חזרה לפרטים</button>`;
+  $('#backdet').onclick=checkout;
+}
+async function placeOrder(){
+  const btn=$('#paybtn'); if(btn){ btn.disabled=true; btn.style.opacity=.6; }
+  const f=co.f; const mlabel=METHODS.find(m=>m.k===co.method).label;
+  const body={p:{name:f.name,phone:f.phone,email:f.email,city:f.city,street:f.street,notes:f.notes,ship:co.ship,pay_method:co.method,items:coLines().map(({p,q})=>({sku:String(p.sku),q}))}};
+  try{
+    const res=await sbRpc('rt_create_order',body);
+    cart={}; saveCart();
+    $('#cartBody').innerHTML=`<div class="done"><div class="ok">${IC.check}</div><h2 style="font-size:28px">ההזמנה התקבלה</h2><p style="color:var(--muted);max-width:40ch;margin:10px auto 0">מספר הזמנה <span class="mono" style="color:var(--fg)">${esc(res.id)}</span> · סה״כ <span class="mono" style="color:var(--fg)">${money(res.total)}</span>.</p><p style="color:var(--muted);max-width:40ch;margin:10px auto 0">${PAY_LIVE?'':'התשלום באתר ב'+esc(mlabel)+' יופעל בקרוב. בינתיים ניצור איתך קשר בטלפון לתשלום ולתיאום '+(co.ship==='pickup'?'האיסוף':'המשלוח')+'.'}</p></div>`;
+    $('#cartFoot').innerHTML=`<a class="btn btn-main" href="#shop" data-close>להמשך קנייה</a>`;
+  }catch(e){
+    const m=String(e.message||'');
+    const why=m.includes('out_of_stock')?'אחד המוצרים אזל מהמלאי. הסר אותו מהסל ונסה שוב.':m.includes('unknown_item')?'אחד המוצרים כבר לא זמין. הסר אותו מהסל ונסה שוב.':m.includes('too_many')?'נשלחו כמה הזמנות מהטלפון הזה בדקות האחרונות. נסה שוב בעוד כמה דקות.':m.includes('bad_contact')?'בדוק את השם ומספר הטלפון.':m.includes('bad_address')?'חסרה עיר או רחוב למשלוח.':'לא הצלחנו לשלוח את ההזמנה. נסה שוב, או שלח אותה בוואטסאפ.';
+    const no='RT-'+String(Date.now()).slice(-6);
+    const lines=coLines().map(({p,q})=>`${q} × ${p.name.replace(/[\r\n|]+/g,' ').trim()} | ${p.sup}:${p.sku} | ₪${Math.round(priceOf(p)*q*100)/100}`);
+    const msg=['🛒 הזמנה מאתר RomiTech',`מספר הזמנה: ${no}`,`שם: ${f.name}`,`טלפון: ${f.phone}`,`עיר: ${co.ship==='pickup'?'איסוף עצמי':f.city}`,`רחוב: ${co.ship==='pickup'?'אייטק הדקלים 104':f.street}`,`הערות: ${[f.notes,f.email?'מייל '+f.email:'','תשלום מועדף: '+mlabel].filter(Boolean).join(' · ')}`,'פריטים:',...lines,`סה"כ: ₪${Math.round(cartTotal()*100)/100}`].join('\n');
+    const ui=$('#pmui'); if(ui) ui.insertAdjacentHTML('beforeend',`<p style="color:var(--bad);font-size:14px;margin:10px 0 0">${esc(why)}</p><a class="lnk" style="display:inline-block;margin-top:6px" href="${esc('https://wa.me/'+ORDER_WA+'?text='+encodeURIComponent(msg))}" target="_blank" rel="noopener">שליחת ההזמנה בוואטסאפ</a>`);
+    if(btn){ btn.disabled=false; btn.style.opacity=''; }
+  }
+}
+
+/* ===== חיפוש וקטגוריות ===== */
+function renderSearch(){
+  const v=$('#q').value; const t=norm(v);
+  if(!t){ $('#sr').innerHTML=`<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:16px">${['iPhone 17 Pro','S26 Ultra','מטען','AirPods','OtterBox','מגן מסך'].map(x=>`<button class="pill" style="cursor:pointer;padding:6px 14px" data-quick="${esc(x)}">${esc(x)}</button>`).join('')}</div>`; return; }
+  const r=ALL.filter(p=>hasText(p,v)).sort((a,b)=>a.stock-b.stock);
+  $('#sr').innerHTML=r.length?`<div class="rows" style="margin-top:14px">${r.slice(0,10).map(p=>row(p,false)).join('')}</div>${r.length>10?`<button class="lnk" style="margin-top:14px" data-allq="1">לכל ${nf.format(r.length)} התוצאות ←</button>`:''}`:`<div class="empty" style="padding:30px 0">לא נמצאו מוצרים עבור „${esc(v)}”.</div>`;
+  hydrate($('#sr'));
+}
+function renderMega(){ $('#megagrid').innerHTML=DB.cats.map(c=>`<button data-go="${c[0]}"><span class="thumb">${img(PICK[c[0]]??0,c[1])}</span><span style="min-width:0"><div class="nm">${esc(c[1])}</div><div class="label">${c[2]} פריטים</div></span></button>`).join(''); hydrate($('#megagrid')); }
+
+/* ===== פתיחה/סגירה וניתוב ===== */
+function openEl(s){ $$('.sheet.on').forEach(e=>e.classList.remove('on')); $(s).classList.add('on'); if($(s).classList.contains('panel')) $('#scrim').classList.add('on'); document.documentElement.style.overflow='hidden'; }
+function closeAll(){ $$('.panel.on,.sheet.on').forEach(e=>e.classList.remove('on')); $('#scrim').classList.remove('on'); document.documentElement.style.overflow=''; if(lastFocus&&lastFocus.focus) try{lastFocus.focus({preventScroll:true})}catch(e){} }
+function route(){
+  const h=(location.hash||'#home').slice(1);
+  $$('.nav [data-nav]').forEach(a=>a.classList.toggle('on',a.dataset.nav===h));
+  if(!h||h==='home') viewHome();
+  else if(h==='shop'){ shop.cat=-1; shop.shown=CONFIG.pageSize; viewShop(); }
+  else { const i=catIdx(h); if(i>=0){ shop.cat=i; shop.shown=CONFIG.pageSize; viewShop(); } else viewHome(); }
+  window.scrollTo({top:0});
+}
+const go=t=>{ if(location.hash==='#'+t) route(); else location.hash=t; };
+
+document.addEventListener('click',e=>{
+  const t=e.target;
+  const a=t.closest('[data-add]'); if(a){ e.stopPropagation(); addToCart(+a.dataset.add); return; }
+  if(t.closest('[data-close]')) closeAll();
+  const op=t.closest('[data-open]'); if(op){ lastFocus=op; renderMega(); openEl('#'+op.dataset.open); return; }
+  const g=t.closest('[data-go]'); if(g){ closeAll(); shop.q=''; shop.device=''; shop.brands.clear(); go(g.dataset.go); return; }
+  const c=t.closest('[data-cat]'); if(c){ const i=+c.dataset.cat; shop.brands.clear(); go(i<0?'shop':DB.cats[i][0]); return; }
+  const fb=t.closest('[data-fb]'); if(fb){ finder.brand=fb.dataset.fb; finder.model=DEVICES[finder.brand][0]; renderFinder(); return; }
+  const fm=t.closest('[data-fm]'); if(fm){ finder.model=fm.dataset.fm; renderFinder(); return; }
+  if(t.closest('[data-findgo]')){ shop.device=finder.model; shop.q=''; shop.brands.clear(); shop.inStock=true; go('shop'); return; }
+  if(t.closest('[data-finder]')){ e.preventDefault(); if(location.hash!=='#home'&&location.hash!==''){ location.hash='home'; setTimeout(()=>$('#finder')?.scrollIntoView({block:'center'}),80);} else $('#finder')?.scrollIntoView({block:'center',behavior:'smooth'}); return; }
+  if(t.closest('[data-sortnew]')){ shop.sort='new'; shop.q=''; shop.device=''; go('shop'); return; }
+  const v=t.closest('[data-view]'); if(v){ shop.view=v.dataset.view; try{localStorage.setItem('romitech.view',shop.view)}catch(e){} $$('[data-view]').forEach(b=>b.classList.toggle('on',b===v)); renderRes(); return; }
+  const up=t.closest('[data-unpill]'); if(up){ const [k,val]=up.dataset.unpill.split('|'); if(k==='device'){shop.device=''; const d=$('#dev'); if(d) d.value='';} if(k==='brand'){shop.brands.delete(val); const cb=$(`[data-brand="${CSS.escape(val)}"]`); if(cb) cb.checked=false;} if(k==='stock'){shop.inStock=false; $('#instock').checked=false;} if(k==='q'){shop.q=''; $('#sq').value='';} renderRes(); return; }
+  const qk=t.closest('[data-quick]'); if(qk){ $('#q').value=qk.dataset.quick; renderSearch(); $('#q').focus(); return; }
+  if(t.closest('[data-allq]')){ shop.q=$('#q').value; shop.device=''; closeAll(); go('shop'); return; }
+  const p=t.closest('[data-pid]'); if(p){ if($('#search').classList.contains('on')) $('#search').classList.remove('on'); openProduct(+p.dataset.pid); return; }
+  const inc=t.closest('[data-inc]'); if(inc){ setQty(inc.dataset.inc,(cart[inc.dataset.inc]||0)+1); return; }
+  const dec=t.closest('[data-dec]'); if(dec){ setQty(dec.dataset.dec,(cart[dec.dataset.dec]||0)-1); return; }
+  const rm=t.closest('[data-rm]'); if(rm){ setQty(rm.dataset.rm,0); return; }
+});
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape') closeAll();
+  if(e.key==='Enter'&&e.target.matches('[data-pid]')) openProduct(+e.target.dataset.pid);
+  if(e.key==='/'&&!e.target.matches('input,textarea')){ e.preventDefault(); $('#openSearch').click(); }
+});
+$('#scrim').onclick=closeAll;
+$('#openCart').onclick=()=>{ lastFocus=document.activeElement; renderCart(); openEl('#cart'); };
+$('#openSearch').onclick=()=>{ lastFocus=document.activeElement; openEl('#search'); renderSearch(); setTimeout(()=>$('#q').focus(),60); };
+let sd; $('#q').addEventListener('input',()=>{clearTimeout(sd); sd=setTimeout(renderSearch,120)});
+window.addEventListener('hashchange',route);
+
+fetch('products.json').then(r=>r.json()).then(d=>{
+  DB=d;
+  ALL=d.p.map(a=>({id:a[0],name:a[1],sku:a[2],brand:a[3],cat:a[4],models:a[5],price:a[6],stock:a[7],img:a[8],flag:a[9],sup:a[10]||'M',alt:a[11]||''}))
+    .filter(p=>!(CONFIG.hideFlagged&&p.flag)&&!(CONFIG.hideOutOfStock&&p.stock===2));
+  ALL.forEach(p=>{ p._s=norm([p.name,p.sku,p.brand,p.models,d.cats[p.cat][1]].join(' ')); p._w=' '+norm(p.name+' '+p.models)+' '; BYID.set(p.id,p); });
+  Object.keys(cart).forEach(id=>{ if(!BYID.has(+id)) delete cart[id]; }); saveCart();
+  const h=Math.ceil(d.cats.length/2);
+  $('#fc1').innerHTML=d.cats.slice(0,h).map(c=>`<li><button data-go="${c[0]}">${esc(c[1])}</button></li>`).join('');
+  $('#fc2').innerHTML=d.cats.slice(h).map(c=>`<li><button data-go="${c[0]}">${esc(c[1])}</button></li>`).join('');
+  route();
+}).catch(()=>{ $('#app').innerHTML='<div class="loading">לא הצלחנו לטעון את הקטלוג. רענן את העמוד כדי לנסות שוב.</div>'; });
+</script>
+
+
+</body>
+</html>
