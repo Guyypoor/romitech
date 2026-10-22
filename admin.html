@@ -2,6 +2,10 @@
 <html lang="he" dir="rtl">
 <head>
 <meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://rtoukdganvoypamxjgwb.supabase.co wss://rtoukdganvoypamxjgwb.supabase.co; object-src 'none'; base-uri 'none'; form-action 'self'; upgrade-insecure-requests">
+<meta name="referrer" content="no-referrer">
+<style id="antiframe">body{display:none!important}</style>
+<script>if(window.self===window.top){document.getElementById('antiframe').remove()}else{try{window.top.location=window.self.location}catch(e){}}</script>
 <script>if(location.protocol==="http:"&&/(^|\.)romitech\.co\.il$/.test(location.hostname))location.replace("https://"+location.host+location.pathname+location.search+location.hash)</script>
 
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -11,7 +15,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Hebrew:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script src="vendor/supabase-js-2.45.4.js"></script>
 <style>
 /* Layout: operations console – summary strip, status tabs, dense order table, detail drawer. Same graphite/mono language as the store. */
 :root{
@@ -88,6 +92,36 @@ tr:last-child td{border-bottom:0}
 .log{font-size:12.5px;color:var(--muted);font-family:var(--f-mono);display:flex;flex-direction:column;gap:4px}
 .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--btn);color:var(--btn-ink);padding:10px 18px;border-radius:999px;z-index:60;font-size:14px}
 .set{display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap}
+.views{display:flex;gap:6px;margin-top:18px}
+.views button{border:1px solid var(--line-2);background:var(--panel);border-radius:999px;padding:8px 16px;cursor:pointer;font-size:14.5px;color:var(--fg-2)}
+.views button[aria-selected="true"]{background:var(--btn);color:var(--btn-ink);border-color:var(--btn);font-weight:600}
+.qr{display:flex;flex-direction:column;align-items:center;gap:8px;background:#fff;border-radius:14px;padding:12px}
+.qr img{width:200px;height:200px}
+.secret{font-family:var(--f-mono);font-size:13px;word-break:break-all;color:var(--fg-2);user-select:all}
+.steps{margin:0;padding-inline-start:20px;font-size:14px;color:var(--fg-2);display:flex;flex-direction:column;gap:4px}
+.tgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+@media (max-width:760px){.tgrid{grid-template-columns:1fr}}
+.chart{position:relative}
+.chart svg{display:block;width:100%;height:auto;overflow:visible;direction:ltr}
+.chart .bar{fill:var(--accent)}
+.chart .bar.today{fill:var(--ok)}
+.chart .hit{fill:transparent;cursor:default}
+.chart .hit:hover+.bar,.chart .hit:focus+.bar{opacity:.75}
+.chart text{fill:var(--muted);font-family:var(--f-mono);font-size:11px}
+.chart .grid{stroke:var(--line);stroke-width:1}
+.tip{position:absolute;pointer-events:none;background:var(--panel-2);border:1px solid var(--line-2);border-radius:10px;padding:6px 10px;font-size:12.5px;white-space:nowrap;z-index:5;color:var(--fg)}
+.hb{display:grid;grid-template-columns:minmax(0,9em) minmax(0,1fr) auto;gap:6px 10px;align-items:center;font-size:13.5px}
+.hb .tr{height:8px;border-radius:4px;background:var(--panel-2);overflow:hidden}
+.hb .tr i{display:block;height:100%;background:var(--accent);border-radius:4px}
+.hb .lb{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.seg{display:flex;gap:4px}
+.seg button{border:1px solid var(--line);background:var(--panel);border-radius:999px;padding:5px 12px;cursor:pointer;font-size:13px;color:var(--fg-2)}
+.seg button[aria-pressed="true"]{background:var(--btn);color:var(--btn-ink);border-color:var(--btn);font-weight:600}
+.stat b.live{display:flex;align-items:center;gap:8px}
+.live i{display:inline-block;flex:none;width:9px;height:9px;border-radius:50%;background:var(--ok);box-shadow:0 0 0 3px color-mix(in srgb,var(--ok) 25%,transparent)}
+.note{font-size:12.5px;color:var(--muted);margin:6px 0 0}
+@media (max-width:560px){#who{display:none}}
+.otp{color:var(--accent);font-size:14px}
 </style>
 </head>
 <body>
@@ -102,6 +136,59 @@ tr:last-child td{border-bottom:0}
     <p class="err" id="lerr"></p>
     <button class="btn main" type="submit">כניסה</button>
   </form>
+
+  <form class="login" id="mfa" hidden>
+    <h1>אימות דו-שלבי</h1>
+    <div id="mfaEnroll" hidden style="display:flex;flex-direction:column;gap:10px">
+      <p style="margin:0;font-size:14px">הגנה נוספת על הניהול: גם מי שיודע את הסיסמה לא ייכנס בלי קוד מהטלפון שלך. מגדירים פעם אחת:</p>
+      <ol class="steps">
+        <li>באייפון: מצלמה → סרוק את הקוד (או אפליקציית Google Authenticator).</li>
+        <li>שמור את "RomiTech" בסיסמאות / באפליקציה.</li>
+        <li>הקלד כאן את 6 הספרות שמופיעות.</li>
+      </ol>
+      <div class="qr"><img id="mfaQr" alt="קוד QR להגדרת אימות דו-שלבי"></div>
+      <a class="otp" id="mfaUri" href="#">פותח את זה בטלפון? לחץ כאן להוספה ישירה</a>
+      <p class="note">אין מצלמה? הקלדה ידנית: <span class="secret" id="mfaSecret"></span></p>
+    </div>
+    <p id="mfaText" class="muted" style="margin:0;font-size:14px"></p>
+    <label>קוד בן 6 ספרות<input id="mfaCode" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]{6}" maxlength="6" required></label>
+    <p class="err" id="merr" role="alert"></p>
+    <button class="btn main" type="submit">אישור</button>
+    <button class="btn" type="button" id="mfaOut">יציאה</button>
+  </form>
+
+  <nav class="views" id="views" hidden role="tablist" aria-label="תצוגה">
+    <button type="button" role="tab" data-v="orders" aria-selected="true">הזמנות</button>
+    <button type="button" role="tab" data-v="traffic" aria-selected="false">תנועה באתר</button>
+  </nav>
+
+  <section id="traffic" hidden aria-label="תנועה באתר">
+    <div class="bar" style="margin-top:18px">
+      <div class="seg" id="tDays" role="group" aria-label="תקופה">
+        <button type="button" data-d="1" aria-pressed="false">היום</button>
+        <button type="button" data-d="7" aria-pressed="false">7 ימים</button>
+        <button type="button" data-d="14" aria-pressed="true">14 ימים</button>
+        <button type="button" data-d="30" aria-pressed="false">30 ימים</button>
+      </div>
+      <span class="sp"></span><span class="muted" style="font-size:12.5px" id="tUpd"></span>
+    </div>
+    <div class="stats" style="margin-top:6px">
+      <div class="stat"><b id="tLive" class="live"><i></i>0</b><span>באתר עכשיו (5 דק' אחרונות)</span></div>
+      <div class="stat"><b id="tToday">0</b><span>מבקרים היום</span></div>
+      <div class="stat"><b id="tViews">0</b><span>צפיות בדפים היום</span></div>
+      <div class="stat"><b id="tConv">0%</b><span id="tConvL">מבקרים שקנו (14 ימים)</span></div>
+    </div>
+    <div class="box" style="margin-bottom:12px"><h3 id="tDaysH">מבקרים ביום</h3><div class="chart" id="cDays"></div></div>
+    <div class="box" style="margin-bottom:12px"><h3>מבקרים לפי שעה – היום</h3><div class="chart" id="cHours"></div></div>
+    <div class="tgrid">
+      <div class="box"><h3>מסלול הקנייה</h3><div class="hb" id="tFunnel"></div></div>
+      <div class="box"><h3>מאיפה הגיעו</h3><div class="hb" id="tSources"></div></div>
+      <div class="box"><h3>המוצרים הנצפים ביותר</h3><div class="hb" id="tProducts"></div></div>
+      <div class="box"><h3>דפים וקטגוריות</h3><div class="hb" id="tPages"></div></div>
+      <div class="box"><h3>מכשירים</h3><div class="hb" id="tDevices"></div></div>
+    </div>
+    <p class="note" style="margin-bottom:40px">ספירה אנונימית: בלי כתובות IP ובלי פרטים אישיים. בוטים ומנועי חיפוש לא נספרים. מתרענן כל 30 שניות.</p>
+  </section>
 
   <section id="app" hidden>
     <div class="stats">
@@ -154,20 +241,65 @@ const pill=(cls,txt)=>`<span class="pill ${cls}"><i></i>${esc(txt)}</span>`;
 const fdt=s=>{const d=new Date(s); return d.toLocaleDateString('he-IL',{day:'2-digit',month:'2-digit'})+' '+d.toLocaleTimeString('he-IL',{hour:'2-digit',minute:'2-digit'})};
 let tt; function toast(t){ const e=$('#toast'); e.textContent=t; e.hidden=false; clearTimeout(tt); tt=setTimeout(()=>e.hidden=true,2400); }
 
+/* ===== כניסה: סיסמה → אימות דו-שלבי (TOTP) → ניהול. השרת עצמו (rt_is_admin) דורש aal2 ברגע שהוגדר קוד ===== */
+const show=w=>{ $('#login').hidden=w!=='login'; $('#mfa').hidden=w!=='mfa'; const on=w==='app'; $('#views').hidden=!on; $('#out').hidden=w==='login';
+  if(!on){ $('#app').hidden=true; $('#traffic').hidden=true; } else setView(VIEW); };
+let VIEW='orders', MF=null;
 async function boot(){
   const { data:{ session } }=await sb.auth.getSession();
-  if(!session){ $('#login').hidden=false; $('#app').hidden=true; $('#out').hidden=true; $('#who').textContent=''; return; }
-  const { data:isAdmin, error }=await sb.rpc('rt_is_admin');
-  if(error||!isAdmin){ $('#login').hidden=false; $('#lerr').textContent='למשתמש הזה אין הרשאת ניהול.'; await sb.auth.signOut(); return; }
-  $('#login').hidden=true; $('#app').hidden=false; $('#out').hidden=false; $('#who').textContent=session.user.email;
+  if(!session){ show('login'); $('#who').textContent=''; return; }
+  const { data:st, error }=await sb.rpc('rt_admin_mfa_state');
+  if(error||!st||!st.role_ok){ show('login'); $('#lerr').textContent='למשתמש הזה אין הרשאת ניהול.'; await sb.auth.signOut(); return; }
+  $('#who').textContent=session.user.email;
+  if(st.aal!=='aal2') return startMfa(st.has_factor);
+  show('app'); idleArm();
   await load(); clearInterval(timer); timer=setInterval(load,30000);
 }
+async function startMfa(has){
+  show('mfa'); $('#merr').textContent=''; $('#mfaCode').value='';
+  const { data:fl, error }=await sb.auth.mfa.listFactors();
+  if(error){ $('#merr').textContent='שגיאה: '+error.message; return; }
+  if(has){
+    MF=(fl.totp||[]).find(f=>f.status==='verified');
+    $('#mfaEnroll').hidden=true; $('#mfaText').textContent='הקלד את הקוד בן 6 הספרות של RomiTech מהטלפון (סיסמאות באייפון / אפליקציית האימות).';
+  } else {
+    for(const f of (fl.all||[]).filter(f=>f.status!=='verified')){ try{ await sb.auth.mfa.unenroll({factorId:f.id}); }catch(e){} }
+    const { data, error:e2 }=await sb.auth.mfa.enroll({factorType:'totp',issuer:'RomiTech',friendlyName:'RomiTech ניהול '+new Date().toISOString().slice(0,16)});
+    if(e2){ $('#merr').textContent='לא הצלחתי להתחיל את ההגדרה: '+e2.message; return; }
+    MF={id:data.id}; const q=String(data.totp.qr_code||'');
+    $('#mfaQr').src=q.startsWith('data:')?q:'data:image/svg+xml;utf8,'+encodeURIComponent(q);
+    $('#mfaSecret').textContent=data.totp.secret||''; $('#mfaUri').href=String(data.totp.uri||'').startsWith('otpauth://')?data.totp.uri:'#'; $('#mfaEnroll').hidden=false; $('#mfaText').textContent='';
+  }
+  setTimeout(()=>$('#mfaCode').focus(),50);
+}
+/* הגבלת ניסיונות בדפדפן (בנוסף להגבלות של השרת) */
+const lock={ get(){ try{ return JSON.parse(sessionStorage.getItem('rt.lock')||'{"n":0,"until":0}'); }catch(e){ return {n:0,until:0}; } }, set(v){ try{ sessionStorage.setItem('rt.lock',JSON.stringify(v)); }catch(e){} } };
+const locked=()=>{ const l=lock.get(); const s=Math.ceil((l.until-Date.now())/1000); return s>0?s:0; };
+const failed=()=>{ const l=lock.get(); l.n++; if(l.n>=5){ l.until=Date.now()+Math.min(15*60,60*2**(l.n-5))*1000; } lock.set(l); };
 $('#login').addEventListener('submit',async e=>{ e.preventDefault(); $('#lerr').textContent='';
+  const w=locked(); if(w){ $('#lerr').textContent='יותר מדי ניסיונות. נסה שוב בעוד '+Math.ceil(w/60)+' דק׳.'; return; }
   const { error }=await sb.auth.signInWithPassword({email:$('#le').value.trim(),password:$('#lp').value});
-  if(error){ $('#lerr').textContent='הדוא״ל או הסיסמה לא נכונים.'; return; } boot(); });
+  $('#lp').value='';
+  if(error){ failed(); $('#lerr').textContent='הדוא״ל או הסיסמה לא נכונים.'; return; } lock.set({n:0,until:0}); boot(); });
+$('#mfa').addEventListener('submit',async e=>{ e.preventDefault(); $('#merr').textContent='';
+  const w=locked(); if(w){ $('#merr').textContent='יותר מדי ניסיונות. נסה שוב בעוד '+Math.ceil(w/60)+' דק׳.'; return; }
+  const code=$('#mfaCode').value.replace(/\D/g,''); if(code.length!==6){ $('#merr').textContent='צריך 6 ספרות.'; return; }
+  if(!MF){ $('#merr').textContent='רענן את הדף ונסה שוב.'; return; }
+  const { error }=await sb.auth.mfa.challengeAndVerify({factorId:MF.id,code});
+  if(error){ failed(); $('#merr').textContent='הקוד לא נכון או שפג תוקפו – נסה את הקוד הבא.'; $('#mfaCode').select(); return; }
+  lock.set({n:0,until:0}); toast('אימות דו-שלבי פעיל'); boot(); });
+$('#mfaOut').onclick=async()=>{ await sb.auth.signOut(); location.reload(); };
 $('#out').onclick=async()=>{ await sb.auth.signOut(); location.reload(); };
+/* יציאה אוטומטית אחרי 30 דקות בלי פעילות */
+let lastAct=Date.now(), idleT=null;
+['pointerdown','keydown','scroll','touchstart'].forEach(ev=>addEventListener(ev,()=>{ lastAct=Date.now(); },{passive:true}));
+function idleArm(){ clearInterval(idleT); idleT=setInterval(async()=>{ if(Date.now()-lastAct>30*60*1000){ clearInterval(idleT); await sb.auth.signOut(); location.reload(); } },30000); }
+/* תצוגות: הזמנות / תנועה */
+function setView(v){ VIEW=v; $$('#views [data-v]').forEach(b=>b.setAttribute('aria-selected',String(b.dataset.v===v))); $('#app').hidden=v!=='orders'; $('#traffic').hidden=v!=='traffic'; if(v==='traffic') loadTraffic(); }
+$('#views').addEventListener('click',e=>{ const b=e.target.closest('[data-v]'); if(b) setView(b.dataset.v); });
 
 async function load(){
+  if(VIEW==='traffic') loadTraffic();
   const { data, error }=await sb.from('rt_orders').select('*').order('created_at',{ascending:false}).limit(500);
   if(error){ toast('שגיאה בטעינה: '+error.message); return; }
   ORD=data||[]; render(); $('#upd').textContent='עודכן '+new Date().toLocaleTimeString('he-IL',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
@@ -256,6 +388,53 @@ function closeOrder(){ if($('#drawer').hidden) return; $('#drawer').hidden=true;
 document.addEventListener('keydown',e=>{ if(e.key!=='Tab'||$('#drawer').hidden) return; const fs=[...$('#drawer').querySelectorAll('button:not([disabled]),select,textarea,input,a[href]')].filter(x=>x.getClientRects().length); if(!fs.length) return; const a=fs[0],z=fs[fs.length-1];
   if(!$('#drawer').contains(document.activeElement)){ e.preventDefault(); a.focus(); } else if(e.shiftKey&&document.activeElement===a){ e.preventDefault(); z.focus(); } else if(!e.shiftKey&&document.activeElement===z){ e.preventDefault(); a.focus(); } });
 document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeOrder(); });
+/* ===== מד תנועה ===== */
+let TDAYS=14, CAT=null, PN=null, tBusy=false;
+async function catalog(){ if(PN) return; try{ const d=await fetch('products.json').then(r=>r.json()); PN=new Map(d.p.map(a=>[a[0],a[1]])); CAT=new Map(d.cats.map(c=>[c[0],c[1]])); }catch(e){ PN=new Map(); CAT=new Map(); } }
+const nfi=new Intl.NumberFormat('he-IL');
+const pageName=p=>{ const h=String(p||'#home').replace(/^#/,''); return h===''||h==='home'?'דף הבית':h==='shop'?'כל החנות':(CAT&&CAT.get(h))||h; };
+const srcName=r=>({direct:'ישיר / וואטסאפ / סימנייה','google.com':'גוגל','google.co.il':'גוגל','facebook.com':'פייסבוק','m.facebook.com':'פייסבוק','l.facebook.com':'פייסבוק','lm.facebook.com':'פייסבוק','instagram.com':'אינסטגרם','l.instagram.com':'אינסטגרם','tiktok.com':'טיקטוק','bing.com':'בינג'}[r]||r);
+const devName=d=>({mobile:'טלפון',tablet:'טאבלט',desktop:'מחשב'}[d]||d);
+function hbars(el,rows){ const max=Math.max(1,...rows.map(r=>r.v)); el.innerHTML=rows.length?rows.map(r=>`<span class="lb" title="${esc(r.l)}">${esc(r.l)}</span><span class="tr" aria-hidden="true"><i style="width:${Math.max(r.v?2:0,Math.round(r.v/max*100))}%"></i></span><span class="mono">${esc(r.t??nfi.format(r.v))}</span>`).join(''):'<span class="muted" style="grid-column:1/-1">אין עדיין נתונים.</span>'; }
+function vbars(el,items){
+  const W=Math.max(280,el.clientWidth||600), H=170, pb=22, pt=10, pl=30, n=items.length, max=Math.max(1,...items.map(i=>i.v));
+  const step=Math.pow(10,Math.floor(Math.log10(max))), nice=Math.ceil(max/step)*step, ticks=[0,nice/2,nice];
+  const bw=(W-pl)/n, w=Math.max(2,Math.min(28,bw-2)), y=v=>H-pb-(v/nice)*(H-pb-pt);
+  const every=Math.max(1,Math.ceil(n/Math.max(2,Math.floor((W-pl)/40))));
+  let g=ticks.map(t=>`<line class="grid" x1="${pl}" x2="${W}" y1="${y(t)}" y2="${y(t)}"/><text x="${pl-6}" y="${y(t)+4}" text-anchor="end">${nfi.format(Math.round(t))}</text>`).join('');
+  items.forEach((it,i)=>{ const x=pl+i*bw+(bw-w)/2, h=Math.max(it.v?2:0,H-pb-y(it.v));
+    g+=`<rect class="hit" x="${pl+i*bw}" y="${pt}" width="${bw}" height="${H-pb-pt}" tabindex="0" data-i="${i}" aria-label="${esc(it.tip)}"/><rect class="bar${it.hl?' today':''}" x="${x}" y="${H-pb-h}" width="${w}" height="${h}" rx="${Math.min(4,w/2)}"/>`;
+    if(i%every===0&&(i===n-1||n-1-i>=every)||i===n-1) g+=`<text x="${pl+i*bw+bw/2}" y="${H-6}" text-anchor="middle">${esc(it.l)}</text>`; });
+  el.innerHTML=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(el.dataset.label||'')}">${g}</svg><div class="tip" hidden></div>`;
+  const tip=el.querySelector('.tip'); const showTip=(t,i)=>{ const r=t.getBoundingClientRect(), b=el.getBoundingClientRect(); tip.textContent=items[i].tip; tip.hidden=false; tip.style.left=Math.min(b.width-tip.offsetWidth,Math.max(0,r.left-b.left+r.width/2-tip.offsetWidth/2))+'px'; tip.style.top='-6px'; };
+  el.querySelectorAll('.hit').forEach(t=>{ const i=+t.dataset.i; t.addEventListener('mouseenter',()=>showTip(t,i)); t.addEventListener('focus',()=>showTip(t,i)); t.addEventListener('mouseleave',()=>tip.hidden=true); t.addEventListener('blur',()=>tip.hidden=true); });
+}
+async function loadTraffic(){
+  if(tBusy) return; tBusy=true;
+  try{
+    await catalog();
+    const { data:T, error }=await sb.rpc('rt_traffic',{p_days:TDAYS});
+    if(error){ toast('שגיאה בטעינת התנועה: '+error.message); return; }
+    $('#tLive').innerHTML='<i></i>'+nfi.format(T.live); $('#tToday').textContent=nfi.format(T.today.visitors); $('#tViews').textContent=nfi.format(T.today.views);
+    const f=T.funnel; $('#tConv').textContent=f.visitors?(Math.round(f.paid/f.visitors*1000)/10)+'%':'—';
+    const per=TDAYS===1?'היום':TDAYS+' ימים'; $('#tConvL').textContent='מבקרים שקנו ('+per+')'; $('#tDaysH').textContent='מבקרים ביום – '+per;
+    const todayD=new Date().toLocaleDateString('en-CA',{timeZone:'Asia/Jerusalem'});
+    const dd=s=>{ const [y,m,d]=s.split('-'); return +d+'/'+ +m; };
+    $('#cDays').dataset.label='מבקרים ביום'; vbars($('#cDays'),T.days.map(d=>({l:dd(d.d),v:d.visitors,hl:d.d===todayD,tip:`${dd(d.d)} · ${nfi.format(d.visitors)} מבקרים · ${nfi.format(d.views)} צפיות · ${d.orders} הזמנות · ${d.paid} שולמו`})));
+    const hrs=Array.from({length:24},(_,h)=>{ const x=T.hours.find(r=>r.h===h); return {l:String(h).padStart(2,'0'),v:x?x.visitors:0,tip:`${String(h).padStart(2,'0')}:00–${String(h).padStart(2,'0')}:59 · ${x?x.visitors:0} מבקרים`}; });
+    const nowH=+new Date().toLocaleString('en-GB',{timeZone:'Asia/Jerusalem',hour:'2-digit',hour12:false}); hrs[nowH%24].hl=true;
+    $('#cHours').dataset.label='מבקרים לפי שעה היום'; vbars($('#cHours'),hrs);
+    const pc=v=>f.visitors?' · '+Math.round(v/f.visitors*100)+'%':'';
+    hbars($('#tFunnel'),[{l:'נכנסו לאתר',v:f.visitors},{l:'צפו במוצר',v:f.product,t:nfi.format(f.product)+pc(f.product)},{l:'הוסיפו לסל',v:f.cart,t:nfi.format(f.cart)+pc(f.cart)},{l:'התחילו קופה',v:f.checkout,t:nfi.format(f.checkout)+pc(f.checkout)},{l:'הזמינו',v:f.orders},{l:'שילמו',v:f.paid}]);
+    hbars($('#tSources'),T.sources.map(r=>({l:srcName(r.ref),v:r.visits})));
+    hbars($('#tProducts'),T.top_products.map(r=>({l:(PN.get(r.pid)||('מוצר '+r.pid)),v:r.views,t:nfi.format(r.views)+(r.carts?' · '+r.carts+' לסל':'')})));
+    hbars($('#tPages'),T.pages.map(r=>({l:pageName(r.path),v:r.views})));
+    hbars($('#tDevices'),T.devices.map(r=>({l:devName(r.dev),v:r.visitors})));
+    $('#tUpd').textContent='עודכן '+new Date().toLocaleTimeString('he-IL',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+  } finally { tBusy=false; }
+}
+$('#tDays').addEventListener('click',e=>{ const b=e.target.closest('[data-d]'); if(!b) return; TDAYS=+b.dataset.d; $$('#tDays [data-d]').forEach(x=>x.setAttribute('aria-pressed',String(x===b))); loadTraffic(); });
+let rz; addEventListener('resize',()=>{ clearTimeout(rz); rz=setTimeout(()=>{ if(VIEW==='traffic'&&!$('#traffic').hidden) loadTraffic(); },250); });
 sb.auth.onAuthStateChange((ev)=>{ if(ev==='SIGNED_OUT'){ clearInterval(timer); } });
 boot();
 </script>

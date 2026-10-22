@@ -5,8 +5,11 @@ const SR = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 const TERM = Number(Deno.env.get("CARDCOM_TERMINAL"));
 const API = Deno.env.get("CARDCOM_API_NAME")!;
 const SITE = "https://romitech.co.il/";
-const CORS = { "Access-Control-Allow-Origin": "*", "Access-Control-Allow-Headers": "authorization, apikey, content-type", "Access-Control-Allow-Methods": "POST, OPTIONS" };
-const j = (o: unknown, s = 200) => new Response(JSON.stringify(o), { status: s, headers: { ...CORS, "Content-Type": "application/json" } });
+// אבטחה 22/10/2026: רק האתר שלנו יכול לקרוא לפונקציה מדפדפן
+const ORIGINS = ["https://romitech.co.il", "https://www.romitech.co.il", "https://guyypoor.github.io"];
+let CORS: Record<string, string> = {};
+const cors = (req: Request) => { const o = req.headers.get("origin") || ""; CORS = { "Access-Control-Allow-Origin": ORIGINS.includes(o) ? o : ORIGINS[0], "Vary": "Origin", "Access-Control-Allow-Headers": "authorization, apikey, content-type", "Access-Control-Allow-Methods": "POST, OPTIONS" }; };
+const j = (o: unknown, s = 200) => new Response(JSON.stringify(o), { status: s, headers: { ...CORS, "Content-Type": "application/json", "Cache-Control": "no-store" } });
 
 async function db(path: string, init: RequestInit = {}) {
   const r = await fetch(SB + "/rest/v1/" + path, { ...init, headers: { apikey: SR, Authorization: "Bearer " + SR, "Content-Type": "application/json", Prefer: "return=representation", ...(init.headers || {}) } });
@@ -16,7 +19,9 @@ async function db(path: string, init: RequestInit = {}) {
 }
 
 Deno.serve(async (req) => {
+  cors(req);
   if (req.method === "OPTIONS") return new Response("ok", { headers: CORS });
+  if (req.method !== "POST") return j({ error: "method" }, 405);
   try {
     const { id, method } = await req.json();
     if (!/^RT-\d{6}$/.test(String(id || ""))) return j({ error: "bad_id" }, 400);
@@ -25,6 +30,9 @@ Deno.serve(async (req) => {
     if (!o) return j({ error: "not_found" }, 404);
     if (o.pay_status === "paid") return j({ error: "already_paid" }, 409);
     if (o.status === "cancelled" || o.status === "test") return j({ error: "closed" }, 409);
+    // נגד שימוש לרעה: דף תשלום רק להזמנה מהיומיים האחרונים, ועד 15 ניסיונות להזמנה
+    if (Date.now() - new Date(o.created_at).getTime() > 48 * 3600 * 1000) return j({ error: "expired" }, 409);
+    if ((o.log || []).filter((e: any) => e.ev === "pay_create").length >= 15) return j({ error: "too_many" }, 429);
     const total = Math.round(Number(o.total) * 100) / 100;
     const products = (o.items || []).map((i: any) => ({ ProductID: String(i.sku), Description: String(i.name || i.sku).slice(0, 200), Quantity: Number(i.q), UnitCost: Number(i.price) }));
     if (Number(o.ship_fee) > 0) products.push({ ProductID: "SHIP", Description: "משלוח עד הבית", Quantity: 1, UnitCost: Number(o.ship_fee) });
@@ -39,7 +47,7 @@ Deno.serve(async (req) => {
     const r = await fetch("https://secure.cardcom.solutions/api/v11/LowProfile/Create", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
     const res = await r.json();
     const log = (o.log || []).concat([{ at: new Date().toISOString(), ev: "pay_create", code: res.ResponseCode, desc: res.Description, lp: res.LowProfileId }]);
-    await db("rt_orders?id=eq." + o.id, { method: "PATCH", body: JSON.stringify({ pay_method: method || o.pay_method, pay_ref: res.LowProfileId || o.pay_ref, log, updated_at: new Date().toISOString() }) });
+    await db("rt_orders?id=eq." + o.id, { method: "PATCH", body: JSON.stringify({ pay_method: ["apple", "card", "bit", "google", "paypal"].includes(method) ? method : o.pay_method, pay_ref: res.LowProfileId || o.pay_ref, log, updated_at: new Date().toISOString() }) });
     if (res.ResponseCode !== 0) return j({ error: "cardcom", code: res.ResponseCode, desc: res.Description }, 502);
     return j({ url: res.Url, bit: res.UrlToBit || null, id: o.id, total });
   } catch (e) {

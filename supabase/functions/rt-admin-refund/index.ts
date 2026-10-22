@@ -6,8 +6,11 @@ const SR = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 const ANON = Deno.env.get("SUPABASE_ANON_KEY")!;
 const API = Deno.env.get("CARDCOM_API_NAME_ADMIN") || Deno.env.get("CARDCOM_API_NAME")!;
 const PASS = Deno.env.get("CARDCOM_API_PASSWORD") || "";
-const CORS = { "Access-Control-Allow-Origin": "*", "Access-Control-Allow-Headers": "authorization, apikey, content-type", "Access-Control-Allow-Methods": "POST, OPTIONS" };
-const j = (o: unknown, s = 200) => new Response(JSON.stringify(o), { status: s, headers: { ...CORS, "Content-Type": "application/json" } });
+// אבטחה 22/10/2026: רק האתר שלנו יכול לקרוא לפונקציה מדפדפן
+const ORIGINS = ["https://romitech.co.il", "https://www.romitech.co.il", "https://guyypoor.github.io"];
+let CORS: Record<string, string> = {};
+const cors = (req: Request) => { const o = req.headers.get("origin") || ""; CORS = { "Access-Control-Allow-Origin": ORIGINS.includes(o) ? o : ORIGINS[0], "Vary": "Origin", "Access-Control-Allow-Headers": "authorization, apikey, content-type", "Access-Control-Allow-Methods": "POST, OPTIONS" }; };
+const j = (o: unknown, s = 200) => new Response(JSON.stringify(o), { status: s, headers: { ...CORS, "Content-Type": "application/json", "Cache-Control": "no-store" } });
 async function db(path: string, init: RequestInit = {}) {
   const r = await fetch(SB + "/rest/v1/" + path, { ...init, headers: { apikey: SR, Authorization: "Bearer " + SR, "Content-Type": "application/json", Prefer: "return=representation", ...(init.headers || {}) } });
   const t = await r.text(); if (!r.ok) throw new Error("db " + r.status + " " + t.slice(0, 200)); return t ? JSON.parse(t) : null;
@@ -15,7 +18,9 @@ async function db(path: string, init: RequestInit = {}) {
 const cc = (path: string, body: unknown) => fetch("https://secure.cardcom.solutions/api/v11/" + path, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) }).then((r) => r.json());
 
 Deno.serve(async (req) => {
+  cors(req);
   if (req.method === "OPTIONS") return new Response("ok", { headers: CORS });
+  if (req.method !== "POST") return j({ error: "method" }, 405);
   try {
     const tok = (req.headers.get("authorization") || "").replace(/^Bearer\s+/i, "");
     const adm = await fetch(SB + "/rest/v1/rpc/rt_is_admin", { method: "POST", headers: { apikey: ANON, Authorization: "Bearer " + tok, "Content-Type": "application/json" }, body: "{}" });
