@@ -1,0 +1,48 @@
+// RomiTech – יצירת דף תשלום בקארדקום (LowProfile) להזמנה קיימת. 22/10/2026
+// קלט: POST {id:"RT-123456"}. הסכום והפריטים נלקחים מהשרת (rt_orders), לא מהדפדפן.
+const SB = Deno.env.get("SUPABASE_URL")!;
+const SR = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+const TERM = Number(Deno.env.get("CARDCOM_TERMINAL"));
+const API = Deno.env.get("CARDCOM_API_NAME")!;
+const SITE = "https://romitech.co.il/";
+const CORS = { "Access-Control-Allow-Origin": "*", "Access-Control-Allow-Headers": "authorization, apikey, content-type", "Access-Control-Allow-Methods": "POST, OPTIONS" };
+const j = (o: unknown, s = 200) => new Response(JSON.stringify(o), { status: s, headers: { ...CORS, "Content-Type": "application/json" } });
+
+async function db(path: string, init: RequestInit = {}) {
+  const r = await fetch(SB + "/rest/v1/" + path, { ...init, headers: { apikey: SR, Authorization: "Bearer " + SR, "Content-Type": "application/json", Prefer: "return=representation", ...(init.headers || {}) } });
+  const t = await r.text();
+  if (!r.ok) throw new Error("db " + r.status + " " + t.slice(0, 200));
+  return t ? JSON.parse(t) : null;
+}
+
+Deno.serve(async (req) => {
+  if (req.method === "OPTIONS") return new Response("ok", { headers: CORS });
+  try {
+    const { id, method } = await req.json();
+    if (!/^RT-\d{6}$/.test(String(id || ""))) return j({ error: "bad_id" }, 400);
+    const rows = await db("rt_orders?id=eq." + id + "&select=*");
+    const o = rows && rows[0];
+    if (!o) return j({ error: "not_found" }, 404);
+    if (o.pay_status === "paid") return j({ error: "already_paid" }, 409);
+    if (o.status === "cancelled" || o.status === "test") return j({ error: "closed" }, 409);
+    const total = Math.round(Number(o.total) * 100) / 100;
+    const products = (o.items || []).map((i: any) => ({ ProductID: String(i.sku), Description: String(i.name || i.sku).slice(0, 200), Quantity: Number(i.q), UnitCost: Number(i.price) }));
+    if (Number(o.ship_fee) > 0) products.push({ ProductID: "SHIP", Description: "משלוח עד הבית", Quantity: 1, UnitCost: Number(o.ship_fee) });
+    const hook = SB + "/functions/v1/rt-pay-hook";
+    const body = {
+      TerminalNumber: TERM, ApiName: API, Operation: "ChargeOnly", ReturnValue: o.id, Amount: total,
+      SuccessRedirectUrl: SITE + "?pay=ok&o=" + o.id, FailedRedirectUrl: SITE + "?pay=fail&o=" + o.id, CancelRedirectUrl: SITE + "?pay=cancel&o=" + o.id,
+      WebHookUrl: hook, ProductName: "הזמנה " + o.id + " – RomiTech", Language: "he", ISOCoinId: 1,
+      UIDefinition: { CardOwnerNameValue: o.name || "", CardOwnerPhoneValue: o.phone || "", CardOwnerEmailValue: o.email || "", IsCardOwnerPhoneRequired: true },
+      Document: { DocumentTypeToCreate: "TaxInvoiceAndReceipt", Name: o.name || "לקוח", Email: o.email || "", IsSendByEmail: !!o.email, Mobile: o.phone || "", City: o.city || "", AddressLine1: o.street || "", ExternalId: o.id, Products: products, Language: "he" },
+    };
+    const r = await fetch("https://secure.cardcom.solutions/api/v11/LowProfile/Create", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
+    const res = await r.json();
+    const log = (o.log || []).concat([{ at: new Date().toISOString(), ev: "pay_create", code: res.ResponseCode, desc: res.Description, lp: res.LowProfileId }]);
+    await db("rt_orders?id=eq." + o.id, { method: "PATCH", body: JSON.stringify({ pay_method: method || o.pay_method, pay_ref: res.LowProfileId || o.pay_ref, log, updated_at: new Date().toISOString() }) });
+    if (res.ResponseCode !== 0) return j({ error: "cardcom", code: res.ResponseCode, desc: res.Description }, 502);
+    return j({ url: res.Url, bit: res.UrlToBit || null, id: o.id, total });
+  } catch (e) {
+    return j({ error: "server", desc: String((e as Error).message || e).slice(0, 200) }, 500);
+  }
+});

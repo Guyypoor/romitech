@@ -712,16 +712,17 @@ function renderCart(){
   $('#cartFoot').innerHTML=ids.length?`<div class="tot"><span>סה״כ</span><span class="price">${money(cartTotal())}</span></div><span style="color:var(--muted);font-size:13px">${esc(freeNote()||'דמי המשלוח יחושבו בקופה.')}${SHIPCFG.free!=null&&cartTotal()<SHIPCFG.free?' · משלוח '+money(SHIPCFG.fee):''} · איסוף עצמי מהחנות חינם</span><button class="btn btn-main" id="co">לתשלום</button>`:'';
   hydrate($('#cartBody')); const co=$('#co'); if(co) co.onclick=checkout;
 }
-/* קופה בשני שלבים: פרטים ומשלוח → תשלום (Apple Pay / אשראי / PayPal / ביט).
-   מצב תצוגה: PAY_LIVE=false – התשלום עוד לא מחובר (Grow + PayPal), ההזמנה נשלחת בוואטסאפ. */
-const PAY_LIVE=false;
+/* קופה בשני שלבים: פרטים ומשלוח → תשלום בדף המאובטח של קארדקום (אשראי / Apple Pay / Google Pay / ביט).
+   22/10/2026: PAY_LIVE=true – ההזמנה נשמרת (rt_create_order), ואז פונקציית rt-pay יוצרת דף תשלום לפי הסכום בשרת. */
+const PAY_LIVE=true;
+const PAY_FN=SB.url+'/functions/v1/rt-pay';
 const SHIPCFG={fee:35,free:199}; // ברירת מחדל – מתעדכן מהגדרות פאנל הניהול (rt_settings)
 const SHIP={pickup:{label:'איסוף עצמי מהחנות',sub:'אייטק, הדקלים 104, פרדס חנה'},home:{label:'משלוח עד הבית',sub:'שליח עד הדלת, 1–3 ימי עסקים'}};
 const homeFee=()=>(SHIPCFG.free!=null&&cartTotal()>=SHIPCFG.free)?0:(SHIPCFG.fee||0);
 const feeOf=k=>k==='home'?homeFee():0;
 const freeNote=()=>SHIPCFG.free==null?'':(cartTotal()>=SHIPCFG.free?'משלוח חינם עד הבית':'עוד '+money(Math.ceil((SHIPCFG.free-cartTotal())*100)/100)+' למשלוח חינם עד הבית');
 fetch(SB.url+'/rest/v1/rt_settings?select=k,v',{headers:{apikey:SB.key,Authorization:'Bearer '+SB.key}}).then(r=>r.ok?r.json():[]).then(a=>{(a||[]).forEach(x=>{if(x.k==='ship_home_fee'&&x.v!=null)SHIPCFG.fee=+x.v;if(x.k==='ship_free_over')SHIPCFG.free=x.v==null?null:+x.v;});if($('#cartBody')&&!$('#cartBody .co')&&!$('#cartBody .done'))renderCart();}).catch(()=>{});
-const co={step:1,ship:'home',method:'apple',f:{}};
+const co={step:1,ship:'home',method:'card',f:{}};
 const coLines=()=>Object.entries(cart).map(([id,q])=>{const p=BYID.get(+id);return p?{p,q}:null}).filter(Boolean);
 const shipFee=()=>feeOf(co.ship);
 const grand=()=>Math.round((cartTotal()+shipFee())*100)/100;
@@ -762,8 +763,8 @@ function checkout(){
   };
 }
 const METHODS=[
-  {k:'apple',label:'Apple Pay',sub:'אישור ב-Face ID או Touch ID'},
-  {k:'card',label:'כרטיס אשראי',sub:'ויזה, מאסטרקארד, אמריקן אקספרס, ישראכרט'},
+  {k:'card',label:'כרטיס אשראי',sub:'ויזה, מאסטרקארד, ישראכרט, דיינרס'},
+  {k:'apple',label:'Apple Pay / Google Pay',sub:'בדף התשלום, במכשירים תומכים'},
   {k:'bit',label:'ביט',sub:'אישור באפליקציית ביט'}
 ];
 function payStep(){
@@ -774,20 +775,14 @@ function payStep(){
     <span class="label">אמצעי תשלום</span>
     <div class="methods" role="radiogroup" aria-label="אמצעי תשלום">${METHODS.map(m=>`<label class="opt ${co.method===m.k?'on':''}"><input type="radio" name="pm" value="${m.k}" ${co.method===m.k?'checked':''}><span><b>${esc(m.label)}</b><small>${esc(m.sub)}</small></span></label>`).join('')}</div>
     <div id="pmui" style="margin-top:14px"></div>
-    <p class="secure">${IC.lock}<span>התשלום מתבצע בדף מאובטח של חברת הסליקה, בתוך האתר. פרטי הכרטיס לא נשמרים אצלנו.</span></p>
+    <p class="secure">${IC.lock}<span>התשלום מתבצע בדף המאובטח של קארדקום (תקן PCI DSS). פרטי הכרטיס לא עוברים דרכנו ולא נשמרים אצלנו. חשבונית מס קבלה נשלחת אוטומטית.</span></p>
   </div>`;
   const draw=()=>{
     const g=money(grand()); const m=co.method; const ui=$('#pmui');
     if(m==='apple') ui.innerHTML=`<button class="wallet apple" id="paybtn" type="button"><span class="wl">Apple Pay</span><span class="mono">${g}</span></button>`;
     if(m==='paypal') ui.innerHTML=`<button class="wallet paypal" id="paybtn" type="button"><span class="wl"><i>Pay</i>Pal</span><span class="mono">${g}</span></button>`;
     if(m==='bit') ui.innerHTML=`<button class="wallet bit" id="paybtn" type="button"><span class="wl">bit</span><span class="mono">${g}</span></button>`;
-    if(m==='card') ui.innerHTML=`<div class="cardf" aria-label="טופס כרטיס אשראי">
-        <label class="full">מספר כרטיס<input id="cc-num" ${PAY_LIVE?'':'disabled'} placeholder="•••• •••• •••• ••••" inputmode="numeric"></label>
-        <label>תוקף<input id="cc-exp" ${PAY_LIVE?'':'disabled'} placeholder="MM/YY"></label>
-        <label>CVV<input id="cc-cvv" ${PAY_LIVE?'':'disabled'} placeholder="•••"></label>
-        <label class="full">תעודת זהות של בעל הכרטיס<input id="cc-id" ${PAY_LIVE?'':'disabled'} placeholder="9 ספרות"></label>
-        <label class="full">תשלומים<select id="cc-inst" ${PAY_LIVE?'':'disabled'}><option>תשלום אחד</option><option>2 תשלומים</option><option>3 תשלומים</option></select></label>
-      </div><button class="btn btn-main" id="paybtn" type="button" style="width:100%;margin-top:12px">${IC.lock} תשלום ${g}</button>`;
+    if(m==='card') ui.innerHTML=`<button class="btn btn-main" id="paybtn" type="button" style="width:100%">${IC.lock} מעבר לתשלום מאובטח · ${g}</button>`;
     $('#paybtn').onclick=placeOrder;
   };
   $$('input[name=pm]').forEach(r=>r.onchange=()=>{ co.method=r.value; $$('.methods .opt').forEach(o=>o.classList.toggle('on',o.querySelector('input').checked)); draw(); });
@@ -801,12 +796,19 @@ async function placeOrder(){
   const body={p:{name:f.name,phone:f.phone,email:f.email,city:f.city,street:f.street,notes:f.notes,ship:co.ship,pay_method:co.method,items:coLines().map(({p,q})=>({sku:String(p.sku),q}))}};
   try{
     const res=await sbRpc('rt_create_order',body);
+    if(PAY_LIVE){
+      try{ sessionStorage.setItem('rt_last',JSON.stringify({id:res.id,total:res.total,cart})); }catch(e){}
+      const pr=await fetch(PAY_FN,{method:'POST',headers:{apikey:SB.key,Authorization:'Bearer '+SB.key,'Content-Type':'application/json'},body:JSON.stringify({id:res.id,method:co.method})});
+      const pj=await pr.json().catch(()=>({}));
+      if(pr.ok&&pj.url){ cart={}; saveCart(); location.href=(co.method==='bit'&&pj.bit)?pj.bit:pj.url; return; }
+      throw new Error('pay_page '+(pj.error||pr.status)+' '+res.id);
+    }
     cart={}; saveCart();
     $('#cartBody').innerHTML=`<div class="done"><div class="ok">${IC.check}</div><h2 style="font-size:28px">ההזמנה התקבלה</h2><p style="color:var(--muted);max-width:40ch;margin:10px auto 0">מספר הזמנה <span class="mono" style="color:var(--fg)">${esc(res.id)}</span> · סה״כ <span class="mono" style="color:var(--fg)">${money(res.total)}</span>.</p><p style="color:var(--muted);max-width:40ch;margin:10px auto 0">${PAY_LIVE?'':'התשלום באתר ב'+esc(mlabel)+' יופעל בקרוב. בינתיים ניצור איתך קשר בטלפון לתשלום ולתיאום '+(co.ship==='pickup'?'האיסוף':'המשלוח')+'.'}</p></div>`;
     $('#cartFoot').innerHTML=`<a class="btn btn-main" href="#shop" data-close>להמשך קנייה</a>`;
   }catch(e){
     const m=String(e.message||'');
-    const why=m.includes('out_of_stock')?'אחד המוצרים אזל מהמלאי. הסר אותו מהסל ונסה שוב.':m.includes('unknown_item')?'אחד המוצרים כבר לא זמין. הסר אותו מהסל ונסה שוב.':m.includes('too_many')?'נשלחו כמה הזמנות מהטלפון הזה בדקות האחרונות. נסה שוב בעוד כמה דקות.':m.includes('bad_contact')?'בדוק את השם ומספר הטלפון.':m.includes('bad_address')?'חסרה עיר או רחוב למשלוח.':'לא הצלחנו לשלוח את ההזמנה. נסה שוב, או שלח אותה בוואטסאפ.';
+    const why=m.includes('pay_page')?'ההזמנה נשמרה ('+(m.split(' ').pop())+') אבל דף התשלום לא נפתח. נסה שוב בעוד רגע, או שלח לנו בוואטסאפ ונחזור אליך לתשלום.':m.includes('out_of_stock')?'אחד המוצרים אזל מהמלאי. הסר אותו מהסל ונסה שוב.':m.includes('unknown_item')?'אחד המוצרים כבר לא זמין. הסר אותו מהסל ונסה שוב.':m.includes('too_many')?'נשלחו כמה הזמנות מהטלפון הזה בדקות האחרונות. נסה שוב בעוד כמה דקות.':m.includes('bad_contact')?'בדוק את השם ומספר הטלפון.':m.includes('bad_address')?'חסרה עיר או רחוב למשלוח.':'לא הצלחנו לשלוח את ההזמנה. נסה שוב, או שלח אותה בוואטסאפ.';
     const no='RT-'+String(Date.now()).slice(-6);
     const lines=coLines().map(({p,q})=>`${q} × ${p.name.replace(/[\r\n|]+/g,' ').trim()} | ${p.sup}:${p.sku} | ₪${Math.round(priceOf(p)*q*100)/100}`);
     const msg=['🛒 הזמנה מאתר RomiTech',`מספר הזמנה: ${no}`,`שם: ${f.name}`,`טלפון: ${f.phone}`,`עיר: ${co.ship==='pickup'?'איסוף עצמי':f.city}`,`רחוב: ${co.ship==='pickup'?'אייטק הדקלים 104':f.street}`,`הערות: ${[f.notes,f.email?'מייל '+f.email:'','תשלום מועדף: '+mlabel].filter(Boolean).join(' · ')}`,'פריטים:',...lines,`סה"כ: ₪${Math.round(cartTotal()*100)/100}`].join('\n');
@@ -893,6 +895,22 @@ $('#openCart').onclick=()=>{ lastFocus=document.activeElement; renderCart(); ope
 $('#openSearch').onclick=()=>{ lastFocus=document.activeElement; openEl('#search'); renderSearch(); setTimeout(()=>$('#q').focus(),60); };
 let sd; $('#q').addEventListener('input',()=>{clearTimeout(sd); sd=setTimeout(renderSearch,120)});
 window.addEventListener('hashchange',route);
+/* חזרה מדף התשלום של קארדקום: ?pay=ok|fail|cancel&o=RT-xxxxxx */
+function payReturn(){
+  const u=new URLSearchParams(location.search); const st=u.get('pay'); const id=(u.get('o')||'').replace(/[^\w-]/g,'');
+  if(!st) return;
+  let last=null; try{ last=JSON.parse(sessionStorage.getItem('rt_last')||'null'); }catch(e){}
+  history.replaceState(null,'',location.pathname+location.hash);
+  if(st!=='ok'&&last&&last.cart&&!Object.keys(cart).length){ cart=last.cart; saveCart(); }
+  lastFocus=document.activeElement; openEl('#cart');
+  const msg=st==='ok'
+    ?`<div class="done"><div class="ok">${IC.check}</div><h2 style="font-size:28px">התשלום התקבל, תודה!</h2><p style="color:var(--muted);max-width:40ch;margin:10px auto 0">מספר הזמנה <span class="mono" style="color:var(--fg)">${esc(id)}</span>. חשבונית מס קבלה נשלחת למייל שהזנת. ניצור איתך קשר לתיאום ${'המשלוח או האיסוף'}.</p></div>`
+    :`<div class="done"><h2 style="font-size:26px">${st==='cancel'?'התשלום בוטל':'התשלום לא עבר'}</h2><p style="color:var(--muted);max-width:40ch;margin:10px auto 0">לא חויבת. הסל שלך נשמר – אפשר לנסות שוב, או לשלוח לנו הודעה בוואטסאפ עם מספר ההזמנה <span class="mono" style="color:var(--fg)">${esc(id)}</span>.</p></div>`;
+  $('#cartBody').innerHTML=msg;
+  $('#cartFoot').innerHTML=st==='ok'?`<a class="btn btn-main" href="#shop" data-close>להמשך קנייה</a>`:`<button class="btn btn-main" id="retryPay">חזרה לסל</button>`;
+  const rb=$('#retryPay'); if(rb) rb.onclick=renderCart;
+  if(st==='ok'){ try{ sessionStorage.removeItem('rt_last'); }catch(e){} }
+}
 
 fetch('products.json').then(r=>r.json()).then(d=>{
   DB=d;
@@ -906,6 +924,7 @@ fetch('products.json').then(r=>r.json()).then(d=>{
   $('#fc1').innerHTML=vc.slice(0,h).map(c=>`<li><button data-go="${c[0]}">${esc(c[1])}</button></li>`).join('');
   $('#fc2').innerHTML=vc.slice(h).map(c=>`<li><button data-go="${c[0]}">${esc(c[1])}</button></li>`).join('');
   route();
+  payReturn();
 }).catch(()=>{ $('#app').innerHTML='<div class="loading">לא הצלחנו לטעון את הקטלוג. רענן את העמוד כדי לנסות שוב.</div>'; });
 </script>
 
