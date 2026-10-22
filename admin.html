@@ -68,7 +68,7 @@ tr:last-child td{border-bottom:0}
 .pill{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:2px 10px;font-size:12.5px;border:1px solid currentColor}
 .pill i{width:6px;height:6px;border-radius:50%;background:currentColor}
 .s-new{color:var(--accent)} .s-approved{color:var(--violet)} .s-ordered{color:var(--warn)} .s-ready{color:var(--ok)} .s-shipped{color:var(--ok)} .s-delivered{color:var(--muted)} .s-cancelled{color:var(--bad)} .s-test{color:var(--muted)}
-.p-unpaid{color:var(--warn)} .p-pending{color:var(--accent)} .p-paid{color:var(--ok)} .p-failed{color:var(--bad)} .p-refunded{color:var(--muted)}
+.p-unpaid{color:var(--warn)} .p-pending{color:var(--accent)} .p-paid{color:var(--ok)} .p-failed{color:var(--bad)} .p-refunded{color:var(--muted)} .p-amount_mismatch{color:var(--bad)}
 .empty{padding:40px;text-align:center;color:var(--muted)}
 .scrim{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:40}
 .drawer{position:fixed;top:0;bottom:0;left:0;width:min(620px,100vw);background:var(--bg);border-right:1px solid var(--line);z-index:50;display:flex;flex-direction:column}
@@ -142,7 +142,9 @@ const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const nf=new Intl.NumberFormat('he-IL',{maximumFractionDigits:2}); const money=v=>'₪'+nf.format(+v||0);
 const ST={new:'חדשה',approved:'אושרה',ordered:'הוזמנה מהספק',ready:'מוכנה בחנות',shipped:'נשלחה',delivered:'נמסרה',cancelled:'בוטלה',test:'בדיקה'};
-const PAY={unpaid:'לא שולם',pending:'בתהליך',paid:'שולם',failed:'נכשל',refunded:'הוחזר'};
+const PAY={unpaid:'לא שולם',pending:'בתהליך',paid:'שולם',failed:'נכשל',refunded:'הוחזר',amount_mismatch:'סכום לא תואם'};
+const REFUND_FN=SB_URL+'/functions/v1/rt-admin-refund';
+const evText=l=>l.ev==='created'?'נוצרה באתר':l.ev==='admin'?'עודכנה בניהול: '+(ST[l.status]||l.status)+' / '+(PAY[l.pay]||l.pay):l.ev==='ha'?'עדכון אוטומטי: '+JSON.stringify(l.set):l.ev==='pay_create'?(l.code===0?'נפתח דף תשלום בקארדקום':'דף תשלום נכשל: '+(l.desc||l.code)):l.ev==='pay_hook'?(l.code===0&&l.tx?'שולם ₪'+l.amount+' · עסקה '+l.tx+(l.doc?' · חשבונית מס קבלה '+l.doc:''):'תשלום לא עבר: '+(l.desc||l.code)):l.ev==='refund'?(l.code===0?'בוטל והוחזר ללקוח ('+(l.how==='CancelDoc'?'ביטול חשבונית + מסמך זיכוי':'זיכוי עסקה')+')':'ביטול/החזר נכשל: '+(l.desc||l.code)):l.ev;
 const PM={apple:'Apple Pay',card:'כרטיס אשראי',paypal:'PayPal',bit:'ביט'};
 const SUP={M:'מיאמי',N:'ניל'};
 const TABS=[['new','חדשות'],['open','בטיפול'],['ready','מוכנות'],['done','הושלמו'],['cancelled','בוטלו'],['all','הכל']];
@@ -221,19 +223,32 @@ function openOrder(id){
       <div class="it" style="font-weight:700"><span>סה״כ</span><span></span><span class="mono">${money(o.total)}</span></div>
       ${o.nil_order||o.nil_status?`<p class="muted" style="font-size:13px;margin:10px 0 0">ניל: ${esc(o.nil_status||'')} ${o.nil_order?'· הזמנה '+esc(o.nil_order):''}</p>`:''}
     </div>
+    ${(()=>{const h=(o.log||[]).slice().reverse().find(l=>l.ev==='pay_hook'&&l.tx); const rf=(o.log||[]).slice().reverse().find(l=>l.ev==='refund'&&l.code===0); return h?`<div class="box"><h3>תשלום בקארדקום</h3><div class="kv">
+      <span class="muted">סטטוס</span><span>${pill('p-'+o.pay_status,PAY[o.pay_status]||o.pay_status)}</span>
+      <span class="muted">סכום</span><span class="mono">${money(h.amount)}</span>
+      <span class="muted">מספר עסקה</span><span class="mono">${esc(h.tx)}</span>
+      ${h.doc?`<span class="muted">חשבונית מס קבלה</span><span class="mono">${esc(h.doc)}</span>`:''}
+      ${rf?`<span class="muted">החזר</span><span>${fdt(rf.at)} · ${rf.how==='CancelDoc'?'בוטלה + מסמך זיכוי':'זיכוי עסקה'}</span>`:''}
+    </div>${o.pay_status==='paid'?`<p class="muted" style="font-size:12.5px;margin:10px 0 0">"ביטול והחזר כספי" מבטל את החיוב בקארדקום ומוציא ללקוח מסמך זיכוי. ביטול באותו יום – בלי עמלה.</p>`:''}</div>`:''})()}
     <div class="box"><h3>טיפול</h3><div class="grid2">
       <label>סטטוס<select id="dSt">${Object.entries(ST).map(([k,l])=>`<option value="${k}" ${o.status===k?'selected':''}>${l}</option>`).join('')}</select></label>
       <label>תשלום<select id="dPay">${Object.entries(PAY).map(([k,l])=>`<option value="${k}" ${o.pay_status===k?'selected':''}>${l}</option>`).join('')}</select></label>
       <label style="grid-column:1/-1">הערה פנימית<textarea id="dNote">${esc(o.admin_note||'')}</textarea></label>
     </div>
     <p class="muted" style="font-size:12.5px;margin:10px 0 0">"אושרה" = ההזמנה האוטומטית לניל יוצאת בריצה הקרובה (פריטי מיאמי מוזמנים ידנית בינתיים).</p></div>
-    <div class="box"><h3>היסטוריה</h3><div class="log">${(o.log||[]).slice().reverse().map(l=>`<span>${fdt(l.at)} · ${esc(l.ev==='created'?'נוצרה באתר':l.ev==='admin'?'עודכנה בניהול: '+(ST[l.status]||l.status)+' / '+(PAY[l.pay]||l.pay):l.ev==='ha'?'עדכון אוטומטי: '+JSON.stringify(l.set):l.ev)}</span>`).join('')||'—'}</div></div>
+    <div class="box"><h3>היסטוריה</h3><div class="log">${(o.log||[]).slice().reverse().map(l=>`<span>${fdt(l.at)} · ${esc(evText(l))}</span>`).join('')||'—'}</div></div>
   </div>
-  <div class="df">${o.status==='new'?`<button class="btn main" id="dApprove">אישור הזמנה</button>`:''}<button class="btn ${o.status==='new'?'':'main'}" id="dSave">שמירה</button><span class="sp"></span>${o.status!=='cancelled'?`<button class="btn" id="dCancel" style="color:var(--bad)">ביטול הזמנה</button>`:''}</div>`;
+  <div class="df">${o.status==='new'?`<button class="btn main" id="dApprove">אישור הזמנה</button>`:''}<button class="btn ${o.status==='new'?'':'main'}" id="dSave">שמירה</button><span class="sp"></span>${o.pay_status==='paid'?`<button class="btn" id="dRefund" style="color:var(--bad)">ביטול והחזר כספי · ${money(o.total)}</button>`:o.status!=='cancelled'?`<button class="btn" id="dCancel" style="color:var(--bad)">ביטול הזמנה</button>`:''}</div>`;
   aLast=document.activeElement; $('#drawer').hidden=false; $('#scrim').hidden=false; setTimeout(()=>{ const b=$('#drawer [data-x]'); if(b) b.focus(); },30);
   const save=async(patch)=>{ const { error }=await sb.from('rt_orders').update(patch).eq('id',o.id); if(error){ toast('לא נשמר: '+error.message); return; } toast('נשמר'); await load(); openOrder(o.id); };
   $('#dSave').onclick=()=>save({status:$('#dSt').value,pay_status:$('#dPay').value,admin_note:$('#dNote').value.trim()||null});
   if($('#dApprove')) $('#dApprove').onclick=()=>save({status:'approved',admin_note:$('#dNote').value.trim()||null});
+  if($('#dRefund')) $('#dRefund').onclick=async()=>{ const b=$('#dRefund'); if(!b.dataset.sure){ b.dataset.sure='1'; b.textContent='ללחוץ שוב: לבטל ולהחזיר '+money(o.total)+' ללקוח'; return; }
+    b.disabled=true; b.textContent='מבטל בקארדקום…';
+    try{ const { data:{ session } }=await sb.auth.getSession(); const r=await fetch(REFUND_FN,{method:'POST',headers:{Authorization:'Bearer '+(session&&session.access_token||''),apikey:SB_KEY,'Content-Type':'application/json'},body:JSON.stringify({id:o.id})}); const j=await r.json().catch(()=>({}));
+      if(r.ok&&j.ok){ toast('בוטל והוחזר ללקוח'); } else { toast('לא בוצע: '+(j.desc||j.error||r.status)); }
+    }catch(e){ toast('לא בוצע: '+e.message); }
+    await load(); openOrder(o.id); };
   if($('#dCancel')) $('#dCancel').onclick=()=>{ const b=$('#dCancel'); if(b.dataset.sure){ save({status:'cancelled'}); } else { b.dataset.sure='1'; b.textContent='ללחוץ שוב לביטול'; } };
 }
 let aLast=null;
