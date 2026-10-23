@@ -6,6 +6,11 @@ const SR = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 const TERM = Number(Deno.env.get("CARDCOM_TERMINAL"));
 const API = Deno.env.get("CARDCOM_API_NAME")!;
 const SITE = "https://romitech.co.il/";
+// 23/10/2026: פרטי העסק ותנאי הביטול על החשבונית (מסמך בכתב לפי חוק הגנת הצרכן, עסקת מכר מרחוק)
+const DOC_NOTE = "RomiTech – גיא פור יזמות והפצה בע\"מ, ח.פ. 517290664, הדקלים 104, פרדס חנה, guypoor+romitech@gmail.com. " +
+  "ביטול עסקה: תוך 14 ימים מקבלת המוצר או מסמך זה (המאוחר מביניהם), בדוא\"ל או בטופס באתר romitech.co.il/returns.html. " +
+  "דמי ביטול: 5% מהמחיר או 100 ₪, הנמוך מביניהם (לא בביטול בגלל פגם, אי-התאמה או איחור). החזר כספי תוך 14 ימים מקבלת הודעת הביטול. " +
+  "אחריות לפי היצרן או היבואן. אספקה עד 7 ימי עסקים.";
 // אבטחה 22/10/2026: רק האתר שלנו יכול לקרוא לפונקציה מדפדפן
 const ORIGINS = ["https://romitech.co.il", "https://www.romitech.co.il", "https://guyypoor.github.io"];
 let CORS: Record<string, string> = {};
@@ -44,7 +49,7 @@ Deno.serve(async (req) => {
       SuccessRedirectUrl: SITE + "?pay=ok&o=" + o.id, FailedRedirectUrl: SITE + "?pay=fail&o=" + o.id, CancelRedirectUrl: SITE + "?pay=cancel&o=" + o.id,
       WebHookUrl: hook, ProductName: "הזמנה " + o.id + " – RomiTech", Language: "he", ISOCoinId: 1,
       UIDefinition: { CardOwnerNameValue: o.name || "", CardOwnerPhoneValue: o.phone || "", CardOwnerEmailValue: o.email || "", IsCardOwnerPhoneRequired: true },
-      Document: { DocumentTypeToCreate: "TaxInvoiceAndReceipt", Name: o.name || "לקוח", Email: o.email || "", IsSendByEmail: !!o.email, Mobile: o.phone || "", City: o.city || "", AddressLine1: o.street || "", ExternalId: o.id, Products: products, Language: "he" },
+      Document: { DocumentTypeToCreate: "TaxInvoiceAndReceipt", Comments: DOC_NOTE, DeliveryName: o.ship_method === "pickup" ? "איסוף עצמי – הדקלים 104, פרדס חנה" : "משלוח עד הבית", Name: o.name || "לקוח", Email: o.email || "", IsSendByEmail: !!o.email, Mobile: o.phone || "", City: o.city || "", AddressLine1: o.street || "", ExternalId: o.id, Products: products, Language: "he" },
     };
     const r = await fetch("https://secure.cardcom.solutions/api/v11/LowProfile/Create", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
     const res = await r.json();

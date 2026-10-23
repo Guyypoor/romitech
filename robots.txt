@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://romitech.co.il/sitemap.xml

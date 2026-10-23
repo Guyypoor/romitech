@@ -8,9 +8,18 @@
 
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="description" content="RomiTech – אביזרים לטלפון, לשעון ולאוזניות. כיסויים, מגני מסך, מטענים ואוזניות לפי המכשיר שלך.">
-<meta name="robots" content="noindex">
+<link rel="canonical" href="https://romitech.co.il/">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="he_IL">
+<meta property="og:site_name" content="RomiTech">
+<meta property="og:title" content="RomiTech – הבית שלך לאביזרי סלולר">
+<meta property="og:description" content="כיסויים, מגני מסך, מטענים ואוזניות לפי המכשיר שלך. משלוח לכל הארץ או איסוף עצמי מפרדס חנה.">
+<meta property="og:url" content="https://romitech.co.il/">
+<meta property="og:image" content="https://romitech.co.il/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"OnlineStore","name":"RomiTech","url":"https://romitech.co.il/","logo":"https://romitech.co.il/og.png","description":"חנות אונליין לאביזרי סלולר: כיסויים, מגני מסך, מטענים ואוזניות.","email":"guypoor+romitech@gmail.com","legalName":"גיא פור יזמות והפצה בע״מ","taxID":"517290664","address":{"@type":"PostalAddress","streetAddress":"הדקלים 104","addressLocality":"פרדס חנה-כרכור","addressCountry":"IL"},"areaServed":"IL","currenciesAccepted":"ILS"}</script>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='1' y='1' width='30' height='30' rx='9' fill='%23000000'/%3E%3Cpath d='M11.5 23.5V8.5h5.2a4.2 4.2 0 0 1 0 8.4h-5.2M16.4 16.9l5.2 6.6' fill='none' stroke='%23d9b45a' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
-<title>RomiTech</title>
+<title>RomiTech – אביזרי סלולר: כיסויים, מגני מסך, מטענים ואוזניות</title>
 <link rel="stylesheet" href="fonts/rubik.css">
 <style>
 html,body{margin:0}img{max-width:100%}
@@ -634,7 +643,7 @@ function viewHome(){
 
   <section class="sec" style="padding-top:0"><div class="wrap"><div class="facts">
     <div><b>מלאי</b><p>לכל מוצר מוצג מצב המלאי: במלאי, מלאי נמוך או אזל. אם מוצר אזל אחרי ההזמנה, נעדכן אותך ונחזיר את הכסף.</p></div>
-    <div><b>עד הבית</b><p>מזמינים באתר ומקבלים משלוח עד הדלת, או אוספים בחינם מהחנות בפרדס חנה. <a class="lnk" href="shipping.html">פרטי משלוח</a></p></div>
+    <div><b>עד הבית</b><p>מזמינים באתר ומקבלים משלוח עד הדלת בכל הארץ, תוך עד 7 ימי עסקים, או אוספים בחינם מהחנות בפרדס חנה. <a class="lnk" href="shipping.html">פרטי משלוח</a></p></div>
     <div><b>14 ימים</b><p>ביטול עסקה והחזרה לפי חוק הגנת הצרכן. <a class="lnk" href="returns.html">איך מבטלים</a></p></div>
   </div></div></section>`;
   hydrate($('#app'));
@@ -747,7 +756,7 @@ function renderCart(){
 const PAY_LIVE=true;
 const PAY_FN=SB.url+'/functions/v1/rt-pay';
 const SHIPCFG={fee:35,free:199}; // ברירת מחדל – מתעדכן מהגדרות פאנל הניהול (rt_settings)
-const SHIP={pickup:{label:'איסוף עצמי מהחנות',sub:'אייטק, הדקלים 104, פרדס חנה'},home:{label:'משלוח עד הבית',sub:'שליח עד הדלת, 1–3 ימי עסקים'}};
+const SHIP={pickup:{label:'איסוף עצמי מהחנות',sub:'אייטק, הדקלים 104, פרדס חנה'},home:{label:'משלוח עד הבית',sub:'שליח עד הדלת, לכל הארץ, עד 7 ימי עסקים'}};
 const homeFee=()=>(SHIPCFG.free!=null&&cartTotal()>=SHIPCFG.free)?0:(SHIPCFG.fee||0);
 const feeOf=k=>k==='home'?homeFee():0;
 const freeNote=()=>SHIPCFG.free==null?'':(cartTotal()>=SHIPCFG.free?'משלוח חינם עד הבית':'עוד '+money(Math.ceil((SHIPCFG.free-cartTotal())*100)/100)+' למשלוח חינם עד הבית');
