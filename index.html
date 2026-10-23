@@ -6,7 +6,8 @@
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <script>if(location.protocol==="http:"&&/(^|\.)romitech\.co\.il$/.test(location.hostname))location.replace("https://"+location.host+location.pathname+location.search+location.hash);if(top!==self)top.location=self.location;</script>
 
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,interactive-widget=resizes-content">
+<meta name="theme-color" content="#ffffff">
 <meta name="description" content="RomiTech – אביזרים לטלפון, לשעון ולאוזניות. כיסויים, מגני מסך, מטענים ואוזניות לפי המכשיר שלך.">
 <link rel="canonical" href="https://romitech.co.il/">
 <meta property="og:type" content="website">
@@ -25,6 +26,8 @@
 html,body{margin:0}img{max-width:100%}
 /* Layout: dark "spec-sheet" store — graphite panels, circular light-box pedestals for white product shots,
    mono type for every number (prices, counts, codes), one iridescent gradient used only on the mark and key highlights. */
+/* עקומות תנועה (לפי animate): ease-out חזק לממשק, ease-drawer למגירות */
+:root{--ease-out:cubic-bezier(.23,1,.32,1);--ease-drawer:cubic-bezier(.32,.72,0,1)}
 :root{
   /* RomiTech – רקע לבן, כיתוב שחור, זהב לכותרות ולהדגשות. זהב ככיתוב על לבן = זהב כהה (#8a6a1f) לקריאות */
   --bg:#ffffff; --panel:#ffffff; --panel-2:#f7f4ed; --line:#ece6d9; --line-2:#d8ccb4;
@@ -43,7 +46,9 @@ html,body{margin:0}img{max-width:100%}
   color-scheme:light;
 }
 *{box-sizing:border-box} [hidden]{display:none!important}
-html{direction:rtl}
+html{direction:rtl;-webkit-tap-highlight-color:transparent;-webkit-text-size-adjust:100%}
+button,a,[role="button"],label,summary{touch-action:manipulation}
+button,[role="button"],.btn,.chip,.pill{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
 body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--f-sans);font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased}
 body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:60;background:var(--glass)}
 button,input,select,textarea{font:inherit;color:inherit}
@@ -62,6 +67,7 @@ h1,h2,.sh h2,.pd h2,.ct h3{font-family:var(--f-display)}
 /* top strip + header */
 .strip{font-size:12.5px;color:var(--muted);border-bottom:1px solid var(--line);padding-block:7px;text-align:center}
 .hdr{border-bottom-color:var(--gold)!important;position:sticky;top:env(safe-area-inset-top,0px);z-index:50;background:var(--glass);backdrop-filter:blur(18px) saturate(160%);-webkit-backdrop-filter:blur(18px) saturate(160%);border-bottom:1px solid var(--line)}
+@media (pointer:coarse){.hdr{-webkit-backdrop-filter:none;backdrop-filter:none;background:rgba(255,255,255,.97)}}
 .hdr .wrap{display:flex;align-items:center;gap:28px;height:64px}
 .logo{display:flex;align-items:center;gap:10px;direction:ltr;flex:none}
 @media (max-width:380px){.hdr .wrap{gap:10px}.logo{gap:6px}.logo svg{width:26px;height:26px}.wm{font-size:18px!important}.hdr .ib{min-width:36px;height:36px;padding:0 8px;gap:4px}}
@@ -70,25 +76,26 @@ h1,h2,.sh h2,.pd h2,.ct h3{font-family:var(--f-display)}
 .wm b{font-weight:800;color:var(--gold-deep)}
 .nav{display:flex;gap:6px}
 .nav a,.nav button{border:0;background:none;cursor:pointer;font-size:14.5px;color:var(--fg-2);padding:8px 12px;border-radius:999px}
-.nav a:hover,.nav button:hover{background:var(--panel-2);color:var(--fg)}
+@media (hover:hover) and (pointer:fine){.nav a:hover,.nav button:hover{background:var(--panel-2);color:var(--fg)}}
 .nav .on{color:var(--fg);background:var(--panel-2)}
 .hdr .sp{flex:1}
 .ib{height:40px;min-width:40px;padding:0 10px;border-radius:999px;border:1px solid var(--line);background:var(--panel);display:inline-flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;color:var(--fg)}
-.ib:hover{border-color:var(--line-2)}
+@media (hover:hover) and (pointer:fine){.ib:hover{border-color:var(--line-2)}}
 .ib svg{width:18px;height:18px}
+.ib,.addb{transition:transform .12s var(--ease-out)}.ib:active,.addb:active{transform:scale(.94)}
 .ib .mono{font-size:13px}
 .mnav{display:none}
 @media (max-width:900px){.nav{display:none}.mnav{display:inline-flex}.hdr .wrap{gap:12px}}
 
 /* buttons */
-.btn{height:46px;padding:0 24px;border-radius:999px;border:0;cursor:pointer;font-weight:600;font-size:15px;display:inline-flex;align-items:center;justify-content:center;gap:10px;transition:transform .15s}
+.btn{height:46px;padding:0 24px;border-radius:999px;border:0;cursor:pointer;font-weight:600;font-size:15px;display:inline-flex;align-items:center;justify-content:center;gap:10px;transition:transform .15s var(--ease-out)}
 .btn:active{transform:scale(.97)}
 .btn-main{background:var(--btn);color:var(--btn-ink)}
 .btn-line{background:transparent;color:var(--fg);border:1px solid var(--line-2)}
-.btn-line:hover{border-color:var(--fg-2)}
+@media (hover:hover) and (pointer:fine){.btn-line:hover{border-color:var(--fg-2)}}
 .btn[disabled]{opacity:.4;cursor:not-allowed}
 .lnk{color:var(--accent);font-weight:500;border:0;background:none;cursor:pointer;padding:0;font-size:15px}
-.lnk:hover{text-decoration:underline}
+@media (hover:hover) and (pointer:fine){.lnk:hover{text-decoration:underline}}
 
 /* hero */
 .hero{position:relative;overflow:hidden;border-bottom:1px solid var(--line)}
@@ -104,9 +111,9 @@ h1,h2,.sh h2,.pd h2,.ct h3{font-family:var(--f-display)}
 .finder .tabs{display:flex;gap:4px;background:var(--panel-2);border-radius:999px;padding:4px;width:max-content;max-width:100%;overflow-x:auto}
 .finder .tabs button{border:0;background:none;padding:7px 16px;border-radius:999px;cursor:pointer;font-size:14px;color:var(--fg-2);white-space:nowrap}
 .finder .tabs button.on{background:var(--btn);color:var(--btn-ink);font-weight:600}
-.models{display:flex;flex-wrap:wrap;gap:6px;max-height:132px;overflow:auto}
+.models{display:flex;flex-wrap:wrap;gap:6px;max-height:132px;overflow:auto;overscroll-behavior:contain}
 .models button{border:1px solid var(--line-2);background:transparent;border-radius:10px;padding:6px 11px;cursor:pointer;font-size:13.5px;direction:ltr}
-.models button:hover{border-color:var(--fg-2)}
+@media (hover:hover) and (pointer:fine){.models button:hover{border-color:var(--fg-2)}}
 .models button.on{border-color:var(--accent);color:var(--accent);background:rgba(201,162,74,.12)}
 .finder .go{display:flex;align-items:center;justify-content:space-between;gap:12px;border-top:1px solid var(--line);padding-top:14px;flex-wrap:wrap}
 
@@ -140,11 +147,11 @@ h1,h2,.sh h2,.pd h2,.ct h3{font-family:var(--f-display)}
 /* category bento */
 .bento{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));grid-auto-rows:220px;gap:14px}
 .ct{position:relative;background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:20px;overflow:hidden;cursor:pointer;text-align:right;display:flex;flex-direction:column;justify-content:space-between;transition:border-color .2s}
-.ct:hover{border-color:var(--line-2)}
+@media (hover:hover) and (pointer:fine){.ct:hover{border-color:var(--line-2)}}
 .ct h3{font-size:21px;font-weight:600;position:relative;z-index:1}
 .ct .n{position:relative;z-index:1}
 .ct .disc{width:58%;height:auto;aspect-ratio:1;left:-6%;bottom:-10%;box-shadow:none;transition:transform .5s cubic-bezier(.2,.8,.2,1)}
-.ct:hover .disc{transform:scale(1.04) rotate(-2deg)}
+@media (hover:hover) and (pointer:fine){.ct:hover .disc{transform:scale(1.04) rotate(-2deg)}}
 .ct.big{grid-column:span 2;grid-row:span 2}
 .ct.big h3{font-size:30px}
 .ct.big .disc{width:62%;left:-4%;bottom:-6%}
@@ -153,7 +160,7 @@ h1,h2,.sh h2,.pd h2,.ct h3{font-family:var(--f-display)}
 @media (max-width:900px){.bento{grid-template-columns:repeat(2,minmax(0,1fr));grid-auto-rows:180px}.ct.big{grid-row:span 2}.ct.wide{grid-column:span 2}}
 .index{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0 36px;margin-top:30px;border-top:1px solid var(--line)}
 .index button{display:flex;align-items:baseline;gap:10px;border:0;border-bottom:1px solid var(--line);background:none;padding:13px 2px;cursor:pointer;text-align:right;font-size:15px}
-.index button:hover{color:var(--accent)}
+@media (hover:hover) and (pointer:fine){.index button:hover{color:var(--accent)}}
 .index .dots{flex:1;border-bottom:1px dotted var(--line-2);transform:translateY(-4px)}
 @media (max-width:900px){.index{grid-template-columns:1fr 1fr}}
 @media (max-width:560px){.index{grid-template-columns:1fr}}
@@ -161,15 +168,15 @@ h1,h2,.sh h2,.pd h2,.ct h3{font-family:var(--f-display)}
 /* list rows */
 .rows{border-top:1px solid var(--line)}
 .rowp{display:grid;grid-template-columns:76px minmax(0,1fr) auto auto;gap:18px;align-items:center;padding:14px 4px;border-bottom:1px solid var(--line);cursor:pointer}
-.rowp:hover{background:var(--panel)}
+@media (hover:hover) and (pointer:fine){.rowp:hover{background:var(--panel)}}
 .thumb{position:relative;width:76px;height:76px;border-radius:16px;background:var(--lightbox);display:grid;place-items:center;overflow:hidden}
 .thumb img{width:84%;height:84%;object-fit:contain;mix-blend-mode:multiply}
 .thumb .sk{position:absolute;inset:0}
-.rowp .nm{font-weight:500;line-height:1.35}
+.rowp .nm{font-weight:500;line-height:1.35;overflow-wrap:anywhere}
 .rowp .sub{font-size:13px;color:var(--muted);margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .price{font-family:var(--f-sans);font-variant-numeric:tabular-nums;font-weight:600;font-size:17px;letter-spacing:-.01em;white-space:nowrap}
 .addb{width:38px;height:38px;border-radius:50%;border:1px solid var(--line-2);background:transparent;cursor:pointer;display:grid;place-items:center;color:var(--fg)}
-.addb:hover{background:var(--btn);color:var(--btn-ink);border-color:var(--btn)}
+@media (hover:hover) and (pointer:fine){.addb:hover{background:var(--btn);color:var(--btn-ink);border-color:var(--btn)}}
 .addb svg{width:18px;height:18px}
 @media (max-width:560px){.rowp{grid-template-columns:64px minmax(0,1fr) auto;gap:12px}.rowp .addb{display:none}.thumb{width:64px;height:64px}}
 
@@ -180,16 +187,18 @@ h1,h2,.sh h2,.pd h2,.ct h3{font-family:var(--f-display)}
 .tile{cursor:pointer;display:flex;flex-direction:column;gap:10px;min-width:0}
 .tile .box{position:relative;aspect-ratio:1/1;border-radius:16px;box-shadow:inset 0 0 0 1px transparent;transition:box-shadow .2s;background:var(--lightbox);display:grid;place-items:center;overflow:hidden}
 .tile .box img{width:78%;height:78%;object-fit:contain;mix-blend-mode:multiply;transition:transform .45s cubic-bezier(.2,.8,.2,1)}
-.tile:hover .box img{transform:scale(1.05)}
+@media (hover:hover) and (pointer:fine){.tile:hover .box img{transform:scale(1.05)}}
 .tile .box .sk{position:absolute;inset:0}
-.tile .box .addb{position:absolute;left:10px;bottom:10px;background:var(--btn);color:var(--btn-ink);border:0;opacity:0;transform:translateY(6px);transition:all .2s}
-.tile:hover .box,.tile:focus-within .box{box-shadow:inset 0 0 0 2px var(--gold)}
-.tile:hover .box .addb,.tile:focus-within .box .addb{opacity:1;transform:none}
+.tile .box .addb{position:absolute;left:10px;bottom:10px;background:var(--btn);color:var(--btn-ink);border:0;opacity:0;transform:translateY(6px);transition:opacity .2s var(--ease-out),transform .2s var(--ease-out)}
+.tile:has(:focus-visible) .box{box-shadow:inset 0 0 0 2px var(--gold)}
+@media (hover:hover) and (pointer:fine){.tile:hover .box{box-shadow:inset 0 0 0 2px var(--gold)}}
+.tile:has(:focus-visible) .box .addb{opacity:1;transform:none}
+@media (hover:hover) and (pointer:fine){.tile:hover .box .addb{opacity:1;transform:none}}
 @media (hover:none){.tile .box .addb{opacity:1;transform:none}}
-.tile .nm{font-size:14.5px;line-height:1.38;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.tile .meta{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.tile .nm{font-size:14.5px;line-height:1.38;overflow-wrap:anywhere;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.tile .meta{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:2px 8px}
 .flag{position:absolute;top:10px;right:10px;font-size:12px;font-weight:600;padding:4px 8px;border-radius:999px;background:rgba(12,13,16,.86);color:#fff}
-.st{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;color:var(--muted)}
+.st{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;color:var(--muted);white-space:nowrap}
 .st i{width:7px;height:7px;border-radius:50%;background:var(--ok)}
 .st.low i{background:var(--warn)} .st.out i{background:var(--bad)}
 .sk{background:linear-gradient(90deg,transparent,rgba(255,255,255,.55),transparent);animation:sk 1.2s infinite}
@@ -206,10 +215,10 @@ h1,h2,.sh h2,.pd h2,.ct h3{font-family:var(--f-display)}
 
 /* shop layout */
 .shop{display:grid;grid-template-columns:250px minmax(0,1fr);gap:40px;padding-block:36px 60px}
-.side{position:sticky;top:calc(84px + env(safe-area-inset-top,0px));align-self:start;max-height:calc(100vh - 100px);overflow:auto;padding-left:4px}
+.side{position:sticky;top:calc(84px + env(safe-area-inset-top,0px));align-self:start;max-height:calc(100vh - 100px);max-height:calc(100dvh - 100px);overflow:auto;overscroll-behavior:contain;padding-left:4px}
 .side h4{margin:22px 0 8px}
 .side .cl button{display:flex;justify-content:space-between;gap:10px;width:100%;border:0;background:none;text-align:right;padding:7px 10px;border-radius:10px;cursor:pointer;font-size:14.5px;color:var(--fg-2)}
-.side .cl button:hover{background:var(--panel-2);color:var(--fg)}
+@media (hover:hover) and (pointer:fine){.side .cl button:hover{background:var(--panel-2);color:var(--fg)}}
 .side .cl button.on{background:var(--panel-2);color:var(--fg);font-weight:600}
 .side .cl .mono{color:var(--muted);font-size:12px}
 .side select,.tb select{width:100%;height:40px;border-radius:12px;border:1px solid var(--line);background:var(--panel);padding:0 10px;cursor:pointer}
@@ -242,7 +251,7 @@ h1,h2,.sh h2,.pd h2,.ct h3{font-family:var(--f-display)}
 @media (prefers-reduced-motion:no-preference){.panel{transition:transform .32s cubic-bezier(.2,.8,.2,1),visibility 0s .32s}.panel.on{transition:transform .32s cubic-bezier(.2,.8,.2,1)}}
 .panel.narrow{width:min(460px,100vw)}
 .ph{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 22px;border-bottom:1px solid var(--line)}
-.pb{flex:1;overflow:auto;padding:22px}
+.pb{flex:1;overflow:auto;overscroll-behavior:contain;padding:22px}
 .pf{border-top:1px solid var(--line);padding:16px 22px;display:flex;flex-direction:column;gap:12px}
 .hero-shot{position:relative;aspect-ratio:16/11;border-radius:24px;background:radial-gradient(circle at 50% 40%,#fff 0%,var(--lightbox) 60%,var(--lightbox-2) 100%);display:grid;place-items:center;overflow:hidden}
 .hero-shot img{width:64%;height:80%;object-fit:contain;mix-blend-mode:multiply}
@@ -264,17 +273,17 @@ h1,h2,.sh h2,.pd h2,.ct h3{font-family:var(--f-display)}
 .rel .rowp{grid-template-columns:64px minmax(0,1fr) auto}
 .rel .thumb{width:64px;height:64px}
 .line{display:grid;grid-template-columns:64px minmax(0,1fr) auto;gap:12px;align-items:center;padding:14px 0;border-bottom:1px solid var(--line)}
-.line .nm{font-size:14px;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.line .ctl{display:flex;align-items:center;gap:12px;margin-top:6px}
+.line .nm{font-size:14px;line-height:1.3;overflow-wrap:anywhere;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.line .ctl{display:flex;align-items:center;flex-wrap:wrap;gap:6px 12px;margin-top:6px}
 .line .qty{height:32px}.line .qty button{width:30px;height:30px;font-size:15px}
 .rm{border:0;background:none;color:var(--muted);font-size:13px;cursor:pointer;padding:0}
-.rm:hover{color:var(--bad)}
+@media (hover:hover) and (pointer:fine){.rm:hover{color:var(--bad)}}
 .tot{display:flex;justify-content:space-between;align-items:baseline}
 .tot .price{font-size:22px}
 .co form{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .co label{display:flex;flex-direction:column;gap:6px;font-size:13px;color:var(--muted)}
 .co .full{grid-column:1/-1}
-.co input,.co textarea{height:46px;border-radius:12px;border:1px solid var(--line);background:var(--panel);padding:0 12px;font-size:15px;color:var(--fg)}
+.co input,.co textarea{height:46px;border-radius:12px;border:1px solid var(--line);background:var(--panel);padding:0 12px;font-size:16px;color:var(--fg)}
 .co textarea{height:84px;padding:10px 12px;resize:vertical}
 .pay{grid-column:1/-1;border:1px dashed var(--line-2);border-radius:14px;padding:14px;font-size:14px;color:var(--muted);display:flex;gap:10px;align-items:center}
 .pay svg{width:22px;height:22px;flex:none;color:var(--accent)}
@@ -303,7 +312,7 @@ h1,h2,.sh h2,.pd h2,.ct h3{font-family:var(--f-display)}
 .cardf{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .cardf label{display:flex;flex-direction:column;gap:6px;font-size:13px;color:var(--muted)}
 .cardf .full{grid-column:1/-1}
-.cardf input,.cardf select{height:46px;border-radius:12px;border:1px solid var(--line);background:var(--panel);padding:0 12px;font-size:15px;color:var(--fg);direction:ltr;text-align:right}
+.cardf input,.cardf select{height:46px;border-radius:12px;border:1px solid var(--line);background:var(--panel);padding:0 12px;font-size:16px;color:var(--fg);direction:ltr;text-align:right}
 .cardf input:disabled,.cardf select:disabled{opacity:.6;cursor:not-allowed}
 .secure{display:flex;gap:8px;align-items:center;color:var(--muted);font-size:12.5px;margin:14px 0 0}.secure svg{width:16px;height:16px;flex:none}
 .co label[hidden]{display:none!important}
@@ -313,7 +322,7 @@ h1,h2,.sh h2,.pd h2,.ct h3{font-family:var(--f-display)}
 @media (max-width:560px){.co form{grid-template-columns:1fr}.spec div{grid-template-columns:110px minmax(0,1fr)}}
 
 /* mega menu + search */
-.sheet{position:fixed;z-index:95;inset:0 0 auto 0;background:var(--bg);border-bottom:1px solid var(--line);transform:translateY(-104%);transition:transform .3s cubic-bezier(.2,.8,.2,1);padding-top:env(safe-area-inset-top,0px);max-height:90vh;overflow:auto}
+.sheet{position:fixed;z-index:95;inset:0 0 auto 0;background:var(--bg);border-bottom:1px solid var(--line);transform:translateY(-104%);transition:transform .3s cubic-bezier(.2,.8,.2,1);padding-top:env(safe-area-inset-top,0px);max-height:90vh;max-height:90dvh;overflow:auto;overscroll-behavior:contain}
 .sheet.on{transform:none}
 @media (prefers-reduced-motion:no-preference){.sheet{transition:transform .3s cubic-bezier(.2,.8,.2,1),visibility 0s .3s}.sheet.on{transition:transform .3s cubic-bezier(.2,.8,.2,1)}}
 .skip{position:fixed;top:8px;right:8px;z-index:200;background:var(--fg);color:var(--bg);padding:10px 16px;border-radius:10px;font-weight:600;transform:translateY(-150%)}
@@ -323,7 +332,7 @@ h1,h2,.sh h2,.pd h2,.ct h3{font-family:var(--f-display)}
 .tile .pbtn{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .a11yb{position:fixed;left:16px;bottom:16px;z-index:85;width:48px;height:48px;border-radius:50%;border:2px solid #000;background:var(--gold);color:#000;display:grid;place-items:center;cursor:pointer;box-shadow:0 6px 18px rgba(0,0,0,.35)}
 .a11yb svg{width:28px;height:28px}
-.a11yp{position:fixed;left:16px;bottom:74px;z-index:96;width:min(320px,calc(100vw - 32px));max-height:calc(100vh - 100px);overflow:auto;background:var(--panel);color:var(--fg);border:1px solid var(--line-2);border-radius:16px;padding:16px;box-shadow:0 18px 50px rgba(0,0,0,.4)}
+.a11yp{position:fixed;left:16px;bottom:74px;z-index:96;width:min(320px,calc(100vw - 32px));max-height:calc(100vh - 100px);max-height:calc(100dvh - 100px);overflow:auto;overscroll-behavior:contain;background:var(--panel);color:var(--fg);border:1px solid var(--line-2);border-radius:16px;padding:16px;box-shadow:0 18px 50px rgba(0,0,0,.4)}
 .a11yp[hidden]{display:none}
 .a11yp h2{font-size:18px;margin:0 0 4px}
 .a11yp .g{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
@@ -345,7 +354,7 @@ html.a11y-cursor,html.a11y-cursor *{cursor:url("data:image/svg+xml,%3Csvg xmlns=
 .sbar input{flex:1;min-width:0;border:0;outline:none;background:transparent;font-size:26px;font-weight:600}
 .megagrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:18px}
 .megagrid button{display:flex;align-items:center;gap:12px;border:1px solid var(--line);background:var(--panel);border-radius:16px;padding:10px;cursor:pointer;text-align:right}
-.megagrid button:hover{border-color:var(--line-2)}
+@media (hover:hover) and (pointer:fine){.megagrid button:hover{border-color:var(--line-2)}}
 .megagrid .thumb{width:52px;height:52px;border-radius:12px;flex:none}
 .megagrid .nm{font-size:14.5px;font-weight:500}
 @media (max-width:900px){.megagrid{grid-template-columns:1fr 1fr}}
@@ -361,12 +370,12 @@ footer.site .wrap{padding-block:44px 30px}
 .fg{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:28px}
 .fg ul{list-style:none;margin:10px 0 0;padding:0;display:flex;flex-direction:column;gap:8px;font-size:14px;color:var(--fg-2)}
 .fg button{border:0;background:none;padding:0;cursor:pointer;color:inherit;text-align:right;font-size:14px}
-.fg button:hover{color:var(--fg)}
+@media (hover:hover) and (pointer:fine){.fg button:hover{color:var(--fg)}}
 .fg>div{min-width:0}.fg a{overflow-wrap:anywhere;text-decoration:underline;text-underline-offset:3px}
 .legal{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;border-top:1px solid var(--line);margin-top:30px;padding-top:18px;color:var(--muted);font-size:12.5px}
 @media (max-width:760px){.fg{grid-template-columns:1fr 1fr}}
 
-.toast{position:fixed;z-index:99;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translate(-50%,20px);opacity:0;background:var(--btn);color:var(--btn-ink);padding:12px 18px;border-radius:999px;font-size:14px;transition:all .25s;pointer-events:none;max-width:calc(100vw - 32px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.toast{position:fixed;z-index:99;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translate(-50%,20px);opacity:0;background:var(--btn);color:var(--btn-ink);padding:12px 18px;border-radius:999px;font-size:14px;transition:opacity .25s var(--ease-out),transform .25s var(--ease-out);pointer-events:none;max-width:calc(100vw - 32px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .toast.on{opacity:1;transform:translate(-50%,0)}
 .loading{padding:140px 0;text-align:center;color:var(--muted)}
 .noimg{display:grid;place-items:center;width:100%;height:100%;font-weight:700;font-size:clamp(11px,2.2vw,18px);letter-spacing:-.02em;color:#9aa0ab;direction:ltr}
@@ -386,8 +395,10 @@ footer.site .wrap{padding-block:44px 30px}
 .catcircles .cc img{width:70%;height:70%;object-fit:contain;mix-blend-mode:multiply}
 .catcircles .t{font-size:14px;font-weight:500;line-height:1.25;color:var(--fg)}
 .catcircles .k{font-size:12px;color:var(--muted);margin-top:-6px}
-.bsheet{inset:auto 0 0 0!important;top:auto!important;transform:translateY(104%)!important;border-radius:22px 22px 0 0;border-top:1px solid var(--gold-deep)!important;border-bottom:0!important;max-height:86vh;padding-bottom:env(safe-area-inset-bottom,0px)}
+.bsheet{inset:auto 0 0 0!important;top:auto!important;transform:translateY(104%)!important;border-radius:22px 22px 0 0;border-top:1px solid var(--gold-deep)!important;border-bottom:0!important;max-height:86vh;max-height:86dvh;padding-bottom:env(safe-area-inset-bottom,0px)}
 .bsheet.on{transform:none!important}
+@media (prefers-reduced-motion:no-preference){.bsheet{transition:transform .4s var(--ease-drawer),visibility 0s .4s}.bsheet.on{transition:transform .4s var(--ease-drawer)}}
+#cartN{display:inline-block}
 .bsheet .grip{width:44px;height:5px;border-radius:9px;background:var(--line-2);margin:10px auto 4px}
 .bsheet .bh{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:6px 0 14px}
 .bsheet .bh h2{font-size:22px}
@@ -464,7 +475,7 @@ footer.site .wrap{padding-block:44px 30px}
   <div class="pf" id="cartFoot"></div>
 </aside>
 <div class="sheet" id="search" role="dialog" aria-modal="true" aria-label="חיפוש"><div class="wrap">
-  <div class="sbar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input id="q" type="search" aria-label="חיפוש מוצר" placeholder="מה מחפשים? דגם, מוצר או ברקוד" autocomplete="off"><button class="ib" data-close aria-label="סגירה"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
+  <div class="sbar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input id="q" type="search" enterkeyhint="search" aria-label="חיפוש מוצר" placeholder="מה מחפשים? דגם, מוצר או ברקוד" autocomplete="off"><button class="ib" data-close aria-label="סגירה"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
   <div id="sr"></div>
 </div></div>
 <div class="sheet" id="mega" role="dialog" aria-modal="true" aria-label="קטגוריות"><div class="wrap">
@@ -569,8 +580,32 @@ let cart={}; try{cart=JSON.parse(localStorage.getItem('romitech.cart')||'{}')||{
 const saveCart=()=>{ try{localStorage.setItem('romitech.cart',JSON.stringify(cart))}catch(e){} $('#cartN').textContent=cartCount(); $('#openCart').setAttribute('aria-label','סל הקניות, '+cartCount()+' פריטים'); };
 const cartCount=()=>Object.values(cart).reduce((a,b)=>a+b,0);
 const cartTotal=()=>Object.entries(cart).reduce((a,[id,q])=>{const p=BYID.get(+id);return a+(p?priceOf(p)*q:0)},0);
-function addToCart(id,q=1){ const p=BYID.get(id); if(!p) return; if(p.stock===2){toast('המוצר אזל מהמלאי');return} cart[id]=(cart[id]||0)+q; saveCart(); toast('נוסף לסל · '+p.name); TRK('cart',{pid:id}); }
+function addToCart(id,q=1){ const p=BYID.get(id); if(!p) return; if(p.stock===2){toast('המוצר אזל מהמלאי');return} cart[id]=(cart[id]||0)+q; saveCart(); bump(); toast('נוסף לסל · '+p.name); TRK('cart',{pid:id}); }
 function setQty(id,q){ if(q<=0) delete cart[id]; else cart[id]=q; saveCart(); renderCart(); }
+/* ===== מלאי חי – rt_stock ב-Supabase (מקובץ הספק, מעודכן מהפאנל). נטען עם הקטלוג, מתרענן כל דקה וכשחוזרים ללשונית.
+   מוצר שלא בטבלה נשאר עם המלאי מ-products.json. ===== */
+const LIVE=new Map();
+async function loadStock(){ try{ const m=await sbRpc('rt_stock_map',{}); if(Array.isArray(m)){ LIVE.clear(); m.forEach(([k,v])=>LIVE.set(String(k),v)); } }catch(e){} }
+const stockOf=(sku,base)=>LIVE.has(String(sku))?LIVE.get(String(sku)):base;
+async function refreshStock(force){ if(!ALL.length||(!force&&document.hidden)) return;
+  await loadStock(); const ch=ALL.filter(p=>{ const v=stockOf(p.sku,p.stock0); if(v===p.stock) return false; p.stock=v; return true; }); if(!ch.length) return;
+  ch.forEach(p=>$$(`[data-pid="${p.id}"]`).forEach(el=>{ if(el.classList.contains('tile')) el.outerHTML=tile(p); else if(el.classList.contains('rowp')) el.outerHTML=row(p,el.children.length>3); }));
+  if($('#cart').classList.contains('on')&&$('#co')&&ch.some(p=>cart[p.id])) renderCart(); }
+setInterval(refreshStock,60000); document.addEventListener('visibilitychange',()=>{ if(!document.hidden) refreshStock(); });
+const calm=()=>matchMedia('(prefers-reduced-motion: reduce)').matches||document.documentElement.classList.contains('a11y-still');
+function bump(){ const n=$('#cartN'); if(calm()||!n.animate) return; n.animate([{transform:'scale(1)'},{transform:'scale(1.45)'},{transform:'scale(1)'}],{duration:320,easing:'cubic-bezier(.23,1,.32,1)'}); }
+/* מגירה תחתונה (בחירת מכשיר): גרירה למטה סוגרת – רבע מהגובה או הנפה מהירה (0.11px/ms). למעלה – התנגדות, לא קיר */
+(()=>{ const el=$('#devs'); if(!el) return; let y0=0,x0=0,t0=0,dy=0,drag=false,dead=true;
+  const put=(y,ms)=>{ el.style.transition=ms?`transform ${ms}ms var(--ease-drawer)`:'none'; el.style.setProperty('transform',`translateY(${y}px)`,'important'); };
+  const clear=()=>{ el.style.removeProperty('transform'); el.style.transition=''; };
+  el.addEventListener('touchstart',e=>{ dead=e.touches.length>1||drag; if(dead) return; y0=e.touches[0].clientY; x0=e.touches[0].clientX; dy=0; },{passive:true});
+  el.addEventListener('touchmove',e=>{ if(dead||e.touches.length>1) return; const t=e.touches[0], d=t.clientY-y0;
+    if(!drag){ if(el.scrollTop>0||Math.abs(d)<6) return; if(d<0||Math.abs(t.clientX-x0)>Math.abs(d)){ dead=true; return; } drag=true; y0=t.clientY; t0=Date.now(); }
+    e.preventDefault(); dy=t.clientY-y0; put(dy>=0?dy:-(1-1/(-dy*.55/60+1))*60,0); },{passive:false});
+  const end=()=>{ if(!drag) return; drag=false; dead=true; const v=dy/Math.max(1,Date.now()-t0);
+    if(dy>el.offsetHeight*.25||(dy>10&&v>0.11)){ put(el.offsetHeight+24,calm()?0:260); setTimeout(()=>{ closeAll(); clear(); },calm()?0:260); }
+    else { put(0,calm()?0:400); setTimeout(clear,400); } };
+  el.addEventListener('touchend',end); el.addEventListener('touchcancel',end); })();
 let tt; function toast(t){ const e=$('#toast'); e.textContent=t; e.classList.add('on'); clearTimeout(tt); tt=setTimeout(()=>e.classList.remove('on'),2200); }
 
 /* ===== רכיבים ===== */
@@ -686,7 +721,7 @@ function viewShop(){
     <section style="min-width:0">
       <div class="shophead"><span class="label">${c?'קטגוריה':'חנות'}</span><h1>${c?esc(c[1]):'כל המוצרים'}</h1></div>
       <div class="tb">
-        <label class="srch">${IC.search}<input id="sq" type="search" value="${esc(shop.q)}" placeholder="חיפוש בתוך ${c?esc(c[1]):'החנות'}" aria-label="חיפוש"></label>
+        <label class="srch">${IC.search}<input id="sq" type="search" enterkeyhint="search" value="${esc(shop.q)}" placeholder="חיפוש בתוך ${c?esc(c[1]):'החנות'}" aria-label="חיפוש"></label>
         <button class="ib mfilter" id="mf">${IC.filter}<span>סינון</span></button>
         <select id="sort" aria-label="מיון"><option value="rec">מומלץ</option><option value="new">החדשים</option><option value="low">מחיר: מהנמוך לגבוה</option><option value="high">מחיר: מהגבוה לנמוך</option></select>
         <div class="seg" role="group" aria-label="תצוגה"><button data-view="grid" class="${shop.view==='grid'?'on':''}" aria-label="רשת">${IC.grid}</button><button data-view="list" class="${shop.view==='list'?'on':''}" aria-label="רשימה">${IC.list}</button></div>
@@ -745,11 +780,12 @@ function openProduct(id){
 
 /* ===== סל וקופה ===== */
 function renderCart(){
-  const ids=Object.keys(cart);
-  $('#cartBody').innerHTML=ids.length?ids.map(id=>{const p=BYID.get(+id); if(!p) return ''; const q=cart[id]; return `<div class="line"><div class="thumb" style="width:64px;height:64px">${img(p.img,p.name)}</div><div style="min-width:0"><div class="nm">${esc(p.name)}</div><div class="ctl"><div class="qty"><button data-inc="${id}" aria-label="הוספת יחידה: ${esc(p.name)}">+</button><span aria-label="כמות ${q}">${q}</span><button data-dec="${id}" aria-label="הורדת יחידה: ${esc(p.name)}">−</button></div><button class="rm" data-rm="${id}" aria-label="הסרה מהסל: ${esc(p.name)}">הסרה</button></div></div><span class="price" style="font-size:15px">${money(priceOf(p)*q)}</span></div>`}).join('')
+  const ids=Object.keys(cart); const outN=ids.filter(id=>BYID.get(+id)?.stock===2).length;
+  $('#cartBody').innerHTML=ids.length?ids.map(id=>{const p=BYID.get(+id); if(!p) return ''; const q=cart[id]; return `<div class="line"><div class="thumb" style="width:64px;height:64px">${img(p.img,p.name)}</div><div style="min-width:0"><div class="nm">${esc(p.name)}</div>${p.stock===2?'<span class="st out"><i></i>אזל מהמלאי – יש להסיר מהסל</span>':''}<div class="ctl"><div class="qty"><button data-inc="${id}" aria-label="הוספת יחידה: ${esc(p.name)}">+</button><span aria-label="כמות ${q}">${q}</span><button data-dec="${id}" aria-label="הורדת יחידה: ${esc(p.name)}">−</button></div><button class="rm" data-rm="${id}" aria-label="הסרה מהסל: ${esc(p.name)}">הסרה</button></div></div><span class="price" style="font-size:15px">${money(priceOf(p)*q)}</span></div>`}).join('')
     :`<div class="empty">הסל ריק.<br><br><a class="lnk" href="#shop" data-close>לחנות ←</a></div>`;
-  $('#cartFoot').innerHTML=ids.length?`<div class="tot"><span>סה״כ</span><span class="price">${money(cartTotal())}</span></div><span style="color:var(--muted);font-size:13px">${esc(freeNote()||'דמי המשלוח יחושבו בקופה.')}${SHIPCFG.free!=null&&cartTotal()<SHIPCFG.free?' · משלוח '+money(SHIPCFG.fee):''} · איסוף עצמי מהחנות חינם</span><button class="btn btn-main" id="co">לתשלום</button>`:'';
-  hydrate($('#cartBody')); const co=$('#co'); if(co) co.onclick=checkout;
+  $('#cartFoot').innerHTML=ids.length?`<div class="tot"><span>סה״כ</span><span class="price">${money(cartTotal())}</span></div><span style="color:var(--muted);font-size:13px">${esc(freeNote()||'דמי המשלוח יחושבו בקופה.')}${SHIPCFG.free!=null&&cartTotal()<SHIPCFG.free?' · משלוח '+money(SHIPCFG.fee):''} · איסוף עצמי מהחנות חינם</span>${outN?'<span role="alert" style="color:var(--bad);font-size:13.5px">יש בסל מוצר שאזל מהמלאי. הסר אותו כדי להמשיך.</span>':''}<button class="btn btn-main" id="co" ${outN?'disabled':''}>לתשלום</button>`:'';
+  hydrate($('#cartBody')); const cb=$('#co');
+  if(cb) cb.onclick=async()=>{ cb.disabled=true; await refreshStock(true); if(Object.keys(cart).some(id=>BYID.get(+id)?.stock===2)){ renderCart(); toast('אחד המוצרים בסל אזל מהמלאי'); return; } checkout(); };
 }
 /* קופה בשני שלבים: פרטים ומשלוח → תשלום בדף המאובטח של קארדקום (אשראי / Apple Pay / Google Pay / ביט).
    22/10/2026: PAY_LIVE=true – ההזמנה נשמרת (rt_create_order), ואז פונקציית rt-pay יוצרת דף תשלום לפי הסכום בשרת. */
@@ -779,7 +815,7 @@ function checkout(){
     <span class="label" style="display:block;margin-top:18px">פרטים</span>
     <form id="cof" novalidate style="margin-top:12px">
       <label>שם מלא (חובה)<input id="co-name" autocomplete="name" aria-required="true" value="${esc(f.name||'')}"></label>
-      <label>טלפון נייד (חובה)<input id="co-phone" inputmode="tel" aria-required="true" autocomplete="tel" placeholder="05X-XXXXXXX" value="${esc(f.phone||'')}"></label>
+      <label>טלפון נייד (חובה)<input id="co-phone" type="tel" inputmode="tel" aria-required="true" autocomplete="tel" placeholder="05X-XXXXXXX" value="${esc(f.phone||'')}"></label>
       <label class="full">דוא״ל – לחשבונית ולאישור ההזמנה (חובה)<input id="co-email" type="email" aria-required="true" autocomplete="email" value="${esc(f.email||'')}"></label>
       <label class="addr">עיר (חובה)<input id="co-city" aria-required="true" autocomplete="address-level2" value="${esc(f.city||'')}"></label>
       <label class="addr">רחוב ומספר (חובה)<input id="co-street" aria-required="true" autocomplete="street-address" value="${esc(f.street||'')}"></label>
@@ -858,7 +894,7 @@ async function placeOrder(){
     $('#cartFoot').innerHTML=`<a class="btn btn-main" href="#shop" data-close>להמשך קנייה</a>`;
   }catch(e){
     const m=String(e.message||'');
-    const why=m.includes('pay_page')?'ההזמנה נשמרה ('+(m.split(' ').pop())+') אבל דף התשלום לא נפתח. נסה שוב בעוד רגע, או שלח לנו בוואטסאפ ונחזור אליך לתשלום.':m.includes('out_of_stock')?'אחד המוצרים אזל מהמלאי. הסר אותו מהסל ונסה שוב.':m.includes('unknown_item')?'אחד המוצרים כבר לא זמין. הסר אותו מהסל ונסה שוב.':m.includes('too_many')?'נשלחו כמה הזמנות מהטלפון הזה בדקות האחרונות. נסה שוב בעוד כמה דקות.':m.includes('bad_contact')?'בדוק את השם ומספר הטלפון.':m.includes('bad_address')?'חסרה עיר או רחוב למשלוח.':'לא הצלחנו לשלוח את ההזמנה. נסה שוב, או שלח אותה בוואטסאפ.';
+    const why=m.includes('pay_page')?'ההזמנה נשמרה ('+(m.split(' ').pop())+') אבל דף התשלום לא נפתח. נסה שוב בעוד רגע, או שלח לנו בוואטסאפ ונחזור אליך לתשלום.':m.includes('out_of_stock')?(refreshStock(true),'אחד המוצרים אזל מהמלאי, או שאין ממנו מספיק יחידות. עדכן את הסל ונסה שוב.'):m.includes('unknown_item')?'אחד המוצרים כבר לא זמין. הסר אותו מהסל ונסה שוב.':m.includes('too_many')?'נשלחו כמה הזמנות מהטלפון הזה בדקות האחרונות. נסה שוב בעוד כמה דקות.':m.includes('bad_contact')?'בדוק את השם ומספר הטלפון.':m.includes('bad_address')?'חסרה עיר או רחוב למשלוח.':'לא הצלחנו לשלוח את ההזמנה. נסה שוב, או שלח אותה בוואטסאפ.';
     const no='RT-'+String(Date.now()).slice(-6);
     const lines=coLines().map(({p,q})=>`${q} × ${p.name.replace(/[\r\n|]+/g,' ').trim()} | ${p.sup}:${p.sku} | ₪${Math.round(priceOf(p)*q*100)/100}`);
     const msg=['🛒 הזמנה מאתר RomiTech',`מספר הזמנה: ${no}`,`שם: ${f.name}`,`טלפון: ${f.phone}`,`עיר: ${co.ship==='pickup'?'איסוף עצמי':f.city}`,`רחוב: ${co.ship==='pickup'?'אייטק הדקלים 104':f.street}`,`הערות: ${[f.notes,f.email?'מייל '+f.email:'','תשלום מועדף: '+mlabel].filter(Boolean).join(' · ')}`,'פריטים:',...lines,`סה"כ: ₪${Math.round(cartTotal()*100)/100}`].join('\n');
@@ -967,9 +1003,10 @@ function payReturn(){
   if(st==='ok'){ TRK('paid'); try{ sessionStorage.removeItem('rt_last'); }catch(e){} }
 }
 
-fetch('products.json').then(r=>r.json()).then(d=>{
-  DB=d;
-  ALL=d.p.map(a=>({id:a[0],name:a[1],sku:a[2],brand:a[3],cat:a[4],models:a[5],price:a[6],stock:a[7],img:a[8],flag:a[9],sup:a[10]||'M',alt:a[11]||''}))
+const stockReady=Promise.race([loadStock(),new Promise(r=>setTimeout(r,1500))]);
+fetch('products.json').then(r=>r.json()).then(async d=>{
+  await stockReady; DB=d;
+  ALL=d.p.map(a=>({id:a[0],name:a[1],sku:a[2],brand:a[3],cat:a[4],models:a[5],price:a[6],stock0:a[7],stock:stockOf(a[2],a[7]),img:a[8],flag:a[9],sup:a[10]||'M',alt:a[11]||''}))
     .filter(p=>!(CONFIG.hideSup||[]).includes(p.sup)&&!(CONFIG.hideCats||[]).includes(d.cats[p.cat][0])&&!(CONFIG.hideFlagged&&p.flag)&&!(CONFIG.hideOutOfStock&&p.stock===2));
   ALL.forEach(p=>{ p._s=norm([p.name,p.sku,p.brand,p.models,d.cats[p.cat][1]].join(' ')); p._w=' '+norm(p.name+' '+p.models)+' '; BYID.set(p.id,p); });
   Object.keys(cart).forEach(id=>{ if(!BYID.has(+id)) delete cart[id]; }); saveCart();
@@ -980,6 +1017,7 @@ fetch('products.json').then(r=>r.json()).then(d=>{
   $('#fc2').innerHTML=vc.slice(h).map(c=>`<li><button data-go="${c[0]}">${esc(c[1])}</button></li>`).join('');
   route();
   payReturn();
+  setTimeout(refreshStock,2500);
 }).catch(()=>{ $('#app').innerHTML='<div class="loading">לא הצלחנו לטעון את הקטלוג. רענן את העמוד כדי לנסות שוב.</div>'; });
 </script>
 

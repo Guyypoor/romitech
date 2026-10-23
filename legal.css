@@ -1,3 +1,5 @@
+html{-webkit-tap-highlight-color:transparent;-webkit-text-size-adjust:100%}
+a,button{touch-action:manipulation}
 /* RomiTech – עיצוב משותף לדפי המידע (תקנון, פרטיות, ביטול, משלוחים, נגישות). 23/10/2026 */
 :root{--bg:#fff;--panel:#f7f4ed;--line:#d8ccb4;--fg:#000;--fg-2:#2a2a2a;--accent:#8a6a1f;--link:#8a6a1f;--bad:#c0392b;color-scheme:light}
 *{box-sizing:border-box}
@@ -21,7 +23,7 @@ ul,ol{padding-inline-start:22px}
 .toc{display:flex;flex-wrap:wrap;gap:8px 16px;margin:8px 0 0;padding:0;list-style:none;font-size:15px}
 form.f{display:grid;gap:12px;margin-top:12px}
 form.f label{display:flex;flex-direction:column;gap:6px;font-size:15px;color:var(--fg)}
-form.f input,form.f textarea{font:inherit;height:46px;border-radius:12px;border:1px solid #8c8270;background:#fff;padding:0 12px;color:var(--fg)}
+form.f input,form.f textarea{font:inherit;font-size:16px;height:46px;border-radius:12px;border:1px solid #8c8270;background:#fff;padding:0 12px;color:var(--fg)}
 form.f textarea{height:96px;padding:10px 12px}
 .btn{font:inherit;font-weight:600;height:48px;padding:0 24px;border-radius:999px;border:0;background:#000;color:#e3c06a;cursor:pointer}
 .err{color:var(--bad);margin:0}
