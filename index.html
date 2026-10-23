@@ -6,7 +6,8 @@
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <script>if(location.protocol==="http:"&&/(^|\.)romitech\.co\.il$/.test(location.hostname))location.replace("https://"+location.host+location.pathname+location.search+location.hash);if(top!==self)top.location=self.location;</script>
 
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,interactive-widget=resizes-content">
+<meta name="theme-color" content="#ffffff">
 <meta name="description" content="RomiTech – אביזרים לטלפון, לשעון ולאוזניות. כיסויים, מגני מסך, מטענים ואוזניות לפי המכשיר שלך.">
 <link rel="canonical" href="https://romitech.co.il/">
 <meta property="og:type" content="website">
@@ -43,7 +44,9 @@ html,body{margin:0}img{max-width:100%}
   color-scheme:light;
 }
 *{box-sizing:border-box} [hidden]{display:none!important}
-html{direction:rtl}
+html{direction:rtl;-webkit-tap-highlight-color:transparent;-webkit-text-size-adjust:100%}
+button,a,[role="button"],label,summary{touch-action:manipulation}
+button,[role="button"],.btn,.chip,.pill{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
 body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--f-sans);font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased}
 body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:60;background:var(--glass)}
 button,input,select,textarea{font:inherit;color:inherit}
@@ -70,12 +73,13 @@ h1,h2,.sh h2,.pd h2,.ct h3{font-family:var(--f-display)}
 .wm b{font-weight:800;color:var(--gold-deep)}
 .nav{display:flex;gap:6px}
 .nav a,.nav button{border:0;background:none;cursor:pointer;font-size:14.5px;color:var(--fg-2);padding:8px 12px;border-radius:999px}
-.nav a:hover,.nav button:hover{background:var(--panel-2);color:var(--fg)}
+@media (hover:hover) and (pointer:fine){.nav a:hover,.nav button:hover{background:var(--panel-2);color:var(--fg)}}
 .nav .on{color:var(--fg);background:var(--panel-2)}
 .hdr .sp{flex:1}
 .ib{height:40px;min-width:40px;padding:0 10px;border-radius:999px;border:1px solid var(--line);background:var(--panel);display:inline-flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;color:var(--fg)}
-.ib:hover{border-color:var(--line-2)}
+@media (hover:hover) and (pointer:fine){.ib:hover{border-color:var(--line-2)}}
 .ib svg{width:18px;height:18px}
+.ib,.addb{transition:transform .12s ease-out}.ib:active,.addb:active{transform:scale(.94)}
 .ib .mono{font-size:13px}
 .mnav{display:none}
 @media (max-width:900px){.nav{display:none}.mnav{display:inline-flex}.hdr .wrap{gap:12px}}
@@ -85,10 +89,10 @@ h1,h2,.sh h2,.pd h2,.ct h3{font-family:var(--f-display)}
 .btn:active{transform:scale(.97)}
 .btn-main{background:var(--btn);color:var(--btn-ink)}
 .btn-line{background:transparent;color:var(--fg);border:1px solid var(--line-2)}
-.btn-line:hover{border-color:var(--fg-2)}
+@media (hover:hover) and (pointer:fine){.btn-line:hover{border-color:var(--fg-2)}}
 .btn[disabled]{opacity:.4;cursor:not-allowed}
 .lnk{color:var(--accent);font-weight:500;border:0;background:none;cursor:pointer;padding:0;font-size:15px}
-.lnk:hover{text-decoration:underline}
+@media (hover:hover) and (pointer:fine){.lnk:hover{text-decoration:underline}}
 
 /* hero */
 .hero{position:relative;overflow:hidden;border-bottom:1px solid var(--line)}
@@ -104,9 +108,9 @@ h1,h2,.sh h2,.pd h2,.ct h3{font-family:var(--f-display)}
 .finder .tabs{display:flex;gap:4px;background:var(--panel-2);border-radius:999px;padding:4px;width:max-content;max-width:100%;overflow-x:auto}
 .finder .tabs button{border:0;background:none;padding:7px 16px;border-radius:999px;cursor:pointer;font-size:14px;color:var(--fg-2);white-space:nowrap}
 .finder .tabs button.on{background:var(--btn);color:var(--btn-ink);font-weight:600}
-.models{display:flex;flex-wrap:wrap;gap:6px;max-height:132px;overflow:auto}
+.models{display:flex;flex-wrap:wrap;gap:6px;max-height:132px;overflow:auto;overscroll-behavior:contain}
 .models button{border:1px solid var(--line-2);background:transparent;border-radius:10px;padding:6px 11px;cursor:pointer;font-size:13.5px;direction:ltr}
-.models button:hover{border-color:var(--fg-2)}
+@media (hover:hover) and (pointer:fine){.models button:hover{border-color:var(--fg-2)}}
 .models button.on{border-color:var(--accent);color:var(--accent);background:rgba(201,162,74,.12)}
 .finder .go{display:flex;align-items:center;justify-content:space-between;gap:12px;border-top:1px solid var(--line);padding-top:14px;flex-wrap:wrap}
 
@@ -140,11 +144,11 @@ h1,h2,.sh h2,.pd h2,.ct h3{font-family:var(--f-display)}
 /* category bento */
 .bento{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));grid-auto-rows:220px;gap:14px}
 .ct{position:relative;background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:20px;overflow:hidden;cursor:pointer;text-align:right;display:flex;flex-direction:column;justify-content:space-between;transition:border-color .2s}
-.ct:hover{border-color:var(--line-2)}
+@media (hover:hover) and (pointer:fine){.ct:hover{border-color:var(--line-2)}}
 .ct h3{font-size:21px;font-weight:600;position:relative;z-index:1}
 .ct .n{position:relative;z-index:1}
 .ct .disc{width:58%;height:auto;aspect-ratio:1;left:-6%;bottom:-10%;box-shadow:none;transition:transform .5s cubic-bezier(.2,.8,.2,1)}
-.ct:hover .disc{transform:scale(1.04) rotate(-2deg)}
+@media (hover:hover) and (pointer:fine){.ct:hover .disc{transform:scale(1.04) rotate(-2deg)}}
 .ct.big{grid-column:span 2;grid-row:span 2}
 .ct.big h3{font-size:30px}
 .ct.big .disc{width:62%;left:-4%;bottom:-6%}
@@ -153,7 +157,7 @@ h1,h2,.sh h2,.pd h2,.ct h3{font-family:var(--f-display)}
 @media (max-width:900px){.bento{grid-template-columns:repeat(2,minmax(0,1fr));grid-auto-rows:180px}.ct.big{grid-row:span 2}.ct.wide{grid-column:span 2}}
 .index{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0 36px;margin-top:30px;border-top:1px solid var(--line)}
 .index button{display:flex;align-items:baseline;gap:10px;border:0;border-bottom:1px solid var(--line);background:none;padding:13px 2px;cursor:pointer;text-align:right;font-size:15px}
-.index button:hover{color:var(--accent)}
+@media (hover:hover) and (pointer:fine){.index button:hover{color:var(--accent)}}
 .index .dots{flex:1;border-bottom:1px dotted var(--line-2);transform:translateY(-4px)}
 @media (max-width:900px){.index{grid-template-columns:1fr 1fr}}
 @media (max-width:560px){.index{grid-template-columns:1fr}}
@@ -161,7 +165,7 @@ h1,h2,.sh h2,.pd h2,.ct h3{font-family:var(--f-display)}
 /* list rows */
 .rows{border-top:1px solid var(--line)}
 .rowp{display:grid;grid-template-columns:76px minmax(0,1fr) auto auto;gap:18px;align-items:center;padding:14px 4px;border-bottom:1px solid var(--line);cursor:pointer}
-.rowp:hover{background:var(--panel)}
+@media (hover:hover) and (pointer:fine){.rowp:hover{background:var(--panel)}}
 .thumb{position:relative;width:76px;height:76px;border-radius:16px;background:var(--lightbox);display:grid;place-items:center;overflow:hidden}
 .thumb img{width:84%;height:84%;object-fit:contain;mix-blend-mode:multiply}
 .thumb .sk{position:absolute;inset:0}
@@ -169,7 +173,7 @@ h1,h2,.sh h2,.pd h2,.ct h3{font-family:var(--f-display)}
 .rowp .sub{font-size:13px;color:var(--muted);margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .price{font-family:var(--f-sans);font-variant-numeric:tabular-nums;font-weight:600;font-size:17px;letter-spacing:-.01em;white-space:nowrap}
 .addb{width:38px;height:38px;border-radius:50%;border:1px solid var(--line-2);background:transparent;cursor:pointer;display:grid;place-items:center;color:var(--fg)}
-.addb:hover{background:var(--btn);color:var(--btn-ink);border-color:var(--btn)}
+@media (hover:hover) and (pointer:fine){.addb:hover{background:var(--btn);color:var(--btn-ink);border-color:var(--btn)}}
 .addb svg{width:18px;height:18px}
 @media (max-width:560px){.rowp{grid-template-columns:64px minmax(0,1fr) auto;gap:12px}.rowp .addb{display:none}.thumb{width:64px;height:64px}}
 
@@ -180,11 +184,13 @@ h1,h2,.sh h2,.pd h2,.ct h3{font-family:var(--f-display)}
 .tile{cursor:pointer;display:flex;flex-direction:column;gap:10px;min-width:0}
 .tile .box{position:relative;aspect-ratio:1/1;border-radius:16px;box-shadow:inset 0 0 0 1px transparent;transition:box-shadow .2s;background:var(--lightbox);display:grid;place-items:center;overflow:hidden}
 .tile .box img{width:78%;height:78%;object-fit:contain;mix-blend-mode:multiply;transition:transform .45s cubic-bezier(.2,.8,.2,1)}
-.tile:hover .box img{transform:scale(1.05)}
+@media (hover:hover) and (pointer:fine){.tile:hover .box img{transform:scale(1.05)}}
 .tile .box .sk{position:absolute;inset:0}
 .tile .box .addb{position:absolute;left:10px;bottom:10px;background:var(--btn);color:var(--btn-ink);border:0;opacity:0;transform:translateY(6px);transition:all .2s}
-.tile:hover .box,.tile:focus-within .box{box-shadow:inset 0 0 0 2px var(--gold)}
-.tile:hover .box .addb,.tile:focus-within .box .addb{opacity:1;transform:none}
+.tile:has(:focus-visible) .box{box-shadow:inset 0 0 0 2px var(--gold)}
+@media (hover:hover) and (pointer:fine){.tile:hover .box{box-shadow:inset 0 0 0 2px var(--gold)}}
+.tile:has(:focus-visible) .box .addb{opacity:1;transform:none}
+@media (hover:hover) and (pointer:fine){.tile:hover .box .addb{opacity:1;transform:none}}
 @media (hover:none){.tile .box .addb{opacity:1;transform:none}}
 .tile .nm{font-size:14.5px;line-height:1.38;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .tile .meta{display:flex;align-items:center;justify-content:space-between;gap:8px}
@@ -206,10 +212,10 @@ h1,h2,.sh h2,.pd h2,.ct h3{font-family:var(--f-display)}
 
 /* shop layout */
 .shop{display:grid;grid-template-columns:250px minmax(0,1fr);gap:40px;padding-block:36px 60px}
-.side{position:sticky;top:calc(84px + env(safe-area-inset-top,0px));align-self:start;max-height:calc(100vh - 100px);overflow:auto;padding-left:4px}
+.side{position:sticky;top:calc(84px + env(safe-area-inset-top,0px));align-self:start;max-height:calc(100vh - 100px);max-height:calc(100dvh - 100px);overflow:auto;overscroll-behavior:contain;padding-left:4px}
 .side h4{margin:22px 0 8px}
 .side .cl button{display:flex;justify-content:space-between;gap:10px;width:100%;border:0;background:none;text-align:right;padding:7px 10px;border-radius:10px;cursor:pointer;font-size:14.5px;color:var(--fg-2)}
-.side .cl button:hover{background:var(--panel-2);color:var(--fg)}
+@media (hover:hover) and (pointer:fine){.side .cl button:hover{background:var(--panel-2);color:var(--fg)}}
 .side .cl button.on{background:var(--panel-2);color:var(--fg);font-weight:600}
 .side .cl .mono{color:var(--muted);font-size:12px}
 .side select,.tb select{width:100%;height:40px;border-radius:12px;border:1px solid var(--line);background:var(--panel);padding:0 10px;cursor:pointer}
@@ -242,7 +248,7 @@ h1,h2,.sh h2,.pd h2,.ct h3{font-family:var(--f-display)}
 @media (prefers-reduced-motion:no-preference){.panel{transition:transform .32s cubic-bezier(.2,.8,.2,1),visibility 0s .32s}.panel.on{transition:transform .32s cubic-bezier(.2,.8,.2,1)}}
 .panel.narrow{width:min(460px,100vw)}
 .ph{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 22px;border-bottom:1px solid var(--line)}
-.pb{flex:1;overflow:auto;padding:22px}
+.pb{flex:1;overflow:auto;overscroll-behavior:contain;padding:22px}
 .pf{border-top:1px solid var(--line);padding:16px 22px;display:flex;flex-direction:column;gap:12px}
 .hero-shot{position:relative;aspect-ratio:16/11;border-radius:24px;background:radial-gradient(circle at 50% 40%,#fff 0%,var(--lightbox) 60%,var(--lightbox-2) 100%);display:grid;place-items:center;overflow:hidden}
 .hero-shot img{width:64%;height:80%;object-fit:contain;mix-blend-mode:multiply}
@@ -268,13 +274,13 @@ h1,h2,.sh h2,.pd h2,.ct h3{font-family:var(--f-display)}
 .line .ctl{display:flex;align-items:center;gap:12px;margin-top:6px}
 .line .qty{height:32px}.line .qty button{width:30px;height:30px;font-size:15px}
 .rm{border:0;background:none;color:var(--muted);font-size:13px;cursor:pointer;padding:0}
-.rm:hover{color:var(--bad)}
+@media (hover:hover) and (pointer:fine){.rm:hover{color:var(--bad)}}
 .tot{display:flex;justify-content:space-between;align-items:baseline}
 .tot .price{font-size:22px}
 .co form{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .co label{display:flex;flex-direction:column;gap:6px;font-size:13px;color:var(--muted)}
 .co .full{grid-column:1/-1}
-.co input,.co textarea{height:46px;border-radius:12px;border:1px solid var(--line);background:var(--panel);padding:0 12px;font-size:15px;color:var(--fg)}
+.co input,.co textarea{height:46px;border-radius:12px;border:1px solid var(--line);background:var(--panel);padding:0 12px;font-size:16px;color:var(--fg)}
 .co textarea{height:84px;padding:10px 12px;resize:vertical}
 .pay{grid-column:1/-1;border:1px dashed var(--line-2);border-radius:14px;padding:14px;font-size:14px;color:var(--muted);display:flex;gap:10px;align-items:center}
 .pay svg{width:22px;height:22px;flex:none;color:var(--accent)}
@@ -303,7 +309,7 @@ h1,h2,.sh h2,.pd h2,.ct h3{font-family:var(--f-display)}
 .cardf{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .cardf label{display:flex;flex-direction:column;gap:6px;font-size:13px;color:var(--muted)}
 .cardf .full{grid-column:1/-1}
-.cardf input,.cardf select{height:46px;border-radius:12px;border:1px solid var(--line);background:var(--panel);padding:0 12px;font-size:15px;color:var(--fg);direction:ltr;text-align:right}
+.cardf input,.cardf select{height:46px;border-radius:12px;border:1px solid var(--line);background:var(--panel);padding:0 12px;font-size:16px;color:var(--fg);direction:ltr;text-align:right}
 .cardf input:disabled,.cardf select:disabled{opacity:.6;cursor:not-allowed}
 .secure{display:flex;gap:8px;align-items:center;color:var(--muted);font-size:12.5px;margin:14px 0 0}.secure svg{width:16px;height:16px;flex:none}
 .co label[hidden]{display:none!important}
@@ -313,7 +319,7 @@ h1,h2,.sh h2,.pd h2,.ct h3{font-family:var(--f-display)}
 @media (max-width:560px){.co form{grid-template-columns:1fr}.spec div{grid-template-columns:110px minmax(0,1fr)}}
 
 /* mega menu + search */
-.sheet{position:fixed;z-index:95;inset:0 0 auto 0;background:var(--bg);border-bottom:1px solid var(--line);transform:translateY(-104%);transition:transform .3s cubic-bezier(.2,.8,.2,1);padding-top:env(safe-area-inset-top,0px);max-height:90vh;overflow:auto}
+.sheet{position:fixed;z-index:95;inset:0 0 auto 0;background:var(--bg);border-bottom:1px solid var(--line);transform:translateY(-104%);transition:transform .3s cubic-bezier(.2,.8,.2,1);padding-top:env(safe-area-inset-top,0px);max-height:90vh;max-height:90dvh;overflow:auto;overscroll-behavior:contain}
 .sheet.on{transform:none}
 @media (prefers-reduced-motion:no-preference){.sheet{transition:transform .3s cubic-bezier(.2,.8,.2,1),visibility 0s .3s}.sheet.on{transition:transform .3s cubic-bezier(.2,.8,.2,1)}}
 .skip{position:fixed;top:8px;right:8px;z-index:200;background:var(--fg);color:var(--bg);padding:10px 16px;border-radius:10px;font-weight:600;transform:translateY(-150%)}
@@ -323,7 +329,7 @@ h1,h2,.sh h2,.pd h2,.ct h3{font-family:var(--f-display)}
 .tile .pbtn{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .a11yb{position:fixed;left:16px;bottom:16px;z-index:85;width:48px;height:48px;border-radius:50%;border:2px solid #000;background:var(--gold);color:#000;display:grid;place-items:center;cursor:pointer;box-shadow:0 6px 18px rgba(0,0,0,.35)}
 .a11yb svg{width:28px;height:28px}
-.a11yp{position:fixed;left:16px;bottom:74px;z-index:96;width:min(320px,calc(100vw - 32px));max-height:calc(100vh - 100px);overflow:auto;background:var(--panel);color:var(--fg);border:1px solid var(--line-2);border-radius:16px;padding:16px;box-shadow:0 18px 50px rgba(0,0,0,.4)}
+.a11yp{position:fixed;left:16px;bottom:74px;z-index:96;width:min(320px,calc(100vw - 32px));max-height:calc(100vh - 100px);max-height:calc(100dvh - 100px);overflow:auto;overscroll-behavior:contain;background:var(--panel);color:var(--fg);border:1px solid var(--line-2);border-radius:16px;padding:16px;box-shadow:0 18px 50px rgba(0,0,0,.4)}
 .a11yp[hidden]{display:none}
 .a11yp h2{font-size:18px;margin:0 0 4px}
 .a11yp .g{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
@@ -345,7 +351,7 @@ html.a11y-cursor,html.a11y-cursor *{cursor:url("data:image/svg+xml,%3Csvg xmlns=
 .sbar input{flex:1;min-width:0;border:0;outline:none;background:transparent;font-size:26px;font-weight:600}
 .megagrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:18px}
 .megagrid button{display:flex;align-items:center;gap:12px;border:1px solid var(--line);background:var(--panel);border-radius:16px;padding:10px;cursor:pointer;text-align:right}
-.megagrid button:hover{border-color:var(--line-2)}
+@media (hover:hover) and (pointer:fine){.megagrid button:hover{border-color:var(--line-2)}}
 .megagrid .thumb{width:52px;height:52px;border-radius:12px;flex:none}
 .megagrid .nm{font-size:14.5px;font-weight:500}
 @media (max-width:900px){.megagrid{grid-template-columns:1fr 1fr}}
@@ -361,7 +367,7 @@ footer.site .wrap{padding-block:44px 30px}
 .fg{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:28px}
 .fg ul{list-style:none;margin:10px 0 0;padding:0;display:flex;flex-direction:column;gap:8px;font-size:14px;color:var(--fg-2)}
 .fg button{border:0;background:none;padding:0;cursor:pointer;color:inherit;text-align:right;font-size:14px}
-.fg button:hover{color:var(--fg)}
+@media (hover:hover) and (pointer:fine){.fg button:hover{color:var(--fg)}}
 .fg>div{min-width:0}.fg a{overflow-wrap:anywhere;text-decoration:underline;text-underline-offset:3px}
 .legal{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;border-top:1px solid var(--line);margin-top:30px;padding-top:18px;color:var(--muted);font-size:12.5px}
 @media (max-width:760px){.fg{grid-template-columns:1fr 1fr}}
@@ -386,7 +392,7 @@ footer.site .wrap{padding-block:44px 30px}
 .catcircles .cc img{width:70%;height:70%;object-fit:contain;mix-blend-mode:multiply}
 .catcircles .t{font-size:14px;font-weight:500;line-height:1.25;color:var(--fg)}
 .catcircles .k{font-size:12px;color:var(--muted);margin-top:-6px}
-.bsheet{inset:auto 0 0 0!important;top:auto!important;transform:translateY(104%)!important;border-radius:22px 22px 0 0;border-top:1px solid var(--gold-deep)!important;border-bottom:0!important;max-height:86vh;padding-bottom:env(safe-area-inset-bottom,0px)}
+.bsheet{inset:auto 0 0 0!important;top:auto!important;transform:translateY(104%)!important;border-radius:22px 22px 0 0;border-top:1px solid var(--gold-deep)!important;border-bottom:0!important;max-height:86vh;max-height:86dvh;padding-bottom:env(safe-area-inset-bottom,0px)}
 .bsheet.on{transform:none!important}
 .bsheet .grip{width:44px;height:5px;border-radius:9px;background:var(--line-2);margin:10px auto 4px}
 .bsheet .bh{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:6px 0 14px}
@@ -464,7 +470,7 @@ footer.site .wrap{padding-block:44px 30px}
   <div class="pf" id="cartFoot"></div>
 </aside>
 <div class="sheet" id="search" role="dialog" aria-modal="true" aria-label="חיפוש"><div class="wrap">
-  <div class="sbar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input id="q" type="search" aria-label="חיפוש מוצר" placeholder="מה מחפשים? דגם, מוצר או ברקוד" autocomplete="off"><button class="ib" data-close aria-label="סגירה"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
+  <div class="sbar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input id="q" type="search" enterkeyhint="search" aria-label="חיפוש מוצר" placeholder="מה מחפשים? דגם, מוצר או ברקוד" autocomplete="off"><button class="ib" data-close aria-label="סגירה"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
   <div id="sr"></div>
 </div></div>
 <div class="sheet" id="mega" role="dialog" aria-modal="true" aria-label="קטגוריות"><div class="wrap">
@@ -686,7 +692,7 @@ function viewShop(){
     <section style="min-width:0">
       <div class="shophead"><span class="label">${c?'קטגוריה':'חנות'}</span><h1>${c?esc(c[1]):'כל המוצרים'}</h1></div>
       <div class="tb">
-        <label class="srch">${IC.search}<input id="sq" type="search" value="${esc(shop.q)}" placeholder="חיפוש בתוך ${c?esc(c[1]):'החנות'}" aria-label="חיפוש"></label>
+        <label class="srch">${IC.search}<input id="sq" type="search" enterkeyhint="search" value="${esc(shop.q)}" placeholder="חיפוש בתוך ${c?esc(c[1]):'החנות'}" aria-label="חיפוש"></label>
         <button class="ib mfilter" id="mf">${IC.filter}<span>סינון</span></button>
         <select id="sort" aria-label="מיון"><option value="rec">מומלץ</option><option value="new">החדשים</option><option value="low">מחיר: מהנמוך לגבוה</option><option value="high">מחיר: מהגבוה לנמוך</option></select>
         <div class="seg" role="group" aria-label="תצוגה"><button data-view="grid" class="${shop.view==='grid'?'on':''}" aria-label="רשת">${IC.grid}</button><button data-view="list" class="${shop.view==='list'?'on':''}" aria-label="רשימה">${IC.list}</button></div>
@@ -779,7 +785,7 @@ function checkout(){
     <span class="label" style="display:block;margin-top:18px">פרטים</span>
     <form id="cof" novalidate style="margin-top:12px">
       <label>שם מלא (חובה)<input id="co-name" autocomplete="name" aria-required="true" value="${esc(f.name||'')}"></label>
-      <label>טלפון נייד (חובה)<input id="co-phone" inputmode="tel" aria-required="true" autocomplete="tel" placeholder="05X-XXXXXXX" value="${esc(f.phone||'')}"></label>
+      <label>טלפון נייד (חובה)<input id="co-phone" type="tel" inputmode="tel" aria-required="true" autocomplete="tel" placeholder="05X-XXXXXXX" value="${esc(f.phone||'')}"></label>
       <label class="full">דוא״ל – לחשבונית ולאישור ההזמנה (חובה)<input id="co-email" type="email" aria-required="true" autocomplete="email" value="${esc(f.email||'')}"></label>
       <label class="addr">עיר (חובה)<input id="co-city" aria-required="true" autocomplete="address-level2" value="${esc(f.city||'')}"></label>
       <label class="addr">רחוב ומספר (חובה)<input id="co-street" aria-required="true" autocomplete="street-address" value="${esc(f.street||'')}"></label>
