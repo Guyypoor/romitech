@@ -121,7 +121,8 @@ tr:last-child td{border-bottom:0}
 .live i{display:inline-block;flex:none;width:9px;height:9px;border-radius:50%;background:var(--ok);box-shadow:0 0 0 3px color-mix(in srgb,var(--ok) 25%,transparent)}
 .note{font-size:12.5px;color:var(--muted);margin:6px 0 0}
 @media (max-width:560px){#who{display:none}}
-.otp{color:var(--accent);font-size:14px}
+.ok{color:var(--ok);font-size:14px;margin:0}
+.ok:empty,.err:empty{display:none}
 </style>
 </head>
 <body>
@@ -133,8 +134,19 @@ tr:last-child td{border-bottom:0}
     <p class="muted" style="margin:0 0 6px;font-size:14px">אותו משתמש של פאנל הניהול של גיא שליחויות.</p>
     <label>דוא״ל<input id="le" type="email" autocomplete="username" required></label>
     <label>סיסמה<input id="lp" type="password" autocomplete="current-password" required></label>
-    <p class="err" id="lerr"></p>
+    <p class="err" id="lerr" role="alert"></p>
+    <p class="ok" id="lok" role="status"></p>
     <button class="btn main" type="submit">כניסה</button>
+    <button class="btn" type="button" id="forgot">שכחתי סיסמה</button>
+  </form>
+
+  <form class="login" id="pw" hidden>
+    <h1>סיסמה חדשה</h1>
+    <p class="muted" style="margin:0;font-size:14px">שים לב: זו גם הסיסמה של פאנל הניהול של גיא שליחויות (אותו משתמש). לפחות 10 תווים.</p>
+    <label>סיסמה חדשה<input id="np1" type="password" autocomplete="new-password" minlength="10" required></label>
+    <label>שוב את הסיסמה<input id="np2" type="password" autocomplete="new-password" minlength="10" required></label>
+    <p class="err" id="perr" role="alert"></p>
+    <button class="btn main" type="submit">שמירת הסיסמה</button>
   </form>
 
   <form class="login" id="mfa" hidden>
@@ -142,13 +154,13 @@ tr:last-child td{border-bottom:0}
     <div id="mfaEnroll" hidden style="display:flex;flex-direction:column;gap:10px">
       <p style="margin:0;font-size:14px">הגנה נוספת על הניהול: גם מי שיודע את הסיסמה לא ייכנס בלי קוד מהטלפון שלך. מגדירים פעם אחת:</p>
       <ol class="steps">
-        <li>באייפון: מצלמה → סרוק את הקוד (או אפליקציית Google Authenticator).</li>
-        <li>שמור את "RomiTech" בסיסמאות / באפליקציה.</li>
-        <li>הקלד כאן את 6 הספרות שמופיעות.</li>
+        <li id="stepMob">נכנסת מהאייפון? לחץ על הכפתור למטה ← באפליקציית "סיסמאות" בחר את הסיסמה של romitech.co.il (או צור חדשה) ← נוסף "קוד אימות".</li>
+        <li id="stepPc">נכנסת מהמחשב? פתח את המצלמה באייפון וסרוק את הקוד.</li>
+        <li>חזור לכאן והקלד את 6 הספרות שמופיעות שם (מתחלפות כל 30 שניות).</li>
       </ol>
-      <div class="qr"><img id="mfaQr" alt="קוד QR להגדרת אימות דו-שלבי"></div>
-      <a class="otp" id="mfaUri" href="#">פותח את זה בטלפון? לחץ כאן להוספה ישירה</a>
-      <p class="note">אין מצלמה? הקלדה ידנית: <span class="secret" id="mfaSecret"></span></p>
+      <a class="btn main" id="mfaUri" href="#" style="display:flex;align-items:center;justify-content:center;text-decoration:none">באייפון הזה: הוספה לסיסמאות בלחיצה</a>
+      <div class="qr" id="mfaQrBox"><img id="mfaQr" alt="קוד QR להגדרת אימות דו-שלבי"></div>
+      <p class="note">או הקלדה ידנית באפליקציה: <span class="secret" id="mfaSecret"></span> <button type="button" class="btn" id="mfaCopy" style="height:30px;padding:0 12px;font-size:13px">העתקה</button></p>
     </div>
     <p id="mfaText" class="muted" style="margin:0;font-size:14px"></p>
     <label>קוד בן 6 ספרות<input id="mfaCode" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]{6}" maxlength="6" required></label>
@@ -224,7 +236,8 @@ tr:last-child td{border-bottom:0}
 <script>
 const SB_URL='https://rtoukdganvoypamxjgwb.supabase.co';
 const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ0b3VrZGdhbnZveXBhbXhqZ3diIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE2NzU5NTksImV4cCI6MjEwNzI1MTk1OX0.RSxoPyIPf_KPvwe9rVa2rNsZoSUe5lDxEQmzh14mIFw'; // public anon key; orders readable only by admins (RLS)
-const sb=window.supabase.createClient(SB_URL,SB_KEY,{auth:{persistSession:true,autoRefreshToken:true,storageKey:'romitech-admin'}});
+const HASH=new URLSearchParams(location.hash.slice(1)); const RECOVERY=HASH.get('type')==='recovery'; const HASH_ERR=HASH.get('error_description')||'';
+const sb=window.supabase.createClient(SB_URL,SB_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true,flowType:'implicit',storageKey:'romitech-admin'}});
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const nf=new Intl.NumberFormat('he-IL',{maximumFractionDigits:2}); const money=v=>'₪'+nf.format(+v||0);
@@ -242,12 +255,13 @@ const fdt=s=>{const d=new Date(s); return d.toLocaleDateString('he-IL',{day:'2-d
 let tt; function toast(t){ const e=$('#toast'); e.textContent=t; e.hidden=false; clearTimeout(tt); tt=setTimeout(()=>e.hidden=true,2400); }
 
 /* ===== כניסה: סיסמה → אימות דו-שלבי (TOTP) → ניהול. השרת עצמו (rt_is_admin) דורש aal2 ברגע שהוגדר קוד ===== */
-const show=w=>{ $('#login').hidden=w!=='login'; $('#mfa').hidden=w!=='mfa'; const on=w==='app'; $('#views').hidden=!on; $('#out').hidden=w==='login';
+const show=w=>{ $('#login').hidden=w!=='login'; $('#mfa').hidden=w!=='mfa'; $('#pw').hidden=w!=='pw'; const on=w==='app'; $('#views').hidden=!on; $('#out').hidden=w==='login';
   if(!on){ $('#app').hidden=true; $('#traffic').hidden=true; } else setView(VIEW); };
-let VIEW='orders', MF=null;
+let VIEW='orders', MF=null, pwDone=false;
 async function boot(){
   const { data:{ session } }=await sb.auth.getSession();
-  if(!session){ show('login'); $('#who').textContent=''; return; }
+  if(!session){ show('login'); $('#who').textContent=''; if(HASH_ERR){ $('#lerr').textContent='הקישור לאיפוס לא תקף או שפג תוקפו. בקש קישור חדש.'; history.replaceState(null,'',location.pathname); } return; }
+  if(RECOVERY&&!pwDone){ show('pw'); $('#who').textContent=session.user.email; setTimeout(()=>$('#np1').focus(),50); return; }
   const { data:st, error }=await sb.rpc('rt_admin_mfa_state');
   if(error||!st||!st.role_ok){ show('login'); $('#lerr').textContent='למשתמש הזה אין הרשאת ניהול.'; await sb.auth.signOut(); return; }
   $('#who').textContent=session.user.email;
@@ -268,6 +282,8 @@ async function startMfa(has){
     if(e2){ $('#merr').textContent='לא הצלחתי להתחיל את ההגדרה: '+e2.message; return; }
     MF={id:data.id}; const q=String(data.totp.qr_code||'');
     $('#mfaQr').src=q.startsWith('data:')?q:'data:image/svg+xml;utf8,'+encodeURIComponent(q);
+    const mob=/iPhone|iPad|Android/i.test(navigator.userAgent)||(/Macintosh/.test(navigator.userAgent)&&navigator.maxTouchPoints>1);
+    $('#mfaUri').hidden=!mob; $('#stepMob').hidden=!mob; $('#stepPc').hidden=mob; $('#mfaQrBox').hidden=mob;
     $('#mfaSecret').textContent=data.totp.secret||''; $('#mfaUri').href=String(data.totp.uri||'').startsWith('otpauth://')?data.totp.uri:'#'; $('#mfaEnroll').hidden=false; $('#mfaText').textContent='';
   }
   setTimeout(()=>$('#mfaCode').focus(),50);
@@ -288,6 +304,23 @@ $('#mfa').addEventListener('submit',async e=>{ e.preventDefault(); $('#merr').te
   const { error }=await sb.auth.mfa.challengeAndVerify({factorId:MF.id,code});
   if(error){ failed(); $('#merr').textContent='הקוד לא נכון או שפג תוקפו – נסה את הקוד הבא.'; $('#mfaCode').select(); return; }
   lock.set({n:0,until:0}); toast('אימות דו-שלבי פעיל'); boot(); });
+/* שכחתי סיסמה → מייל עם קישור → סיסמה חדשה */
+$('#forgot').onclick=async()=>{ $('#lerr').textContent=''; $('#lok').textContent='';
+  const em=$('#le').value.trim(); if(!/^\S+@\S+\.\S+$/.test(em)){ $('#lerr').textContent='כתוב קודם את כתובת הדוא״ל שלך בשדה למעלה.'; $('#le').focus(); return; }
+  const b=$('#forgot'); b.disabled=true;
+  const { error }=await sb.auth.resetPasswordForEmail(em,{redirectTo:'https://romitech.co.il/admin.html'});
+  b.disabled=false;
+  if(error){ $('#lerr').textContent=/rate|limit|seconds/i.test(error.message)?'נשלח כבר קישור לפני רגע. חכה כמה דקות ובדוק את המייל (גם בספאם).':'לא נשלח: '+error.message; return; }
+  $('#lok').textContent='שלחנו קישור לאיפוס סיסמה ל-'+em+'. פתח את המייל (בדוק גם בספאם) ולחץ על הקישור.'; };
+$('#pw').addEventListener('submit',async e=>{ e.preventDefault(); $('#perr').textContent='';
+  const a=$('#np1').value, b2=$('#np2').value;
+  if(a.length<10){ $('#perr').textContent='הסיסמה קצרה מדי – לפחות 10 תווים.'; return; }
+  if(a!==b2){ $('#perr').textContent='שתי הסיסמאות לא זהות.'; return; }
+  const { error }=await sb.auth.updateUser({password:a});
+  $('#np1').value=''; $('#np2').value='';
+  if(error){ $('#perr').textContent='לא נשמר: '+error.message; return; }
+  pwDone=true; history.replaceState(null,'',location.pathname); toast('הסיסמה עודכנה'); boot(); });
+$('#mfaCopy').onclick=async()=>{ try{ await navigator.clipboard.writeText($('#mfaSecret').textContent); toast('הקוד הועתק'); }catch(e){ toast('לא הצלחתי להעתיק – סמן והעתק ידנית'); } };
 $('#mfaOut').onclick=async()=>{ await sb.auth.signOut(); location.reload(); };
 $('#out').onclick=async()=>{ await sb.auth.signOut(); location.reload(); };
 /* יציאה אוטומטית אחרי 30 דקות בלי פעילות */
