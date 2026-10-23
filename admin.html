@@ -9,6 +9,8 @@
 <script>if(location.protocol==="http:"&&/(^|\.)romitech\.co\.il$/.test(location.hostname))location.replace("https://"+location.host+location.pathname+location.search+location.hash)</script>
 
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0a0b0e">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#f6f7f9">
 <meta name="robots" content="noindex,nofollow">
 <title>RomiTech – ניהול</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='1' y='1' width='30' height='30' rx='9' fill='%230a0b0e'/%3E%3Cpath d='M11.5 23.5V8.5h5.2a4.2 4.2 0 0 1 0 8.4h-5.2M16.4 16.9l5.2 6.6' fill='none' stroke='%2345f0c4' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
@@ -32,6 +34,9 @@
   --fg:#0c0d10; --fg-2:#2c2f36; --muted:#5f6471; --accent:#2f62ff; --accent-ink:#fff;
   --ok:#0f9d63; --warn:#b26b00; --bad:#d63b3b; --violet:#6a52e0; --btn:#0c0d10; --btn-ink:#fff; color-scheme:light}}
 *{box-sizing:border-box} [hidden]{display:none!important}
+html{-webkit-tap-highlight-color:transparent;-webkit-text-size-adjust:100%}
+button,a,label,tr.row,[role="tab"]{touch-action:manipulation}
+button,[role="tab"]{-webkit-user-select:none;user-select:none}
 html,body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--f-sans);font-size:15px;line-height:1.5}
 button,input,select,textarea{font:inherit;color:inherit}
 .mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
@@ -43,13 +48,14 @@ header .wrap{display:flex;align-items:center;gap:16px;height:60px}
 .tag{font-size:12px;border:1px solid var(--line-2);border-radius:999px;padding:2px 10px;color:var(--muted)}
 .sp{flex:1}
 .btn{height:38px;padding:0 16px;border-radius:999px;border:1px solid var(--line-2);background:var(--panel);cursor:pointer;font-size:14px}
-.btn:hover{border-color:var(--fg-2)}
+@media (hover:hover) and (pointer:fine){.btn:hover{border-color:var(--fg-2)}}
 .btn.main{background:var(--btn);color:var(--btn-ink);border-color:var(--btn);font-weight:600}
 .btn:disabled{opacity:.5;cursor:not-allowed}
 .login{max-width:380px;margin:12vh auto;background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:28px;display:flex;flex-direction:column;gap:12px}
 .login h1{margin:0 0 4px;font-size:24px}
 label{display:flex;flex-direction:column;gap:6px;font-size:13px;color:var(--muted)}
 input,select,textarea{height:42px;border-radius:12px;border:1px solid var(--line);background:var(--panel-2);padding:0 12px;font-size:15px;color:var(--fg)}
+@media (pointer:coarse){input,select,textarea{font-size:16px}}
 textarea{height:80px;padding:10px 12px;resize:vertical}
 .err{color:var(--bad);font-size:14px;margin:0}
 .stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:20px 0}
@@ -67,7 +73,7 @@ textarea{height:80px;padding:10px 12px;resize:vertical}
 table{width:100%;border-collapse:collapse;min-width:820px}
 th,td{text-align:right;padding:11px 12px;border-bottom:1px solid var(--line);font-size:14px;white-space:nowrap}
 th{font-size:12px;color:var(--muted);font-weight:500;background:var(--panel-2)}
-tr.row{cursor:pointer} .idb{all:unset;cursor:pointer;font:inherit;color:inherit;text-decoration:underline;text-underline-offset:3px} .idb:focus-visible{outline:2px solid var(--accent,#45f0c4);outline-offset:2px;border-radius:4px} tr.row:hover td{background:var(--panel-2)}
+tr.row{cursor:pointer} .idb{all:unset;cursor:pointer;font:inherit;color:inherit;text-decoration:underline;text-underline-offset:3px} .idb:focus-visible{outline:2px solid var(--accent,#45f0c4);outline-offset:2px;border-radius:4px} @media (hover:hover) and (pointer:fine){tr.row:hover td{background:var(--panel-2)}}
 tr:last-child td{border-bottom:0}
 .pill{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:2px 10px;font-size:12.5px;border:1px solid currentColor}
 .pill i{width:6px;height:6px;border-radius:50%;background:currentColor}
@@ -172,7 +178,31 @@ tr:last-child td{border-bottom:0}
   <nav class="views" id="views" hidden role="tablist" aria-label="תצוגה">
     <button type="button" role="tab" data-v="orders" aria-selected="true">הזמנות</button>
     <button type="button" role="tab" data-v="traffic" aria-selected="false">תנועה באתר</button>
+    <button type="button" role="tab" data-v="stock" aria-selected="false">מלאי</button>
   </nav>
+
+  <section id="stock" hidden aria-label="מלאי">
+    <div class="stats" style="grid-template-columns:repeat(3,minmax(0,1fr))">
+      <div class="stat"><b id="skN">—</b><span>מוצרים עם מלאי חי</span></div>
+      <div class="stat"><b id="skOut">—</b><span>אזלו (מלאי 0)</span></div>
+      <div class="stat"><b id="skAt" style="font-size:17px">—</b><span>עדכון אחרון</span></div>
+    </div>
+    <div class="box">
+      <h3>עדכון מלאי מקובץ הספק</h3>
+      <p class="note" style="margin:0 0 12px">מעלים את קובץ המלאי של ניל (Excel ‏xlsx או CSV). המוצרים מותאמים לפי ברקוד/מק״ט. אחרי העדכון האתר מציג את המלאי החדש תוך דקה, והזמנה ששולמה מורידה מהמלאי לבד.</p>
+      <input id="skFile" type="file" accept=".xlsx,.csv,text/csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" style="height:auto;padding:10px;width:100%">
+      <div id="skPrev" hidden style="margin-top:14px">
+        <div class="set">
+          <label>עמודת ברקוד / מק״ט<select id="skSku"></select></label>
+          <label>עמודת כמות במלאי<select id="skQty"></select></label>
+        </div>
+        <p id="skSum" style="margin:14px 0 6px;font-size:14.5px"></p>
+        <label style="display:flex;gap:8px;align-items:center;font-size:14px;margin:8px 0"><input type="checkbox" id="skMiss" style="height:18px;width:18px"> מוצרים של ניל שלא מופיעים בקובץ – לסמן כאזלו</label>
+        <button class="btn main" id="skGo" type="button">עדכון המלאי באתר</button>
+      </div>
+    </div>
+    <p class="note" style="margin-bottom:40px">מלאי נמוך = 3 יחידות ומטה. אזל = 0 (הלקוח לא יכול להוסיף לסל, והשרת חוסם הזמנה של מוצר שאזל).</p>
+  </section>
 
   <section id="traffic" hidden aria-label="תנועה באתר">
     <div class="bar" style="margin-top:18px">
@@ -256,7 +286,7 @@ let tt; function toast(t){ const e=$('#toast'); e.textContent=t; e.hidden=false;
 
 /* ===== כניסה: סיסמה → אימות דו-שלבי (TOTP) → ניהול. השרת עצמו (rt_is_admin) דורש aal2 ברגע שהוגדר קוד ===== */
 const show=w=>{ $('#login').hidden=w!=='login'; $('#mfa').hidden=w!=='mfa'; $('#pw').hidden=w!=='pw'; const on=w==='app'; $('#views').hidden=!on; $('#out').hidden=w==='login';
-  if(!on){ $('#app').hidden=true; $('#traffic').hidden=true; } else setView(VIEW); };
+  if(!on){ $('#app').hidden=true; $('#traffic').hidden=true; $('#stock').hidden=true; } else setView(VIEW); };
 let VIEW='orders', MF=null, pwDone=false;
 async function boot(){
   const { data:{ session } }=await sb.auth.getSession();
@@ -328,7 +358,7 @@ let lastAct=Date.now(), idleT=null;
 ['pointerdown','keydown','scroll','touchstart'].forEach(ev=>addEventListener(ev,()=>{ lastAct=Date.now(); },{passive:true}));
 function idleArm(){ clearInterval(idleT); idleT=setInterval(async()=>{ if(Date.now()-lastAct>30*60*1000){ clearInterval(idleT); await sb.auth.signOut(); location.reload(); } },30000); }
 /* תצוגות: הזמנות / תנועה */
-function setView(v){ VIEW=v; $$('#views [data-v]').forEach(b=>b.setAttribute('aria-selected',String(b.dataset.v===v))); $('#app').hidden=v!=='orders'; $('#traffic').hidden=v!=='traffic'; if(v==='traffic') loadTraffic(); }
+function setView(v){ VIEW=v; $$('#views [data-v]').forEach(b=>b.setAttribute('aria-selected',String(b.dataset.v===v))); $('#app').hidden=v!=='orders'; $('#traffic').hidden=v!=='traffic'; $('#stock').hidden=v!=='stock'; if(v==='traffic') loadTraffic(); if(v==='stock') loadStock(); }
 $('#views').addEventListener('click',e=>{ const b=e.target.closest('[data-v]'); if(b) setView(b.dataset.v); });
 
 async function load(){
@@ -470,6 +500,77 @@ $('#tDays').addEventListener('click',e=>{ const b=e.target.closest('[data-d]'); 
 let rz; addEventListener('resize',()=>{ clearTimeout(rz); rz=setTimeout(()=>{ if(VIEW==='traffic'&&!$('#traffic').hidden) loadTraffic(); },250); });
 sb.auth.onAuthStateChange((ev)=>{ if(ev==='SIGNED_OUT'){ clearInterval(timer); } });
 boot();
+/* ===== מלאי: קובץ הספק → rt_stock (23/10/2026). קורא xlsx/csv בדפדפן, בלי ספריות חיצוניות ===== */
+async function loadStock(){
+  const [{ count:n }, { count:o }, { data:last }]=await Promise.all([
+    sb.from('rt_stock').select('sku',{count:'exact',head:true}),
+    sb.from('rt_stock').select('sku',{count:'exact',head:true}).lte('qty',0),
+    sb.from('rt_stock').select('updated_at,src').order('updated_at',{ascending:false}).limit(1)]);
+  $('#skN').textContent=n==null?'—':nfi.format(n); $('#skOut').textContent=o==null?'—':nfi.format(o);
+  $('#skAt').textContent=last&&last[0]?new Date(last[0].updated_at).toLocaleString('he-IL',{timeZone:'Asia/Jerusalem',dateStyle:'short',timeStyle:'short'})+(last[0].src?' · '+last[0].src:''):'עדיין לא הועלה קובץ';
+}
+async function unzip(buf){
+  const dv=new DataView(buf), u8=new Uint8Array(buf); let e=u8.length-22; while(e>=0&&dv.getUint32(e,true)!==0x06054b50) e--; if(e<0) throw new Error('not_xlsx');
+  const files={}; let o=dv.getUint32(e+16,true); for(let i=0,n=dv.getUint16(e+10,true);i<n;i++){ const nl=dv.getUint16(o+28,true); files[new TextDecoder().decode(u8.subarray(o+46,o+46+nl))]={m:dv.getUint16(o+10,true),cs:dv.getUint32(o+20,true),lo:dv.getUint32(o+42,true)}; o+=46+nl+dv.getUint16(o+30,true)+dv.getUint16(o+32,true); }
+  return async name=>{ const f=files[name]; if(!f) return null; const st=f.lo+30+dv.getUint16(f.lo+26,true)+dv.getUint16(f.lo+28,true); const d=u8.subarray(st,st+f.cs);
+    return f.m===0?new TextDecoder().decode(d):await new Response(new Blob([d]).stream().pipeThrough(new DecompressionStream('deflate-raw'))).text(); };
+}
+async function readXlsx(buf){
+  const get=await unzip(buf), X=t=>new DOMParser().parseFromString(t,'application/xml');
+  let path='xl/worksheets/sheet1.xml'; try{ const wb=X(await get('xl/workbook.xml')), rels=X(await get('xl/_rels/workbook.xml.rels')); const rid=wb.getElementsByTagName('sheet')[0].getAttribute('r:id');
+    const t=[...rels.getElementsByTagName('Relationship')].find(r=>r.getAttribute('Id')===rid).getAttribute('Target'); path=t.startsWith('/')?t.slice(1):'xl/'+t.replace(/^\.\//,''); }catch(e){}
+  const ss=await get('xl/sharedStrings.xml'); const S=ss?[...X(ss).getElementsByTagName('si')].map(si=>[...si.getElementsByTagName('t')].map(t=>t.textContent).join('')):[];
+  const col=r=>{ let n=0; for(const ch of r.replace(/\d+/g,'')) n=n*26+ch.charCodeAt(0)-64; return n-1; };
+  return [...X(await get(path)).getElementsByTagName('row')].map(rw=>{ const out=[]; [...rw.getElementsByTagName('c')].forEach(c=>{ const t=c.getAttribute('t'), v=c.getElementsByTagName('v')[0];
+    out[col(c.getAttribute('r')||'A')]=t==='s'?S[+v?.textContent]??'':t==='inlineStr'?[...c.getElementsByTagName('t')].map(x=>x.textContent).join(''):(v?.textContent??''); }); return Array.from(out,x=>x??''); });
+}
+function readCsv(buf){
+  let t=new TextDecoder('utf-8').decode(buf); if(t.includes('\uFFFD')) t=new TextDecoder('windows-1255').decode(buf); t=t.replace(/^\uFEFF/,'');
+  const first=t.split(/\r?\n/)[0], d=[',',';','\t'].sort((a,b)=>first.split(b).length-first.split(a).length)[0];
+  const rows=[]; let row=[], f='', q=false;
+  for(let i=0;i<t.length;i++){ const ch=t[i];
+    if(q){ if(ch==='"'){ if(t[i+1]==='"'){ f+='"'; i++; } else q=false; } else f+=ch; }
+    else if(ch==='"') q=true; else if(ch===d){ row.push(f); f=''; } else if(ch==='\n'||ch==='\r'){ if(ch==='\r'&&t[i+1]==='\n') i++; row.push(f); rows.push(row); row=[]; f=''; } else f+=ch; }
+  if(f||row.length){ row.push(f); rows.push(row); } return rows;
+}
+const skuKey=v=>String(v??'').trim().replace(/\.0+$/,'').replace(/\s/g,'').replace(/^0+/,'');
+const qtyNum=v=>{ const n=parseFloat(String(v??'').replace(/[,\s₪]/g,'')); return Number.isFinite(n)?n:null; };
+let SK=null; // {rows, head, cat:Map(key→{sku,sup}), nil:[sku...]}
+$('#skFile').onchange=async e=>{
+  const file=e.target.files[0]; if(!file) return; $('#skPrev').hidden=true;
+  try{
+    const buf=await file.arrayBuffer(); const rows=(/\.csv$/i.test(file.name)?readCsv(buf):await readXlsx(buf)).filter(r=>r.some(c=>String(c).trim()));
+    const d=await fetch('products.json',{cache:'no-store'}).then(r=>r.json());
+    const cat=new Map(d.p.map(a=>[skuKey(a[2]),{sku:String(a[2]),sup:a[10]||'M'}]));
+    const width=Math.max(...rows.slice(0,50).map(r=>r.length));
+    // שורת כותרות = אחת מ-10 השורות הראשונות שיש בה מילה של ברקוד/מק״ט; עמודת המק״ט = זו שהכי הרבה ערכים בה נמצאים בקטלוג
+    const hi=Math.max(0,rows.slice(0,10).findIndex(r=>r.some(c=>/ברקוד|מק.?ט|barcode|sku|ean|upc|קוד/i.test(c))));
+    const head=Array.from({length:width},(_,i)=>String(rows[hi]?.[i]??'').trim()||'עמודה '+(i+1));
+    const body=rows.slice(hi+1); const hits=head.map((_,i)=>body.filter(r=>cat.has(skuKey(r[i]))).length);
+    const si=hits.indexOf(Math.max(...hits));
+    let qi=head.findIndex((h,i)=>i!==si&&/מלאי|כמות|יתרה|זמין|qty|quantity|stock|available/i.test(h));
+    if(qi<0) qi=head.findIndex((_,i)=>i!==si&&body.slice(0,30).every(r=>String(r[i]).trim()===''||qtyNum(r[i])!=null));
+    SK={body,head,cat,nil:d.p.filter(a=>(a[10]||'M')==='N').map(a=>String(a[2])),file:file.name};
+    const opts=sel=>head.map((h,i)=>`<option value="${i}" ${i===sel?'selected':''}>${esc(h)}</option>`).join('');
+    $('#skSku').innerHTML=opts(si); $('#skQty').innerHTML=opts(qi); $('#skPrev').hidden=false; skSummary();
+  }catch(err){ toast(err.message==='not_xlsx'?'הקובץ לא נקרא. שמור אותו כ-xlsx או csv ונסה שוב.':'הקובץ לא נקרא: '+err.message); }
+};
+function skRows(){ const si=+$('#skSku').value, qi=+$('#skQty').value, m=new Map();
+  SK.body.forEach(r=>{ const c=SK.cat.get(skuKey(r[si])), q=qtyNum(r[qi]); if(c&&q!=null) m.set(c.sku,Math.max(0,Math.floor(q))); });
+  if($('#skMiss').checked) SK.nil.forEach(s=>{ if(!m.has(s)) m.set(s,0); });
+  return m; }
+function skSummary(){ if(!SK) return; const m=skRows(), v=[...m.values()];
+  const miss=SK.body.length-[...new Set(SK.body.map(r=>skuKey(r[+$('#skSku').value])))].filter(k=>SK.cat.has(k)).length;
+  $('#skSum').innerHTML=`<b>${nfi.format(m.size)}</b> מוצרים יעודכנו: <b>${nfi.format(v.filter(q=>q>3).length)}</b> במלאי · <b>${nfi.format(v.filter(q=>q>0&&q<=3).length)}</b> מלאי נמוך · <b style="color:var(--bad)">${nfi.format(v.filter(q=>q<=0).length)}</b> אזלו.<br><span class="muted" style="font-size:13px">${nfi.format(SK.body.length)} שורות בקובץ · ${nfi.format(Math.max(0,miss))} שורות בלי מוצר תואם באתר (מתעלמים מהן).</span>`;
+  $('#skGo').disabled=!m.size; }
+['#skSku','#skQty','#skMiss'].forEach(s=>$(s).onchange=skSummary);
+$('#skGo').onclick=async()=>{ const rows=[...skRows()]; if(!rows.length) return;
+  if(!confirm(`לעדכן מלאי של ${nfi.format(rows.length)} מוצרים באתר?`)) return;
+  const b=$('#skGo'); b.disabled=true; b.textContent='מעדכן…'; let saved=0;
+  try{ for(let i=0;i<rows.length;i+=2000){ const { data, error }=await sb.rpc('rt_stock_upload',{p_rows:rows.slice(i,i+2000),p_src:SK.file}); if(error) throw error; saved+=data?.saved||0; }
+    toast('המלאי עודכן: '+nfi.format(saved)+' מוצרים'); $('#skPrev').hidden=true; $('#skFile').value=''; SK=null; loadStock(); }
+  catch(err){ toast('לא עודכן: '+(err.message||err)); }
+  finally{ b.disabled=false; b.textContent='עדכון המלאי באתר'; } };
 </script>
 </body>
 </html>
