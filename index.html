@@ -2,18 +2,16 @@
 <html lang="he" dir="rtl">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://rtoukdganvoypamxjgwb.supabase.co; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; connect-src 'self' https://rtoukdganvoypamxjgwb.supabase.co; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests">
 <meta name="referrer" content="strict-origin-when-cross-origin">
-<script>if(location.protocol==="http:"&&/(^|\.)romitech\.co\.il$/.test(location.hostname))location.replace("https://"+location.host+location.pathname+location.search+location.hash)</script>
+<script>if(location.protocol==="http:"&&/(^|\.)romitech\.co\.il$/.test(location.hostname))location.replace("https://"+location.host+location.pathname+location.search+location.hash);if(top!==self)top.location=self.location;</script>
 
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="description" content="RomiTech – אביזרים לטלפון, לשעון ולאוזניות. כיסויים, מגני מסך, מטענים ואוזניות לפי המכשיר שלך.">
 <meta name="robots" content="noindex">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='1' y='1' width='30' height='30' rx='9' fill='%23000000'/%3E%3Cpath d='M11.5 23.5V8.5h5.2a4.2 4.2 0 0 1 0 8.4h-5.2M16.4 16.9l5.2 6.6' fill='none' stroke='%23d9b45a' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
 <title>RomiTech</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="fonts/rubik.css">
 <style>
 html,body{margin:0}img{max-width:100%}
 /* Layout: dark "spec-sheet" store — graphite panels, circular light-box pedestals for white product shots,
@@ -100,7 +98,7 @@ h1,h2,.sh h2,.pd h2,.ct h3{font-family:var(--f-display)}
 .models{display:flex;flex-wrap:wrap;gap:6px;max-height:132px;overflow:auto}
 .models button{border:1px solid var(--line-2);background:transparent;border-radius:10px;padding:6px 11px;cursor:pointer;font-size:13.5px;direction:ltr}
 .models button:hover{border-color:var(--fg-2)}
-.models button.on{border-color:var(--accent);color:var(--accent);background:rgba(98,182,255,.08)}
+.models button.on{border-color:var(--accent);color:var(--accent);background:rgba(201,162,74,.12)}
 .finder .go{display:flex;align-items:center;justify-content:space-between;gap:12px;border-top:1px solid var(--line);padding-top:14px;flex-wrap:wrap}
 
 /* pedestal visual */
@@ -345,11 +343,17 @@ html.a11y-cursor,html.a11y-cursor *{cursor:url("data:image/svg+xml,%3Csvg xmlns=
 @media (max-width:480px){.megagrid{grid-template-columns:1fr}}
 
 footer.site{border-top:1px solid var(--line);margin-top:20px}
+.ckb{position:fixed;z-index:84;right:16px;left:80px;bottom:calc(16px + env(safe-area-inset-bottom,0px));max-width:620px;margin-inline-end:auto;background:var(--panel);color:var(--fg);border:1px solid var(--gold);border-radius:16px;padding:14px 16px;box-shadow:0 14px 40px rgba(0,0,0,.18);display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.ckb p{margin:0;flex:1 1 260px;font-size:14px;color:var(--fg-2)}
+.ckb a{color:var(--accent);text-decoration:underline}
+.ckb-b{display:flex;gap:8px;flex-wrap:wrap}
+.ckb .btn{height:40px;padding:0 16px;font-size:14px}
 footer.site .wrap{padding-block:44px 30px}
 .fg{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:28px}
 .fg ul{list-style:none;margin:10px 0 0;padding:0;display:flex;flex-direction:column;gap:8px;font-size:14px;color:var(--fg-2)}
 .fg button{border:0;background:none;padding:0;cursor:pointer;color:inherit;text-align:right;font-size:14px}
 .fg button:hover{color:var(--fg)}
+.fg>div{min-width:0}.fg a{overflow-wrap:anywhere;text-decoration:underline;text-underline-offset:3px}
 .legal{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;border-top:1px solid var(--line);margin-top:30px;padding-top:18px;color:var(--muted);font-size:12.5px}
 @media (max-width:760px){.fg{grid-template-columns:1fr 1fr}}
 
@@ -404,7 +408,7 @@ footer.site .wrap{padding-block:44px 30px}
 
 </head>
 <body>
-<div class="strip">גרסת בנייה · המחירים זמניים ויתעדכנו לפני העלייה לאוויר</div>
+<div class="strip">כל המחירים כוללים מע״מ · איסוף עצמי חינם מפרדס חנה</div>
 
 <a class="skip" href="#app" data-skip>דילוג לתוכן הראשי</a>
 <header class="hdr">
@@ -434,13 +438,13 @@ footer.site .wrap{padding-block:44px 30px}
   <div class="fg">
     <div>
       <div class="logo"><svg viewBox="0 0 32 32" aria-hidden="true"><defs><linearGradient id="lg2" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#8a6a1f"/><stop offset=".5" stop-color="#f1d58a"/><stop offset="1" stop-color="#b8913a"/></linearGradient></defs><rect x="1" y="1" width="30" height="30" rx="9" fill="none" stroke="url(#lg2)" stroke-width="2"/><path d="M11.5 23.5V8.5h5.2a4.2 4.2 0 0 1 0 8.4h-5.2M16.4 16.9l5.2 6.6" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="wm">Romi<b>Tech</b></span></div>
-      <p style="color:var(--muted);font-size:14px;max-width:34ch;margin:14px 0 0">אביזרים לטלפון, לשעון ולאוזניות. מתאימים למכשיר שלך, עם מלאי מתעדכן ומשלוח עד הבית.</p>
+      <p style="color:var(--muted);font-size:14px;max-width:34ch;margin:14px 0 0">אביזרים לטלפון, לשעון ולאוזניות. מתאימים למכשיר שלך, עם משלוח עד הבית או איסוף עצמי.</p>
     </div>
     <div><span class="label">קטגוריות</span><ul id="fc1"></ul></div>
     <div><span class="label">עוד</span><ul id="fc2"></ul></div>
-    <div><span class="label">שירות</span><ul><li>משלוחים</li><li>ביטול עסקה והחזרות</li><li>תקנון</li><li>מדיניות פרטיות</li><li><a href="accessibility.html">הצהרת נגישות</a></li></ul></div>
+    <div><span class="label">שירות</span><ul><li><a href="shipping.html">משלוחים</a></li><li><a href="returns.html">ביטול עסקה והחזרות</a></li><li><a href="terms.html">תקנון</a></li><li><a href="privacy.html">מדיניות פרטיות</a></li><li><a href="accessibility.html">הצהרת נגישות</a></li><li><a href="mailto:guypoor+romitech@gmail.com" dir="ltr">guypoor+romitech@gmail.com</a></li></ul></div>
   </div>
-  <div class="legal"><span>© 2026 RomiTech</span><span>ביטול עסקה לפי חוק הגנת הצרכן · תשלום מאובטח</span></div>
+  <div class="legal"><span>© 2026 RomiTech · גיא פור יזמות והפצה בע״מ, ח.פ. 517290664 · הדקלים 104, פרדס חנה</span><span><a href="returns.html#form" style="text-decoration:underline">ביטול עסקה</a> · כל המחירים כוללים מע״מ · תשלום מאובטח בקארדקום</span><span style="flex-basis:100%">שמות המותגים הם סימני מסחר של בעליהם ומשמשים לתיאור המוצרים בלבד. RomiTech היא חנות עצמאית ואינה נציגה רשמית של המותגים.</span></div>
 </div></footer>
 
 <div class="scrim" id="scrim"></div>
@@ -459,6 +463,7 @@ footer.site .wrap{padding-block:44px 30px}
   <div class="megagrid" id="megagrid"></div>
 </div></div>
 <div class="sheet bsheet" id="devs" role="dialog" aria-modal="true" aria-label="בחירת מכשיר"><div class="wrap"><div class="grip" aria-hidden="true"></div><div id="devsBody"></div></div></div>
+<div class="ckb" id="ckb" role="region" aria-label="הודעה על מד ביקורים" hidden><p>האתר שומר בדפדפן את הסל וההגדרות שלך, ומפעיל מד ביקורים אנונימי (בלי IP ובלי פרטים אישיים) כדי לשפר את האתר. <a href="privacy.html#browser">פרטים</a></p><div class="ckb-b"><button type="button" class="btn btn-main" data-ck="yes">אישור</button><button type="button" class="btn btn-line" data-ck="no">בלי מד ביקורים</button></div></div>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 <button class="a11yb" id="a11yBtn" type="button" aria-label="תפריט נגישות" aria-expanded="false" aria-controls="a11yPanel"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="12" cy="4" r="2"/><path d="M19 8.5c-2.2.5-4.6.8-7 .8s-4.8-.3-7-.8l-.5 1.9c1.9.5 3.9.8 5.8.9V14l-2.1 7.2 1.9.6L12 15.5l1.9 6.3 1.9-.6L13.7 14v-2.7c1.9-.1 3.9-.4 5.8-.9z"/></svg></button>
 <div class="a11yp" id="a11yPanel" role="dialog" aria-label="תפריט נגישות" hidden>
@@ -491,12 +496,14 @@ const CONFIG = {
 const ORDER_WA='972552580000';
 const SB={url:'https://rtoukdganvoypamxjgwb.supabase.co',key:'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ0b3VrZGdhbnZveXBhbXhqZ3diIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE2NzU5NTksImV4cCI6MjEwNzI1MTk1OX0.RSxoPyIPf_KPvwe9rVa2rNsZoSUe5lDxEQmzh14mIFw'}; // public anon key – access enforced by RLS/RPC
 async function sbRpc(fn,body){ const r=await fetch(SB.url+'/rest/v1/rpc/'+fn,{method:'POST',headers:{apikey:SB.key,Authorization:'Bearer '+SB.key,'Content-Type':'application/json'},body:JSON.stringify(body)}); const t=await r.text(); let j=null; try{j=JSON.parse(t)}catch(e){} if(!r.ok) throw new Error((j&&(j.message||j.hint))||('HTTP '+r.status)); return j; } // בוט הוואטסאפ של גיא – מקבל הזמנות ושומר אותן ב-HA (sensor.romitech_orders)
-/* ===== מד תנועה – אנונימי: מזהה אקראי בדפדפן, בלי IP ובלי פרטים אישיים ===== */
+/* ===== מד תנועה – אנונימי: מזהה אקראי בדפדפן, בלי IP ובלי פרטים אישיים. הגולש יכול לבטל (romitech.consent='no') ===== */
+const consent=()=>{ try{ return localStorage.getItem('romitech.consent')||''; }catch(e){ return ''; } };
 const TRK=(()=>{
   const rnd=n=>{ try{ return Array.from(crypto.getRandomValues(new Uint8Array(n)),b=>(b%36).toString(36)).join(''); }catch(e){ return Array.from({length:n},()=>Math.floor(Math.random()*36).toString(36)).join(''); } };
   let vid='', sid='';
-  try{ vid=localStorage.getItem('rt.vid')||''; if(!/^[a-z0-9]{16}$/.test(vid)){ vid=rnd(16); localStorage.setItem('rt.vid',vid); } }catch(e){ vid=vid||rnd(16); }
-  try{ sid=sessionStorage.getItem('rt.sid')||''; if(!/^[a-z0-9]{12}$/.test(sid)){ sid=rnd(12); sessionStorage.setItem('rt.sid',sid); } }catch(e){ sid=sid||rnd(12); }
+  const ids=()=>{ if(vid) return;
+    try{ vid=localStorage.getItem('rt.vid')||''; if(!/^[a-z0-9]{16}$/.test(vid)){ vid=rnd(16); localStorage.setItem('rt.vid',vid); } }catch(e){ vid=vid||rnd(16); }
+    try{ sid=sessionStorage.getItem('rt.sid')||''; if(!/^[a-z0-9]{12}$/.test(sid)){ sid=rnd(12); sessionStorage.setItem('rt.sid',sid); } }catch(e){ sid=sid||rnd(12); } };
   const ua=navigator.userAgent||'';
   const bot=navigator.webdriver||/bot|crawl|spider|slurp|headless|lighthouse|pagespeed|preview|facebookexternalhit|whatsapp/i.test(ua);
   const dev=(/iPad|Tablet/i.test(ua)||(/Macintosh/.test(ua)&&navigator.maxTouchPoints>1))?'tablet':/Mobi|Android|iPhone/i.test(ua)?'mobile':'desktop';
@@ -506,7 +513,7 @@ const TRK=(()=>{
     else if(!u.get('pay')&&document.referrer){ const h=new URL(document.referrer).hostname.replace(/^www\./,''); if(h&&h!==location.hostname.replace(/^www\./,'')&&!/cardcom/.test(h)) ref=h; } }catch(e){}
   let first=true, last='';
   return (ev,extra={})=>{
-    if(bot) return;
+    if(bot||consent()==='no') return; ids();
     const path=(location.hash||'#home').slice(0,60), key=ev+path+(extra.pid||'');
     if(ev==='view'&&key===last) return; last=key;
     const p={vid,sid,ev,path,dev,...extra}; if(first&&ev==='view'){ p.ref=ref; first=false; }
@@ -593,13 +600,13 @@ function viewHome(){
   const fresh=inS.slice().sort((a,b)=>b.id-a.id).filter((p,i,a)=>a.findIndex(x=>x.img===p.img)===i).slice(0,8);
   const B=[['cases','big'],['otterbox','wide'],['screen',''],['audio',''],['chargers','wide'],['apple',''],['speakers','']];
   const rest=DB.cats.map((c,i)=>i).filter(i=>DB.cats[i][2]&&!B.some(b=>b[0]===DB.cats[i][0]));
-  const brands=['OTTERBOX','BLAZE','ANKER','SAMSUNG','APPLE','SPG','IPAKY','ONEPLUS','SANDISK','LITO'];
+  const bcnt={}; ALL.forEach(p=>{ const b=String(p.brand||'').toUpperCase(); if(b) bcnt[b]=(bcnt[b]||0)+1; }); const brands=Object.keys(bcnt).sort((a,b)=>bcnt[b]-bcnt[a]).slice(0,10); // רק מותגים שבאמת מוצגים באתר
   $('#app').innerHTML=`
   <section class="hero"><div class="wrap">
     <div>
       <span class="label"><span class="mono">${nf.format(ALL.length)}</span> מוצרים · <span class="mono">${DB.cats.filter(c=>c[2]).length}</span> קטגוריות · משלוח עד הבית</span>
       <h1 class="foil">הבית שלך<br>לאביזרי סלולר.</h1>
-      <p class="lead">בוחרים את הטלפון, ואנחנו מראים רק את מה שמתאים לו: כיסויים, מגני מסך, מטענים ואוזניות, עם מלאי מתעדכן ומשלוח עד הבית.</p>
+      <p class="lead">בוחרים את הטלפון, ואנחנו מראים רק את מה שמתאים לו: כיסויים, מגני מסך, מטענים ואוזניות, עם משלוח עד הבית או איסוף עצמי.</p>
       ${finderHTML()}
       <button class="devbtn" type="button" data-devsheet="1" aria-haspopup="dialog"><span class="ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><rect x="6.5" y="2.5" width="11" height="19" rx="2.6"/><path d="M10.5 18.5h3"/></svg></span><span><b>בחרו את המכשיר שלכם</b><small>ונראה רק אביזרים שמתאימים לו</small></span><span class="chev" aria-hidden="true">‹</span></button>
     </div>
@@ -609,8 +616,6 @@ function viewHome(){
       <span class="disc d2">${img(PICK.audio,'')}</span>
       <span class="disc d3">${img(PICK.chargers,'')}</span>
       <span class="disc d4">${img(PICK.gadgets,'')}</span>
-      <span class="tagline t1">MAGSAFE · 360°</span>
-      <span class="tagline t2">USB-C · 25W</span>
     </div>
   </div></section>
   <div class="marquee" aria-hidden="true"><div class="row">${[...brands,...brands].map(b=>`<span>— <b>${b}</b></span>`).join('')}</div></div>
@@ -623,14 +628,14 @@ function viewHome(){
   </div></section>
 
   <section class="sec" style="padding-top:0"><div class="wrap">
-    <div class="sh"><div><span class="label">חדש במלאי</span><h2>נכנס השבוע</h2></div><button class="lnk" data-sortnew="1">לכל החדשים ←</button></div>
+    <div class="sh"><div><span class="label">חדש בקטלוג</span><h2>נוספו לאחרונה</h2></div><button class="lnk" data-sortnew="1">לכל החדשים ←</button></div>
     <div class="rows">${fresh.map(p=>row(p)).join('')}</div>
   </div></section>
 
   <section class="sec" style="padding-top:0"><div class="wrap"><div class="facts">
-    <div><b>LIVE</b><p>מצב המלאי של כל מוצר מוצג בזמן אמת: במלאי, מלאי נמוך או אזל.</p></div>
-    <div><b>עד הבית</b><p>מזמינים באתר ומקבלים משלוח עד הדלת, בכל הארץ.</p></div>
-    <div><b>14 ימים</b><p>ביטול עסקה והחזרה לפי חוק הגנת הצרכן.</p></div>
+    <div><b>מלאי</b><p>לכל מוצר מוצג מצב המלאי: במלאי, מלאי נמוך או אזל. אם מוצר אזל אחרי ההזמנה, נעדכן אותך ונחזיר את הכסף.</p></div>
+    <div><b>עד הבית</b><p>מזמינים באתר ומקבלים משלוח עד הדלת, או אוספים בחינם מהחנות בפרדס חנה. <a class="lnk" href="shipping.html">פרטי משלוח</a></p></div>
+    <div><b>14 ימים</b><p>ביטול עסקה והחזרה לפי חוק הגנת הצרכן. <a class="lnk" href="returns.html">איך מבטלים</a></p></div>
   </div></div></section>`;
   hydrate($('#app'));
 }
@@ -674,7 +679,7 @@ function viewShop(){
       <div class="tb">
         <label class="srch">${IC.search}<input id="sq" type="search" value="${esc(shop.q)}" placeholder="חיפוש בתוך ${c?esc(c[1]):'החנות'}" aria-label="חיפוש"></label>
         <button class="ib mfilter" id="mf">${IC.filter}<span>סינון</span></button>
-        <select id="sort" aria-label="מיון"><option value="rec">מומלץ</option><option value="new">החדשים</option><option value="low">מחיר ↑</option><option value="high">מחיר ↓</option></select>
+        <select id="sort" aria-label="מיון"><option value="rec">מומלץ</option><option value="new">החדשים</option><option value="low">מחיר: מהנמוך לגבוה</option><option value="high">מחיר: מהגבוה לנמוך</option></select>
         <div class="seg" role="group" aria-label="תצוגה"><button data-view="grid" class="${shop.view==='grid'?'on':''}" aria-label="רשת">${IC.grid}</button><button data-view="list" class="${shop.view==='list'?'on':''}" aria-label="רשימה">${IC.list}</button></div>
       </div>
       <div class="pills" id="pills"></div>
@@ -713,7 +718,8 @@ function openProduct(id){
   <div class="pb pd">
     <div class="hero-shot">${img(p.img,p.name)}</div>
     <h2>${esc(p.name)}</h2>
-    <div class="pr"><span class="price">${money(priceOf(p))}</span>${stk(p)}<span class="label">${CONFIG.addVat?'כולל מע״מ':'מחיר זמני'}</span></div>
+    <div class="pr"><span class="price">${money(priceOf(p))}</span>${stk(p)}<span class="label">כולל מע״מ</span></div>
+    <p class="label" style="margin:10px 0 0">אחריות לפי היצרן או היבואן · <a class="lnk" style="font-size:13px;text-decoration:underline" href="shipping.html">משלוחים</a> · <a class="lnk" style="font-size:13px;text-decoration:underline" href="returns.html">ביטול עסקה</a></p>
     <dl class="spec">
       ${p.brand?`<div><dt>Brand</dt><dd>${esc(p.brand)}</dd></div>`:''}
       <div><dt>Fits</dt><dd>${esc(p.models||'Universal')}</dd></div>
@@ -757,7 +763,7 @@ function sumBox(){
 }
 const steps=()=>`<ol class="steps"><li class="${co.step===1?'on':'done'}"><span class="mono">1</span>פרטים ומשלוח</li><li class="${co.step===2?'on':''}"><span class="mono">2</span>תשלום</li></ol>`;
 function checkout(){
-  TRK('checkout'); co.step=1; const f=co.f;
+  TRK('checkout'); co.step=1; co.okTotal=null; const f=co.f;
   $('#cartBody').innerHTML=`<div class="co">${steps()}
     <span class="label">איך לקבל את ההזמנה?</span>
     <div class="ships" role="radiogroup" aria-label="שיטת משלוח">${Object.entries(SHIP).map(([k,s])=>`<label class="opt ${co.ship===k?'on':''}"><input type="radio" name="ship" value="${k}" ${co.ship===k?'checked':''}><span><b>${esc(s.label)}</b><small>${esc(s.sub)}${k==='home'&&SHIPCFG.free!=null?' · חינם מעל '+money(SHIPCFG.free):''}</small></span><span class="mono">${feeOf(k)===0?'חינם':money(feeOf(k))}</span></label>`).join('')}</div>
@@ -765,10 +771,12 @@ function checkout(){
     <form id="cof" novalidate style="margin-top:12px">
       <label>שם מלא (חובה)<input id="co-name" autocomplete="name" aria-required="true" value="${esc(f.name||'')}"></label>
       <label>טלפון נייד (חובה)<input id="co-phone" inputmode="tel" aria-required="true" autocomplete="tel" placeholder="05X-XXXXXXX" value="${esc(f.phone||'')}"></label>
-      <label class="full">דוא״ל לקבלה<input id="co-email" type="email" autocomplete="email" value="${esc(f.email||'')}"></label>
+      <label class="full">דוא״ל – לחשבונית ולאישור ההזמנה (חובה)<input id="co-email" type="email" aria-required="true" autocomplete="email" value="${esc(f.email||'')}"></label>
       <label class="addr">עיר (חובה)<input id="co-city" aria-required="true" autocomplete="address-level2" value="${esc(f.city||'')}"></label>
       <label class="addr">רחוב ומספר (חובה)<input id="co-street" aria-required="true" autocomplete="street-address" value="${esc(f.street||'')}"></label>
       <label class="full">הערות<textarea id="co-notes" placeholder="קומה, קוד כניסה…">${esc(f.notes||'')}</textarea></label>
+      <p class="full" style="margin:0;font-size:13px;color:var(--muted)">הפרטים משמשים רק לביצוע ההזמנה, לחשבונית ולתיאום המסירה, ומועברים לקארדקום (תשלום) ולשליח (במשלוח). אין חובה חוקית למסור אותם, אבל בלעדיהם לא נוכל לבצע את ההזמנה. <a class="lnk" style="font-size:13px" href="privacy.html" target="_blank" rel="noopener">מדיניות פרטיות</a></p>
+      <label class="full" style="flex-direction:row;align-items:flex-start;gap:10px;color:var(--fg);font-size:14px;cursor:pointer"><input id="co-terms" type="checkbox" aria-required="true" style="width:20px;height:20px;margin-top:2px;flex:none;accent-color:var(--accent)" ${f.terms?'checked':''}><span>קראתי ואני מסכים/ה ל<a class="lnk" style="font-size:14px" href="terms.html" target="_blank" rel="noopener">תקנון</a>, למדיניות <a class="lnk" style="font-size:14px" href="returns.html" target="_blank" rel="noopener">ביטול עסקה והחזרות</a> ולתנאי ה<a class="lnk" style="font-size:14px" href="shipping.html" target="_blank" rel="noopener">משלוח</a> (חובה)</span></label>
       <p id="coerr" class="full" role="alert" style="color:var(--bad);margin:0;font-size:14px" hidden></p>
     </form></div>`;
   const syncShip=()=>{ $$('#cartBody .addr').forEach(l=>l.hidden=co.ship==='pickup'); };
@@ -777,12 +785,14 @@ function checkout(){
   $('#cartFoot').innerHTML=`<button class="btn btn-main" id="tonext">המשך לתשלום · ${money(grand())}</button><button class="lnk" id="backcart">חזרה לסל</button>`;
   $('#backcart').onclick=renderCart;
   $('#tonext').onclick=()=>{
-    const need=['co-name','co-phone'].concat(co.ship==='home'?['co-city','co-street']:[]);
+    const need=['co-name','co-phone','co-email'].concat(co.ship==='home'?['co-city','co-street']:[]);
     const miss=need.filter(i=>!$('#'+i).value.trim()); const err=$('#coerr');
-    if(miss.length){err.textContent=co.ship==='home'?'כדי להמשיך צריך למלא שם, טלפון, עיר ורחוב.':'כדי להמשיך צריך למלא שם וטלפון.';err.hidden=false;$('#'+miss[0]).focus();return}
+    if(miss.length){err.textContent=co.ship==='home'?'כדי להמשיך צריך למלא שם, טלפון, דוא״ל, עיר ורחוב.':'כדי להמשיך צריך למלא שם, טלפון ודוא״ל.';err.hidden=false;$('#'+miss[0]).focus();return}
     if(!/^05\d{8}$/.test($('#co-phone').value.replace(/\D/g,''))){err.textContent='הטלפון צריך להיות נייד ישראלי בן 10 ספרות, למשל 0521234567.';err.hidden=false;$('#co-phone').focus();return}
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test($('#co-email').value.trim())){err.textContent='כתובת הדוא״ל לא תקינה. החשבונית נשלחת אליה.';err.hidden=false;$('#co-email').focus();return}
+    if(!$('#co-terms').checked){err.textContent='כדי להמשיך צריך לאשר את התקנון ואת מדיניות הביטול.';err.hidden=false;$('#co-terms').focus();return}
     const v=i=>$('#'+i).value.replace(/[\r\n|]+/g,' ').trim();
-    co.f={name:v('co-name'),phone:v('co-phone'),email:v('co-email'),city:v('co-city'),street:v('co-street'),notes:v('co-notes')};
+    co.f={name:v('co-name'),phone:v('co-phone'),email:v('co-email'),city:v('co-city'),street:v('co-street'),notes:v('co-notes'),terms:true};
     payStep();
   };
 }
@@ -792,7 +802,7 @@ const METHODS=[
   {k:'bit',label:'ביט',sub:'אישור באפליקציית ביט'}
 ];
 function payStep(){
-  co.step=2;
+  co.step=2; co.okTotal=null;
   $('#cartBody').innerHTML=`<div class="co">${steps()}
     ${PAY_LIVE?'':`<div class="demo">התשלום באתר יופעל בקרוב. בינתיים ההזמנה נשמרת אצלנו וניצור איתך קשר לתשלום.</div>`}
     ${sumBox()}
@@ -819,10 +829,17 @@ async function placeOrder(){
   const f=co.f; const mlabel=METHODS.find(m=>m.k===co.method).label;
   const body={p:{name:f.name,phone:f.phone,email:f.email,city:f.city,street:f.street,notes:f.notes,ship:co.ship,pay_method:co.method,items:coLines().map(({p,q})=>({sku:String(p.sku),q}))}};
   try{
-    const res=await sbRpc('rt_create_order',body);
+    const confirmed=co.okTotal; co.okTotal=null;
+    const res=confirmed||await sbRpc('rt_create_order',body);
+    // הגנה: אם הסכום שחושב בשרת שונה ממה שהלקוח ראה – עוצרים ומבקשים אישור על הסכום המעודכן
+    if(PAY_LIVE&&!confirmed&&Math.abs(Number(res.total)-grand())>0.009){
+      co.okTotal=res;
+      const ui=$('#pmui'); if(ui){ ui.innerHTML=`<p role="alert" style="color:var(--bad);font-size:14.5px;margin:0 0 10px">המחיר של אחד המוצרים או של המשלוח התעדכן. הסכום לתשלום הוא <b class="mono">${money(res.total)}</b> (במקום ${money(grand())}).</p><button class="btn btn-main" id="paybtn" type="button" style="width:100%">${IC.lock} מאשר/ת – מעבר לתשלום · ${money(res.total)}</button>`; $('#paybtn').onclick=placeOrder; $('#paybtn').focus(); }
+      return;
+    }
     if(PAY_LIVE){
       try{ sessionStorage.setItem('rt_last',JSON.stringify({id:res.id,total:res.total,cart})); }catch(e){}
-      const pr=await fetch(PAY_FN,{method:'POST',headers:{apikey:SB.key,Authorization:'Bearer '+SB.key,'Content-Type':'application/json'},body:JSON.stringify({id:res.id,method:co.method})});
+      const pr=await fetch(PAY_FN,{method:'POST',headers:{apikey:SB.key,Authorization:'Bearer '+SB.key,'Content-Type':'application/json'},body:JSON.stringify({id:res.id,method:co.method,phone:f.phone})});
       const pj=await pr.json().catch(()=>({}));
       if(pr.ok&&pj.url){ cart={}; saveCart(); location.href=(co.method==='bit'&&pj.bit)?pj.bit:pj.url; return; }
       throw new Error('pay_page '+(pj.error||pr.status)+' '+res.id);
@@ -852,7 +869,7 @@ function renderSearch(){
 function renderMega(){ $('#megagrid').innerHTML=DB.cats.filter(c=>c[2]).map(c=>`<button data-go="${c[0]}"><span class="thumb">${img(PICK[c[0]]??0,c[1])}</span><span style="min-width:0"><div class="nm">${esc(c[1])}</div><div class="label">${c[2]} פריטים</div></span></button>`).join(''); hydrate($('#megagrid')); }
 
 /* ===== פתיחה/סגירה וניתוב ===== */
-const BG=()=>['.hdr','#app','footer.site','.skip','#a11yBtn'].map(x=>$(x)).filter(Boolean);
+const BG=()=>['.hdr','#app','footer.site','.skip','#a11yBtn','#ckb'].map(x=>$(x)).filter(Boolean);
 const FOC='a[href],button:not([disabled]),input:not([disabled]):not([type=hidden]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])';
 function openEl(s){ $$('.sheet.on').forEach(e=>e.classList.remove('on')); const el=$(s); el.classList.add('on'); if(el.classList.contains('panel')) $('#scrim').classList.add('on'); document.documentElement.style.overflow='hidden'; BG().forEach(x=>x.inert=true);
   setTimeout(()=>{ if(el.contains(document.activeElement)) return; const f=[...el.querySelectorAll(FOC)].find(x=>!x.closest('[hidden]')&&x.getClientRects().length); (f||el).focus({preventScroll:true}); },70); }
@@ -874,6 +891,10 @@ document.addEventListener('keydown',e=>{ if(e.key!=='Tab') return; const el=$('.
     else if(t.hasAttribute('data-a11y-close')) close(); });
   pan.addEventListener('keydown',e=>{ if(e.key==='Escape'){ e.stopPropagation(); close(); } });
   apply(); })();
+(function(){ const b=$('#ckb'); if(!b) return; if(!consent()) b.hidden=false;
+  b.addEventListener('click',e=>{ const t=e.target.closest('[data-ck]'); if(!t) return; const v=t.dataset.ck;
+    try{ localStorage.setItem('romitech.consent',v); if(v==='no'){ localStorage.removeItem('rt.vid'); sessionStorage.removeItem('rt.sid'); } }catch(e){}
+    b.hidden=true; toast(v==='no'?'מד הביקורים כובה':'תודה!'); }); })();
 function route(){
   const h=(location.hash||'#home').slice(1);
   $$('.nav [data-nav]').forEach(a=>a.classList.toggle('on',a.dataset.nav===h));

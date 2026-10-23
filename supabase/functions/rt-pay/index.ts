@@ -1,5 +1,6 @@
 // RomiTech – יצירת דף תשלום בקארדקום (LowProfile) להזמנה קיימת. 22/10/2026
-// קלט: POST {id:"RT-123456"}. הסכום והפריטים נלקחים מהשרת (rt_orders), לא מהדפדפן.
+// קלט: POST {id:"RT-123456", phone:"05XXXXXXXX"}. הסכום והפריטים נלקחים מהשרת (rt_orders), לא מהדפדפן.
+// 23/10/2026: חובה טלפון שתואם להזמנה – אחרת מי שמנחש מספר הזמנה היה מקבל דף תשלום עם פרטי הלקוח.
 const SB = Deno.env.get("SUPABASE_URL")!;
 const SR = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 const TERM = Number(Deno.env.get("CARDCOM_TERMINAL"));
@@ -23,11 +24,12 @@ Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: CORS });
   if (req.method !== "POST") return j({ error: "method" }, 405);
   try {
-    const { id, method } = await req.json();
+    const { id, method, phone } = await req.json();
     if (!/^RT-\d{6}$/.test(String(id || ""))) return j({ error: "bad_id" }, 400);
     const rows = await db("rt_orders?id=eq." + id + "&select=*");
     const o = rows && rows[0];
-    if (!o) return j({ error: "not_found" }, 404);
+    const digits = (v: unknown) => String(v || "").replace(/\D/g, "").replace(/^972/, "0");
+    if (!o || !digits(phone) || digits(phone) !== digits(o.phone)) return j({ error: "not_found" }, 404);
     if (o.pay_status === "paid") return j({ error: "already_paid" }, 409);
     if (o.status === "cancelled" || o.status === "test") return j({ error: "closed" }, 409);
     // נגד שימוש לרעה: דף תשלום רק להזמנה מהיומיים האחרונים, ועד 15 ניסיונות להזמנה
@@ -51,6 +53,7 @@ Deno.serve(async (req) => {
     if (res.ResponseCode !== 0) return j({ error: "cardcom", code: res.ResponseCode, desc: res.Description }, 502);
     return j({ url: res.Url, bit: res.UrlToBit || null, id: o.id, total });
   } catch (e) {
-    return j({ error: "server", desc: String((e as Error).message || e).slice(0, 200) }, 500);
+    console.error("rt-pay", e);
+    return j({ error: "server" }, 500);
   }
 });

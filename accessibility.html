@@ -2,36 +2,13 @@
 <html lang="he" dir="rtl">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests">
 <meta name="referrer" content="strict-origin-when-cross-origin">
-<script>if(location.protocol==="http:"&&/(^|\.)romitech\.co\.il$/.test(location.hostname))location.replace("https://"+location.host+location.pathname+location.search+location.hash)</script>
-
+<script>if(location.protocol==="http:"&&/(^|\.)romitech\.co\.il$/.test(location.hostname))location.replace("https://"+location.host+location.pathname+location.search+location.hash);if(top!==self)top.location=self.location;</script>
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="robots" content="noindex">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;600;800&display=swap">
+<link rel="stylesheet" href="fonts/rubik.css">
+<link rel="stylesheet" href="legal.css">
 <title>הצהרת נגישות – RomiTech</title>
-<style>
-:root{--bg:#fff;--panel:#f7f4ed;--line:#d8ccb4;--fg:#000;--fg-2:#2a2a2a;--accent:#8a6a1f;--link:#8a6a1f;color-scheme:light}
-*{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--fg);font-family:"Rubik",Arial,Helvetica,sans-serif;font-size:17px;line-height:1.7}
-.skip{position:fixed;top:8px;right:8px;background:var(--fg);color:var(--bg);padding:10px 16px;border-radius:10px;font-weight:600;transform:translateY(-150%)}
-.skip:focus{transform:none}
-:focus-visible{outline:3px solid var(--accent);outline-offset:3px;border-radius:6px}
-header,main,footer{max-width:820px;margin:0 auto;padding:0 16px}
-header{padding-top:24px;padding-bottom:8px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
-.logo{font-family:"Rubik",Arial,sans-serif;font-weight:700;font-size:24px;color:var(--fg);text-decoration:none}
-.logo b{color:var(--accent)}
-a{color:var(--link)}
-h1{font-family:"Rubik",Arial,sans-serif;color:var(--accent);font-size:clamp(32px,6vw,52px);line-height:1.2;margin:24px 0 8px}
-h2{font-size:22px;margin:32px 0 8px}
-p,li{color:var(--fg-2)}
-ul{padding-inline-start:22px}
-.card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:16px 20px;margin-top:12px}
-.card dl{display:grid;grid-template-columns:max-content 1fr;gap:6px 16px;margin:0}
-.card dt{font-weight:600;color:var(--fg)}
-.card dd{margin:0;color:var(--fg-2)}
-footer{padding-top:32px;padding-bottom:40px;color:var(--fg-2);font-size:14px}
-</style>
 </head>
 <body>
 <a class="skip" href="#main">דילוג לתוכן הראשי</a>
@@ -52,13 +29,13 @@ footer{padding-top:32px;padding-bottom:40px;color:var(--fg-2);font-size:14px}
     <li>כל הכפתורים, השדות והתמונות מתוארים בעברית עבור תוכנות הקראת מסך.</li>
     <li>שדות חובה בטופס ההזמנה מסומנים, והודעות שגיאה מוקראות.</li>
     <li>הודעות כמו "נוסף לסל" מוקראות לקוראי מסך.</li>
-    <li>יש ניגודיות צבעים מספקת במצב כהה ובמצב בהיר. מצב התצוגה עוקב אחר הגדרת המכשיר.</li>
+    <li>יש ניגודיות צבעים מספקת בין הטקסט לרקע (יחס של 4.5:1 לפחות בטקסט רגיל), ובתפריט הנגישות אפשר לעבור למצב ניגודיות גבוהה.</li>
     <li>אנימציות נעצרות אוטומטית אם הגדרתם במכשיר "הפחתת תנועה".</li>
     <li>האתר מותאם לטלפון, לטאבלט ולמחשב, ותומך בהגדלת תצוגה בדפדפן עד 200% בלי לאבד תוכן.</li>
   </ul>
 
   <h2>תפריט הנגישות</h2>
-  <p>בפינת המסך יש כפתור נגישות כחול, ובו:</p>
+  <p>בפינה השמאלית התחתונה של המסך יש כפתור נגישות עגול בצבע זהב, ובו:</p>
   <ul>
     <li>הגדלה והקטנה של הטקסט</li>
     <li>ניגודיות גבוהה</li>
@@ -71,7 +48,7 @@ footer{padding-top:32px;padding-bottom:40px;color:var(--fg-2);font-size:14px}
   <p>ההגדרות נשמרות בדפדפן שלכם.</p>
 
   <h2>איך בדקנו</h2>
-  <p>האתר נבדק בכלי בדיקה אוטומטיים לפי WCAG 2.0 ו-2.1 ברמת AA, ובניווט מקלדת מלא בדפדפנים העדכניים: Chrome, Edge, Firefox ו-Safari, במחשב ובטלפון.</p>
+  <p>האתר נבדק בכלי הבדיקה האוטומטי axe לפי WCAG 2.0 ו-2.1 ברמת AA, בבדיקות ניווט מקלדת מלאות ובבדיקת תצוגה ברוחב טלפון (320 פיקסלים) ובמחשב, בדפדפן מבוסס Chromium (כמו Chrome ו-Edge).</p>
 
   <h2>מה עוד לא נגיש במלואו</h2>
   <ul>
@@ -91,8 +68,11 @@ footer{padding-top:32px;padding-bottom:40px;color:var(--fg-2);font-size:14px}
   </div>
   <p>אפשר גם לשלוח לנו את ההזמנה במייל, ואנחנו נמלא אותה בשבילכם.</p>
 
-  <p style="margin-top:32px">ההצהרה עודכנה ב-21 באוקטובר 2026.</p>
+  <p style="margin-top:32px">ההצהרה עודכנה ב-23 באוקטובר 2026.</p>
 </main>
-<footer>© 2026 RomiTech</footer>
+<footer>
+  <nav aria-label="דפי מידע"><a href="terms.html">תקנון</a><a href="shipping.html">משלוחים</a><a href="returns.html">ביטול עסקה והחזרות</a><a href="privacy.html">מדיניות פרטיות</a><a href="accessibility.html">הצהרת נגישות</a></nav>
+  © 2026 RomiTech · גיא פור יזמות והפצה בע״מ, ח.פ. 517290664
+</footer>
 </body>
 </html>
