@@ -15,3 +15,9 @@
 ## מד תנועה
 - האתר שולח אירועים אנונימיים ל-`rt_track` (view/product/cart/checkout/paid; מזהה אקראי בדפדפן, בלי IP). בוטים לא נספרים.
 - טבלה `rt_visits` חסומה לציבור; פאנל הניהול קורא סיכום מ-`rt_traffic(days)` (רק מנהל). לשונית "תנועה באתר" ב-admin.html.
+
+## עמודים לגוגל ופיד מוצרים (24/10/2026)
+- `tools/build_seo.py` בונה מתוך `products.json` (לפי `CONFIG` ב-index.html – אותם מוצרים שמוצגים באתר):
+  `p/<id>/` עמוד קבוע לכל מוצר (Product schema, מלאי חי), `c/<קטגוריה>/`, `m/<דגם>/` (דגם עם 5+ מוצרים), `sitemap.xml` מלא, `feed.xml` ל-Google Merchant Center.
+- רץ אוטומטית ב-GitHub Actions (`.github/workflows/build-seo.yml`) בכל שינוי ב-products.json / index.html. ידנית: `python3 tools/build_seo.py`.
+- `/#p/<id>` בדף הבית פותח את המוצר (כפתור "להזמנה באתר" בעמודי המוצר). בחלון המוצר יש "קישור קבוע למוצר".

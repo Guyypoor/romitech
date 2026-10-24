@@ -1,0 +1,53 @@
+/* RomiTech – עמודי מוצר / קטגוריה / דגם (נבנים ע"י tools/build_seo.py). 24/10/2026 */
+html{-webkit-tap-highlight-color:transparent;-webkit-text-size-adjust:100%}
+:root{--bg:#fff;--panel:#f7f4ed;--light:#f3f1ec;--line:#e4dccb;--fg:#000;--fg-2:#2a2a2a;--muted:#5c5c5c;--gold:#8a6a1f;--gold-2:#e3c06a;--ok:#1f7a3a;--low:#9a5b00;--bad:#c0392b;color-scheme:light}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:"Rubik",Arial,Helvetica,sans-serif;font-size:16px;line-height:1.6}
+a{color:var(--gold)}
+.skip{position:fixed;top:8px;right:8px;background:var(--fg);color:var(--bg);padding:10px 16px;border-radius:10px;font-weight:600;transform:translateY(-150%);z-index:10}
+.skip:focus{transform:none}
+:focus-visible{outline:3px solid var(--gold);outline-offset:3px;border-radius:6px}
+.top,main,footer{max-width:1120px;margin:0 auto;padding-inline:16px}
+.top{display:flex;justify-content:space-between;align-items:center;gap:12px;padding-block:18px;border-bottom:1px solid var(--line)}
+.top nav{display:flex;gap:16px;font-size:15px}
+.logo{font-weight:800;font-size:24px;color:var(--fg);text-decoration:none;direction:ltr}
+.logo b{color:var(--gold)}
+.crumbs{font-size:14px;color:var(--muted);margin:18px 0 6px}
+.crumbs a{color:var(--muted)}
+h1{font-size:clamp(26px,4.5vw,40px);line-height:1.2;margin:8px 0}
+h2{font-size:22px;margin:32px 0 12px}
+.lead{color:var(--muted);margin:0 0 16px}
+.pdp{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:32px;align-items:start;margin-top:8px}
+.shot{background:var(--light);border-radius:24px;aspect-ratio:1/1;display:grid;place-items:center;overflow:hidden}
+.shot img{width:88%;height:88%;object-fit:contain}
+.pr{display:flex;align-items:center;flex-wrap:wrap;gap:10px;margin:8px 0 18px}
+.price{font-size:28px;font-weight:700}
+.vat{color:var(--muted);font-size:14px}
+.st{font-size:14px;font-weight:500;padding:3px 10px;border-radius:999px;background:#e8f4ec;color:var(--ok)}
+.st.s1{background:#fbf1e1;color:var(--low)}
+.st.s2{background:#fbeaea;color:var(--bad)}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:52px;padding:0 32px;border-radius:999px;background:#000;color:var(--gold-2);font-weight:600;font-size:17px;text-decoration:none;width:100%;max-width:360px}
+.btn[aria-disabled="true"]{background:#d9d4c8;color:#555;pointer-events:none}
+.perks{list-style:none;padding:0;margin:18px 0;display:grid;gap:6px;color:var(--fg-2);font-size:15px}
+.perks li::before{content:"✓";color:var(--gold);font-weight:700;margin-inline-end:8px}
+.spec{border:1px solid var(--line);border-radius:16px;overflow:hidden;margin:18px 0}
+.spec div{display:grid;grid-template-columns:130px 1fr;gap:12px;padding:10px 16px;border-bottom:1px solid var(--line)}
+.spec div:last-child{border-bottom:0}
+.spec dt{color:var(--muted)}.spec dd{margin:0}
+.desc{color:var(--fg-2)}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 20px}
+.chips a{padding:6px 12px;border:1px solid var(--line);border-radius:999px;color:var(--fg);text-decoration:none;font-size:14px}
+.grid{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:16px}
+.pc{display:flex;flex-direction:column;gap:8px;color:var(--fg);text-decoration:none;height:100%}
+.pc .box{background:var(--light);border-radius:16px;aspect-ratio:1/1;display:grid;place-items:center;overflow:hidden}
+.pc .box img{width:86%;height:86%;object-fit:contain}
+.pc .nm{font-size:14.5px;line-height:1.38;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;overflow-wrap:anywhere}
+.pc .meta{display:flex;align-items:center;justify-content:space-between;gap:6px;margin-top:auto}
+.pc .price{font-size:16px}
+.pc .st{font-size:12px;padding:2px 8px}
+.pc:hover .nm{text-decoration:underline}
+.noimg{font-weight:800;font-size:22px;color:#b9ad93;direction:ltr}.noimg b{color:var(--gold)}
+footer{margin-top:48px;padding-block:28px 40px;border-top:1px solid var(--line);color:var(--fg-2);font-size:14px}
+footer nav{display:flex;flex-wrap:wrap;gap:6px 16px;margin:10px 0}
+.trust{margin:0;color:var(--muted)}
+@media (max-width:760px){.pdp{grid-template-columns:1fr;gap:18px}.btn{max-width:none}.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.spec div{grid-template-columns:110px 1fr}}

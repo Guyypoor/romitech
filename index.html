@@ -763,7 +763,7 @@ function openProduct(id){
     <div class="hero-shot">${img(p.img,p.name)}</div>
     <h2>${esc(p.name)}</h2>
     <div class="pr"><span class="price">${money(priceOf(p))}</span>${stk(p)}<span class="label">כולל מע״מ</span></div>
-    <p class="label" style="margin:10px 0 0">אחריות לפי היצרן או היבואן · <a class="lnk" style="font-size:13px;text-decoration:underline" href="shipping.html">משלוחים</a> · <a class="lnk" style="font-size:13px;text-decoration:underline" href="returns.html">ביטול עסקה</a></p>
+    <p class="label" style="margin:10px 0 0">אחריות לפי היצרן או היבואן · <a class="lnk" style="font-size:13px;text-decoration:underline" href="shipping.html">משלוחים</a> · <a class="lnk" style="font-size:13px;text-decoration:underline" href="returns.html">ביטול עסקה</a> · <a class="lnk" style="font-size:13px;text-decoration:underline" href="p/${p.id}/">קישור קבוע למוצר</a></p>
     <dl class="spec">
       ${p.brand?`<div><dt>Brand</dt><dd>${esc(p.brand)}</dd></div>`:''}
       <div><dt>Fits</dt><dd>${esc(p.models||'Universal')}</dd></div>
@@ -918,7 +918,7 @@ const BG=()=>['.hdr','#app','footer.site','.skip','#a11yBtn','#ckb'].map(x=>$(x)
 const FOC='a[href],button:not([disabled]),input:not([disabled]):not([type=hidden]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])';
 function openEl(s){ $$('.sheet.on').forEach(e=>e.classList.remove('on')); const el=$(s); el.classList.add('on'); if(el.classList.contains('panel')) $('#scrim').classList.add('on'); document.documentElement.style.overflow='hidden'; BG().forEach(x=>x.inert=true);
   setTimeout(()=>{ if(el.contains(document.activeElement)) return; const f=[...el.querySelectorAll(FOC)].find(x=>!x.closest('[hidden]')&&x.getClientRects().length); (f||el).focus({preventScroll:true}); },70); }
-function closeAll(){ $$('.panel.on,.sheet.on').forEach(e=>e.classList.remove('on')); $('#scrim').classList.remove('on'); document.documentElement.style.overflow=''; BG().forEach(x=>x.inert=false); if(lastFocus&&lastFocus.focus&&document.contains(lastFocus)) try{lastFocus.focus({preventScroll:true})}catch(e){} }
+function closeAll(){ if(/^#p\/\d+$/.test(location.hash)) history.replaceState(null,'',location.pathname+location.search+'#'+((DB&&DB.cats[shop.cat])?DB.cats[shop.cat][0]:'shop')); $$('.panel.on,.sheet.on').forEach(e=>e.classList.remove('on')); $('#scrim').classList.remove('on'); document.documentElement.style.overflow=''; BG().forEach(x=>x.inert=false); if(lastFocus&&lastFocus.focus&&document.contains(lastFocus)) try{lastFocus.focus({preventScroll:true})}catch(e){} }
 document.addEventListener('keydown',e=>{ if(e.key!=='Tab') return; const el=$('.panel.on')||$('.sheet.on')||(!$('#a11yPanel').hidden&&$('#a11yPanel')); if(!el) return;
   const fs=[...el.querySelectorAll(FOC)].filter(x=>!x.closest('[hidden]')&&x.getClientRects().length); if(!fs.length) return; const a=fs[0], z=fs[fs.length-1];
   if(!el.contains(document.activeElement)){ e.preventDefault(); a.focus(); return; }
@@ -944,6 +944,7 @@ function route(){
   const h=(location.hash||'#home').slice(1);
   $$('.nav [data-nav]').forEach(a=>a.classList.toggle('on',a.dataset.nav===h));
   if(!h||h==='home') viewHome();
+  else if(/^p\/\d+$/.test(h)){ const id=+h.slice(2); if(BYID.has(id)){ shop.cat=BYID.get(id).cat; shop.shown=CONFIG.pageSize; viewShop(); openProduct(id); } else viewHome(); TRK('view'); return; } // קישור ישיר ממוצר: /#p/<id> (מעמודי /p/<id>/)
   else if(h==='shop'){ shop.cat=-1; shop.shown=CONFIG.pageSize; viewShop(); }
   else { const i=catIdx(h); if(i>=0){ shop.cat=i; shop.shown=CONFIG.pageSize; viewShop(); } else viewHome(); }
   window.scrollTo({top:0});
