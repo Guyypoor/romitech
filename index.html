@@ -784,7 +784,7 @@ function renderCart(){
   const ids=Object.keys(cart); const outN=ids.filter(id=>BYID.get(+id)?.stock===2).length;
   $('#cartBody').innerHTML=ids.length?ids.map(id=>{const p=BYID.get(+id); if(!p) return ''; const q=cart[id]; return `<div class="line"><div class="thumb" style="width:64px;height:64px">${img(p.img,p.name)}</div><div style="min-width:0"><div class="nm">${esc(p.name)}</div>${p.stock===2?'<span class="st out"><i></i>אזל מהמלאי – יש להסיר מהסל</span>':''}<div class="ctl"><div class="qty"><button data-inc="${id}" aria-label="הוספת יחידה: ${esc(p.name)}">+</button><span aria-label="כמות ${q}">${q}</span><button data-dec="${id}" aria-label="הורדת יחידה: ${esc(p.name)}">−</button></div><button class="rm" data-rm="${id}" aria-label="הסרה מהסל: ${esc(p.name)}">הסרה</button></div></div><span class="price" style="font-size:15px">${money(priceOf(p)*q)}</span></div>`}).join('')
     :`<div class="empty">הסל ריק.<br><br><a class="lnk" href="#shop" data-close>לחנות ←</a></div>`;
-  $('#cartFoot').innerHTML=ids.length?`<div class="tot"><span>סה״כ</span><span class="price">${money(cartTotal())}</span></div><span style="color:var(--muted);font-size:13px">${esc(freeNote()||'דמי המשלוח יחושבו בקופה.')}${SHIPCFG.free!=null&&cartTotal()<SHIPCFG.free?' · משלוח '+money(SHIPCFG.fee):''} · איסוף עצמי מהחנות חינם</span>${outN?'<span role="alert" style="color:var(--bad);font-size:13.5px">יש בסל מוצר שאזל מהמלאי. הסר אותו כדי להמשיך.</span>':''}<button class="btn btn-main" id="co" ${outN?'disabled':''}>לתשלום</button>`:'';
+  $('#cartFoot').innerHTML=ids.length?`<div class="tot"><span>סה״כ</span><span class="price">${money(cartTotal())}</span></div><span style="color:var(--muted);font-size:13px">${esc(freeNote()||'דמי המשלוח יחושבו בקופה.')}${SHIPCFG.free!=null&&cartTotal()<SHIPCFG.free?' · משלוח '+money(SHIPCFG.fee)+(SHIPCFG.locker!=null?' · לוקר '+money(SHIPCFG.locker):''):''} · איסוף עצמי מהחנות חינם</span>${outN?'<span role="alert" style="color:var(--bad);font-size:13.5px">יש בסל מוצר שאזל מהמלאי. הסר אותו כדי להמשיך.</span>':''}<button class="btn btn-main" id="co" ${outN?'disabled':''}>לתשלום</button>`:'';
   hydrate($('#cartBody')); const cb=$('#co');
   if(cb) cb.onclick=async()=>{ cb.disabled=true; await refreshStock(true); if(Object.keys(cart).some(id=>BYID.get(+id)?.stock===2)){ renderCart(); toast('אחד המוצרים בסל אזל מהמלאי'); return; } checkout(); };
 }
@@ -792,12 +792,15 @@ function renderCart(){
    22/10/2026: PAY_LIVE=true – ההזמנה נשמרת (rt_create_order), ואז פונקציית rt-pay יוצרת דף תשלום לפי הסכום בשרת. */
 const PAY_LIVE=true;
 const PAY_FN=SB.url+'/functions/v1/rt-pay';
-const SHIPCFG={fee:35,free:199}; // ברירת מחדל – מתעדכן מהגדרות פאנל הניהול (rt_settings)
-const SHIP={pickup:{label:'איסוף עצמי מהחנות',sub:'אייטק, הדקלים 104, פרדס חנה'},home:{label:'משלוח עד הבית',sub:'שליח עד הדלת, לכל הארץ, עד 7 ימי עסקים'}};
+const SHIPCFG={fee:35,free:199,locker:null}; // ברירת מחדל – מתעדכן מהגדרות פאנל הניהול (rt_settings). locker=null → אפשרות הלוקר מוסתרת
+const SHIP_ALL={pickup:{label:'איסוף עצמי מהחנות',sub:'אייטק, הדקלים 104, פרדס חנה'},locker:{label:'משלוח ללוקר / נקודת איסוף',sub:'לנקודה הקרובה לכתובת שלך, לכל הארץ, עד 7 ימי עסקים. קוד איסוף נשלח ב-SMS'},home:{label:'משלוח עד הבית',sub:'שליח עד הדלת, לכל הארץ, עד 7 ימי עסקים'}};
+const SHIP=SHIP_ALL;
+const shipOpts=()=>Object.entries(SHIP).filter(([k])=>k!=='locker'||SHIPCFG.locker!=null);
 const homeFee=()=>(SHIPCFG.free!=null&&cartTotal()>=SHIPCFG.free)?0:(SHIPCFG.fee||0);
-const feeOf=k=>k==='home'?homeFee():0;
+const lockerFee=()=>(SHIPCFG.free!=null&&cartTotal()>=SHIPCFG.free)?0:(SHIPCFG.locker||0);
+const feeOf=k=>k==='home'?homeFee():k==='locker'?lockerFee():0;
 const freeNote=()=>SHIPCFG.free==null?'':(cartTotal()>=SHIPCFG.free?'משלוח חינם עד הבית':'עוד '+money(Math.ceil((SHIPCFG.free-cartTotal())*100)/100)+' למשלוח חינם עד הבית');
-fetch(SB.url+'/rest/v1/rt_settings?select=k,v',{headers:{apikey:SB.key,Authorization:'Bearer '+SB.key}}).then(r=>r.ok?r.json():[]).then(a=>{(a||[]).forEach(x=>{if(x.k==='ship_home_fee'&&x.v!=null)SHIPCFG.fee=+x.v;if(x.k==='ship_free_over')SHIPCFG.free=x.v==null?null:+x.v;});if($('#cartBody')&&!$('#cartBody .co')&&!$('#cartBody .done'))renderCart();}).catch(()=>{});
+fetch(SB.url+'/rest/v1/rt_settings?select=k,v',{headers:{apikey:SB.key,Authorization:'Bearer '+SB.key}}).then(r=>r.ok?r.json():[]).then(a=>{(a||[]).forEach(x=>{if(x.k==='ship_home_fee'&&x.v!=null)SHIPCFG.fee=+x.v;if(x.k==='ship_free_over')SHIPCFG.free=x.v==null?null:+x.v;if(x.k==='ship_locker_fee')SHIPCFG.locker=x.v==null?null:+x.v;});if($('#cartBody')&&!$('#cartBody .co')&&!$('#cartBody .done'))renderCart();}).catch(()=>{});
 const co={step:1,ship:'home',method:'card',f:{}};
 const coLines=()=>Object.entries(cart).map(([id,q])=>{const p=BYID.get(+id);return p?{p,q}:null}).filter(Boolean);
 const shipFee=()=>feeOf(co.ship);
@@ -809,10 +812,10 @@ function sumBox(){
 }
 const steps=()=>`<ol class="steps"><li class="${co.step===1?'on':'done'}"><span class="mono">1</span>פרטים ומשלוח</li><li class="${co.step===2?'on':''}"><span class="mono">2</span>תשלום</li></ol>`;
 function checkout(){
-  TRK('checkout'); co.step=1; co.okTotal=null; const f=co.f;
+  TRK('checkout'); if(!shipOpts().some(([k])=>k===co.ship)) co.ship='home'; co.step=1; co.okTotal=null; const f=co.f;
   $('#cartBody').innerHTML=`<div class="co">${steps()}
     <span class="label">איך לקבל את ההזמנה?</span>
-    <div class="ships" role="radiogroup" aria-label="שיטת משלוח">${Object.entries(SHIP).map(([k,s])=>`<label class="opt ${co.ship===k?'on':''}"><input type="radio" name="ship" value="${k}" ${co.ship===k?'checked':''}><span><b>${esc(s.label)}</b><small>${esc(s.sub)}${k==='home'&&SHIPCFG.free!=null?' · חינם מעל '+money(SHIPCFG.free):''}</small></span><span class="mono">${feeOf(k)===0?'חינם':money(feeOf(k))}</span></label>`).join('')}</div>
+    <div class="ships" role="radiogroup" aria-label="שיטת משלוח">${shipOpts().map(([k,s])=>`<label class="opt ${co.ship===k?'on':''}"><input type="radio" name="ship" value="${k}" ${co.ship===k?'checked':''}><span><b>${esc(s.label)}</b><small>${esc(s.sub)}${k!=='pickup'&&SHIPCFG.free!=null?' · חינם מעל '+money(SHIPCFG.free):''}</small></span><span class="mono">${feeOf(k)===0?'חינם':money(feeOf(k))}</span></label>`).join('')}</div>
     <span class="label" style="display:block;margin-top:18px">פרטים</span>
     <form id="cof" novalidate style="margin-top:12px">
       <label>שם מלא (חובה)<input id="co-name" autocomplete="name" aria-required="true" value="${esc(f.name||'')}"></label>
@@ -831,9 +834,9 @@ function checkout(){
   $('#cartFoot').innerHTML=`<button class="btn btn-main" id="tonext">המשך לתשלום · ${money(grand())}</button><button class="lnk" id="backcart">חזרה לסל</button>`;
   $('#backcart').onclick=renderCart;
   $('#tonext').onclick=()=>{
-    const need=['co-name','co-phone','co-email'].concat(co.ship==='home'?['co-city','co-street']:[]);
+    const need=['co-name','co-phone','co-email'].concat(co.ship!=='pickup'?['co-city','co-street']:[]);
     const miss=need.filter(i=>!$('#'+i).value.trim()); const err=$('#coerr');
-    if(miss.length){err.textContent=co.ship==='home'?'כדי להמשיך צריך למלא שם, טלפון, דוא״ל, עיר ורחוב.':'כדי להמשיך צריך למלא שם, טלפון ודוא״ל.';err.hidden=false;$('#'+miss[0]).focus();return}
+    if(miss.length){err.textContent=co.ship!=='pickup'?'כדי להמשיך צריך למלא שם, טלפון, דוא״ל, עיר ורחוב.':'כדי להמשיך צריך למלא שם, טלפון ודוא״ל.';err.hidden=false;$('#'+miss[0]).focus();return}
     if(!/^05\d{8}$/.test($('#co-phone').value.replace(/\D/g,''))){err.textContent='הטלפון צריך להיות נייד ישראלי בן 10 ספרות, למשל 0521234567.';err.hidden=false;$('#co-phone').focus();return}
     if(!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test($('#co-email').value.trim())){err.textContent='כתובת הדוא״ל לא תקינה. החשבונית נשלחת אליה.';err.hidden=false;$('#co-email').focus();return}
     if(!$('#co-terms').checked){err.textContent='כדי להמשיך צריך לאשר את התקנון ואת מדיניות הביטול.';err.hidden=false;$('#co-terms').focus();return}

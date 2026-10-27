@@ -42,14 +42,14 @@ Deno.serve(async (req) => {
     if ((o.log || []).filter((e: any) => e.ev === "pay_create").length >= 15) return j({ error: "too_many" }, 429);
     const total = Math.round(Number(o.total) * 100) / 100;
     const products = (o.items || []).map((i: any) => ({ ProductID: String(i.sku), Description: String(i.name || i.sku).slice(0, 200), Quantity: Number(i.q), UnitCost: Number(i.price) }));
-    if (Number(o.ship_fee) > 0) products.push({ ProductID: "SHIP", Description: "משלוח עד הבית", Quantity: 1, UnitCost: Number(o.ship_fee) });
+    if (Number(o.ship_fee) > 0) products.push({ ProductID: "SHIP", Description: o.ship_method === "locker" ? "משלוח ללוקר / נקודת איסוף" : "משלוח עד הבית", Quantity: 1, UnitCost: Number(o.ship_fee) });
     const hook = SB + "/functions/v1/rt-pay-hook";
     const body = {
       TerminalNumber: TERM, ApiName: API, Operation: "ChargeOnly", ReturnValue: o.id, Amount: total,
       SuccessRedirectUrl: SITE + "?pay=ok&o=" + o.id, FailedRedirectUrl: SITE + "?pay=fail&o=" + o.id, CancelRedirectUrl: SITE + "?pay=cancel&o=" + o.id,
       WebHookUrl: hook, ProductName: "הזמנה " + o.id + " – RomiTech", Language: "he", ISOCoinId: 1,
       UIDefinition: { CardOwnerNameValue: o.name || "", CardOwnerPhoneValue: o.phone || "", CardOwnerEmailValue: o.email || "", IsCardOwnerPhoneRequired: true },
-      Document: { DocumentTypeToCreate: "TaxInvoiceAndReceipt", Comments: DOC_NOTE, DeliveryName: o.ship_method === "pickup" ? "איסוף עצמי – הדקלים 104, פרדס חנה" : "משלוח עד הבית", Name: o.name || "לקוח", Email: o.email || "", IsSendByEmail: !!o.email, Mobile: o.phone || "", City: o.city || "", AddressLine1: o.street || "", ExternalId: o.id, Products: products, Language: "he" },
+      Document: { DocumentTypeToCreate: "TaxInvoiceAndReceipt", Comments: DOC_NOTE, DeliveryName: o.ship_method === "pickup" ? "איסוף עצמי – הדקלים 104, פרדס חנה" : o.ship_method === "locker" ? "משלוח ללוקר / נקודת איסוף" : "משלוח עד הבית", Name: o.name || "לקוח", Email: o.email || "", IsSendByEmail: !!o.email, Mobile: o.phone || "", City: o.city || "", AddressLine1: o.street || "", ExternalId: o.id, Products: products, Language: "he" },
     };
     const r = await fetch("https://secure.cardcom.solutions/api/v11/LowProfile/Create", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
     const res = await r.json();
