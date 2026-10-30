@@ -23,15 +23,14 @@ Deno.serve(async (req) => {
     const rows = await db("rt_orders?id=eq." + encodeURIComponent(id) + "&select=id,total,pay_status,log");
     const o = rows && rows[0];
     if (!o) return new Response("no order", { status: 200 });
+    // 30/10/2026: הזמנה ששולמה או הוחזרה – לא נוגעים. אחרת שליחה חוזרת של LowProfileId ישן הייתה מחזירה הזמנה מזוכה ל"שולם" ומורידה מלאי שוב.
+    if (o.pay_status === "paid" || o.pay_status === "refunded") return new Response("ok", { status: 200 });
     const amt = Number(res.TranzactionInfo?.Amount ?? NaN);
     const ok = res.ResponseCode === 0 && res.TranzactionId > 0;
     const match = ok && Math.abs(amt - Number(o.total)) < 0.01;
     const ev = { at: new Date().toISOString(), ev: "pay_hook", code: res.ResponseCode, desc: res.Description, tx: res.TranzactionId, amount: amt, doc: res.DocumentInfo?.DocumentNumber ?? null, doc_url: res.DocumentInfo?.DocumentUrl ?? null, lp };
-    const patch: Record<string, unknown> = { log: (o.log || []).concat([ev]), updated_at: new Date().toISOString() };
-    if (o.pay_status !== "paid") {
-      patch.pay_status = match ? "paid" : ok ? "amount_mismatch" : "failed";
-      if (ok) patch.pay_ref = String(res.TranzactionId);
-    }
+    const patch: Record<string, unknown> = { log: (o.log || []).concat([ev]), updated_at: new Date().toISOString(), pay_status: match ? "paid" : ok ? "amount_mismatch" : "failed" };
+    if (ok) patch.pay_ref = String(res.TranzactionId);
     await db("rt_orders?id=eq." + encodeURIComponent(id), { method: "PATCH", body: JSON.stringify(patch) });
     return new Response("ok", { status: 200 });
   } catch (e) {
