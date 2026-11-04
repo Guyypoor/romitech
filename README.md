@@ -21,3 +21,4 @@
   `p/<id>/` עמוד קבוע לכל מוצר (Product schema, מלאי חי), `c/<קטגוריה>/`, `m/<דגם>/` (דגם עם 5+ מוצרים), `sitemap.xml` מלא, `feed.xml` ל-Google Merchant Center.
 - רץ אוטומטית ב-GitHub Actions (`.github/workflows/build-seo.yml`) בכל שינוי ב-products.json / index.html. ידנית: `python3 tools/build_seo.py`.
 - `/#p/<id>` בדף הבית פותח את המוצר (כפתור "להזמנה באתר" בעמודי המוצר). בחלון המוצר יש "קישור קבוע למוצר".
+- מוצר/קטגוריה/דגם שירד מהאתר לא מחזיר 404: נשאר עמוד "כבר לא זמין" (noindex, לא ב-sitemap) עם קישור לקטגוריה. רשימת כל העמודים שפורסמו: `tools/seo_known.json`. כל כתובת אחרת מקבלת `404.html` ידידותי (קישור ישן `/p/<id>` נפתח במוצר בדף הבית).

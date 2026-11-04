@@ -22,6 +22,8 @@ MIN_MODEL = 5
 STK = [('במלאי', 'in_stock', 'https://schema.org/InStock'),
        ('מלאי נמוך', 'in_stock', 'https://schema.org/LimitedAvailability'),
        ('אזל מהמלאי', 'out_of_stock', 'https://schema.org/OutOfStock')]
+KNOWN = os.path.join(ROOT, 'tools', 'seo_known.json')  # כל עמוד p/c/m שפורסם פעם -> מפתח קטגוריה
+NOINDEX = '<meta name="robots" content="noindex,follow">'
 STATIC_PAGES = ['', 'terms.html', 'shipping.html', 'returns.html', 'privacy.html', 'accessibility.html']
 
 e = lambda s: html.escape(str(s), quote=True)
@@ -172,6 +174,15 @@ def main():
             continue
         prods.append(p)
 
+    # כל עמוד שפורסם פעם נשמר ב-KNOWN, כדי שעמוד של מוצר שירד לא יחזיר 404 בגוגל (ראו סוף main)
+    known = {}
+    if os.path.exists(KNOWN):
+        known = json.load(open(KNOWN, encoding='utf-8'))
+    for sub in ('p', 'c', 'm'):
+        if os.path.isdir(os.path.join(ROOT, sub)):
+            for name in os.listdir(os.path.join(ROOT, sub)):
+                known.setdefault(f'{sub}/{name}', None)
+
     # ניקוי עמודים ישנים (מוצר שהוסר מהאתר לא נשאר באוויר)
     for sub in ('p', 'c', 'm'):
         shutil.rmtree(os.path.join(ROOT, sub), ignore_errors=True)
@@ -302,6 +313,23 @@ def main():
     sm += [f'<url><loc>{e(u)}</loc><lastmod>{TODAY}</lastmod><priority>{pr}</priority></url>' for u, pr in urls]
     sm.append('</urlset>')
     write('sitemap.xml', '\n'.join(sm) + '\n')
+
+    # ---------- עמודים שירדו מהאתר: "לא זמין" במקום 404 (noindex, לא ב-sitemap) ----------
+    live = {u[len(SITE) + 1:].rstrip('/') for u, _ in urls}
+    for p in prods:
+        known[f'p/{p["id"]}'] = cats[p['cat']][0]
+    for k in sorted(set(known) - live):
+        catkey = known[k]
+        catname = next((c[1] for c in cats if c[0] == catkey), None)
+        what = 'המוצר' if k.startswith('p/') else 'העמוד'
+        bcat = ('ב' if re.match(r'[א-ת]', catname or '') else 'ב-') + (catname or '')
+        link = (f'<a class="btn" href="/c/{e(catkey)}/">לכל המוצרים {e(bcat)}</a>'
+                if catname and f'c/{catkey}' in live else '<a class="btn" href="/#shop">לכל המוצרים</a>')
+        body = (f'<nav class="crumbs" aria-label="מיקום באתר"><a href="/">RomiTech</a></nav>'
+                f'<h1>{what} כבר לא זמין באתר</h1><p class="lead">אפשר למצוא מוצרים דומים בחנות.</p>{link}\n')
+        write(f'{k}/index.html', page(f'{what} לא זמין | RomiTech', f'{what} כבר לא זמין ב-RomiTech.',
+                                      f'{SITE}/{k}/', SITE + '/og.png', body, ld=NOINDEX))
+    json.dump(known, open(KNOWN, 'w', encoding='utf-8'), ensure_ascii=False, sort_keys=True, indent=0)
 
     # ---------- פיד Google Merchant Center ----------
     x = lambda s: html.escape(str(s), quote=False)
