@@ -24,7 +24,7 @@ STK = [('במלאי', 'in_stock', 'https://schema.org/InStock'),
        ('אזל מהמלאי', 'out_of_stock', 'https://schema.org/OutOfStock')]
 KNOWN = os.path.join(ROOT, 'tools', 'seo_known.json')  # כל עמוד p/c/m שפורסם פעם -> מפתח קטגוריה
 NOINDEX = '<meta name="robots" content="noindex,follow">'
-STATIC_PAGES = ['', 'terms.html', 'shipping.html', 'returns.html', 'privacy.html', 'accessibility.html']
+STATIC_PAGES = ['', 'about.html', 'contact.html', 'terms.html', 'shipping.html', 'returns.html', 'privacy.html', 'accessibility.html']
 
 e = lambda s: html.escape(str(s), quote=True)
 
@@ -112,7 +112,7 @@ HEAD = '''<!doctype html>
 FOOT = '''</main>
 <footer>
   <p class="trust">משלוח לכל הארץ עד 7 ימי עסקים · משלוח חינם מעל ₪199 · איסוף עצמי חינם מחנות אייטק, הדקלים 104, פרדס חנה · ביטול עסקה תוך 14 יום לפי חוק הגנת הצרכן</p>
-  <nav aria-label="דפי מידע"><a href="/terms.html">תקנון</a><a href="/shipping.html">משלוחים</a><a href="/returns.html">ביטול עסקה והחזרות</a><a href="/privacy.html">מדיניות פרטיות</a><a href="/accessibility.html">הצהרת נגישות</a></nav>
+  <nav aria-label="דפי מידע"><a href="/about.html">אודות</a><a href="/contact.html">יצירת קשר</a><a href="/terms.html">תקנון</a><a href="/shipping.html">משלוחים</a><a href="/returns.html">ביטול עסקה והחזרות</a><a href="/privacy.html">מדיניות פרטיות</a><a href="/accessibility.html">הצהרת נגישות</a></nav>
   © 2026 RomiTech · גיא פור יזמות והפצה בע״מ, ח.פ. 517290664
 </footer>
 {script}
